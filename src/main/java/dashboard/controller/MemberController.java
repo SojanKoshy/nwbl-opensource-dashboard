@@ -16,6 +16,8 @@
 
 package dashboard.controller;
 
+import dashboard.domain.Member;
+import dashboard.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -26,8 +28,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import dashboard.domain.Member;
-import dashboard.repository.MemberRepository;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -76,7 +76,7 @@ public class MemberController {
 
     @GetMapping(value = "delete/{id}")
     public ModelAndView delete(@PathVariable("id") Long id) {
-       //TODO memberRepository.deleteMember(id);
+        //TODO memberRepository.deleteMember(id);
         Iterable<Member> members = memberRepository.findAllByOrderByName();
         return new ModelAndView("members/list", "members", members);
     }

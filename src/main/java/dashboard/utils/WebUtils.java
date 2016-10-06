@@ -11,7 +11,7 @@ public class WebUtils {
 
     public static String formatAccounts(Set<GerritAccount> accounts) {
         StringBuilder sb = new StringBuilder();
-        for (GerritAccount account: accounts) {
+        for (GerritAccount account : accounts) {
 
             sb.append(account).append("\n");
 

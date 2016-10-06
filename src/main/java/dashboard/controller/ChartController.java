@@ -20,9 +20,7 @@ import dashboard.domain.GerritChange;
 import dashboard.repository.GerritChangeRepository;
 import dashboard.utils.ChartData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -46,17 +44,17 @@ public class ChartController {
 
         List<GerritChange> changes = gerritChangeRepository.findByStatus("Merged");
         Map<String, Integer> map = new TreeMap<>();
-        for (GerritChange change: changes) {
+        for (GerritChange change : changes) {
             String key = change.getOwner();
             Integer value = change.getActualSize();
-            if(map.containsKey(key)) {
+            if (map.containsKey(key)) {
                 map.put(key, map.get(key) + value);
             } else {
                 map.put(key, value);
             }
         }
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            data.addRow(entry.getKey(), entry.getValue()/1000);
+            data.addRow(entry.getKey(), entry.getValue() / 1000);
         }
 
         return data.createJson();
@@ -70,17 +68,17 @@ public class ChartController {
 
         List<GerritChange> changes = gerritChangeRepository.findAll();
         Map<String, Integer> map = new TreeMap<>();
-        for (GerritChange change: changes) {
+        for (GerritChange change : changes) {
             String key = change.getStatus();
             Integer value = change.getActualSize();
-            if(map.containsKey(key)) {
+            if (map.containsKey(key)) {
                 map.put(key, map.get(key) + value);
             } else {
                 map.put(key, value);
             }
         }
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            data.addRow(entry.getKey(), entry.getValue()/1000);
+            data.addRow(entry.getKey(), entry.getValue() / 1000);
         }
 
         return data.createJson();
@@ -94,8 +92,8 @@ public class ChartController {
 
         List<GerritChange> changes = gerritChangeRepository.findAll();
         Map<String, Integer> map = new TreeMap<>();
-        for (GerritChange change: changes) {
-            data.addRow(data.stringToGoogleDate(change.getUpdatedOn()),  change.getActualSize()/1000);
+        for (GerritChange change : changes) {
+            data.addRow(data.stringToGoogleDate(change.getUpdatedOn()), change.getActualSize() / 1000);
         }
         return data.createJson();
     }

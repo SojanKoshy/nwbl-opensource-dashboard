@@ -9,5 +9,5 @@ import java.util.List;
  * Created by sojan on 6/10/16.
  */
 public interface MemberRepository extends JpaRepository<Member, Long> {
-    public List<Member> findAllByOrderByName();
+    List<Member> findAllByOrderByName();
 }

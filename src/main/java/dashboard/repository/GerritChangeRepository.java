@@ -1,7 +1,7 @@
 package dashboard.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import dashboard.domain.GerritChange;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 

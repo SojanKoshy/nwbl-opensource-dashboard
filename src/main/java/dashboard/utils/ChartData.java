@@ -3,9 +3,6 @@ package dashboard.utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.util.Collection;
-import java.util.Objects;
-
 /**
  * Created by sojan on 5/10/16.
  */
@@ -25,7 +22,7 @@ public class ChartData {
 //      ]
 //    }
 
-    public String createJson(){
+    public String createJson() {
         JSONObject json = new JSONObject();
         json.put("cols", cols);
         json.put("rows", rows);
@@ -43,7 +40,7 @@ public class ChartData {
     public void addRow(Object... elements) {
         JSONObject row = new JSONObject();
         JSONArray cells = new JSONArray();
-        for (Object element :elements) {
+        for (Object element : elements) {
             JSONObject cell = new JSONObject();
             cell.put("v", element);
             cells.add(cell);
