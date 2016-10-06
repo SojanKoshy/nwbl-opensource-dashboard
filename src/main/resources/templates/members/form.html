@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+<body>
+<h1 layout:fragment="header">Members : Add</h1>
+<div layout:fragment="content" class="container">
+    <form id="memberForm" th:action="@{/members/(form)}" th:object="${member}" action="#" method="post">
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-error">
+            <p th:each="error : ${#fields.errors('*')}" th:text="${error}"> Validation error</p>
+        </div>
+        <div class="pull-right">
+            <a th:href="@{/members}"> Members </a>
+        </div>
+        <input type="hidden" th:field="*{id}" th:class="${#fields.hasErrors('id')} ? 'field-error'"/>
+        <label>Name</label>
+        <input type="text" th:field="*{name}" th:class="${#fields.hasErrors('name')} ? 'field-error'"/>
+        <label>Gerrit Accounts</label>
+        <textarea th:field="*{accounts}" th:class="${#fields.hasErrors('accounts')} ? 'field-error'"></textarea>
+        <label>Visible</label>
+        <select th:field="*{visible}" th:selected="${visible}">
+            <option value="0">false</option>
+            <option value="1">true</option>
+        </select>
+        <!--<input type="text" th:field="*{visible}" th:class="${#fields.hasErrors('name')} ? 'field-error'"/>-->
+        <div class="form-actions">
+            <input type="submit" value="Save"/>
+        </div>
+    </form>
+</div>
+</body>
+
+</html>

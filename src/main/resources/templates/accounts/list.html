@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+<body>
+<h1 layout:fragment="header">Gerrit Accounts : View all</h1>
+<div layout:fragment="content" class="container">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Username</td>
+            <td>Email</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${accounts.empty}">
+            <td colspan="4">No accounts</td>
+        </tr>
+        <tr th:each="account : ${accounts}">
+            <td th:text="${account.id}">1</td>
+            <td>
+                <a th:href="@{'/accounts/' + ${account.id}}" th:text="${account.name}"> The Most Wanted </a>
+            </td>
+            <td th:text="${account.username}"> TheMostWanted</td>
+            <td th:text="${account.email}"> 1000147, 1000127</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<head>
+    <title>Network BL Open-Source Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+</head>
+
+<body>
+<div class="container">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <a class="brand" th:href="@{/}"> Network BL Open-Source Dashboard</a>
+            <ul class="nav">
+                <li><a th:href="@{/members}"> Members </a>
+                </li>
+                <li><a th:href="@{/accounts}"> Gerrit Accounts </a>
+                </li>
+                <li><a th:href="@{/download}"><img src="static/excel_icon.png" /></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <h1 layout:fragment="header">Dashboard</h1>
+    <div layout:fragment="content">Contribution summary</div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+<body>
+<h1 layout:fragment="header">Members : View</h1>
+<div layout:fragment="content" class="container">
+    <div class="alert alert-success" th:if="${globalMember}" th:text="${globalMember}">Some Success member
+    </div>
+    <div class="pull-right">
+        <a th:href="@{/accounts/}" href="list.html"> Accounts </a>
+    </div>
+    <dl>
+        <dt>ID</dt>
+        <dd id="id" th:text="${account.id}">123</dd>
+        <dt>Name</dt>
+        <dd id="name" th:text="${account.name}">A member name</dd>
+        <dt>Email</dt>
+        <dd id="email" th:text="${account.email}">A detailed member email</dd>
+    </dl>
+</div>
+</body>
+
+</html>
