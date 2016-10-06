@@ -91,7 +91,6 @@ public class ChartController {
         data.addColumnHeading("Code Size", "number");
 
         List<GerritChange> changes = gerritChangeRepository.findAll();
-        Map<String, Integer> map = new TreeMap<>();
         for (GerritChange change : changes) {
             data.addRow(data.stringToGoogleDate(change.getUpdatedOn()), change.getActualSize() / 1000);
         }

@@ -5,7 +5,7 @@ import dashboard.domain.GerritAccount;
 import java.util.Set;
 
 /**
- * Created by sojan on 5/10/16.
+ * Web format utils for thymeleaf
  */
 public class WebUtils {
 

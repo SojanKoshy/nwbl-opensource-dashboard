@@ -4,7 +4,7 @@ import dashboard.domain.GerritAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Created by sojan on 6/10/16.
+ * Gerrit account repository
  */
 public interface GerritAccountRepository extends JpaRepository<GerritAccount, Long> {
 }

@@ -4,7 +4,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 /**
- * Created by sojan on 5/10/16.
+ * Create Google chart data in json
  */
 public class ChartData {
     private JSONArray cols = new JSONArray();
