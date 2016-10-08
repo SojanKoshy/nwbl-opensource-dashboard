@@ -16,6 +16,7 @@
 
 package com.huawei.nwbl.opensource.dashboard;
 
+import com.huawei.nwbl.opensource.dashboard.domain.Folder;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritAccountRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.Member;
@@ -45,7 +46,7 @@ public class DashboardApplication {
     }
 
     @Bean
-    public Converter<String, Member> memberConverter() {
+    public Converter<String, Member> stringToMemberConverter() {
         return new Converter<String, Member>() {
             @Override
             public Member convert(String id) {
@@ -55,7 +56,7 @@ public class DashboardApplication {
     }
 
     @Bean
-    public Converter<String, GerritAccount> accountConverter() {
+    public Converter<String, GerritAccount> stringToAccountConverter() {
         return new Converter<String, GerritAccount>() {
             @Override
             public GerritAccount convert(String id) {
@@ -65,19 +66,17 @@ public class DashboardApplication {
     }
 
     @Bean
-    public Converter<String, Set<GerritAccount>> accountsConverter() {
+    public Converter<String, Set<GerritAccount>> stringToAccountsConverter() {
         return new Converter<String, Set<GerritAccount>>() {
             @Override
             public Set<GerritAccount> convert(String accounts) {
                 Set<GerritAccount> gerritAccounts = new HashSet<>();
-                for (String id : accounts.split(",")) {
+                for (String id : accounts.split("\n")) {
                     GerritAccount account = gerritAccountRepository.getOne(Long.valueOf(id));
-                    if (account != null) {
-                        gerritAccounts.add(account);
+                    if (account == null) {
+                        return null;
                     }
-                }
-                if (gerritAccounts.isEmpty()) {
-                    return null;
+                    gerritAccounts.add(account);
                 }
                 return gerritAccounts;
             }
@@ -85,7 +84,7 @@ public class DashboardApplication {
     }
 
     @Bean
-    public Converter<Set<GerritAccount>, String> accountsDisplayConverter() {
+    public Converter<Set<GerritAccount>, String> accountsToStringConverter() {
         return new Converter<Set<GerritAccount>, String>() {
             @Override
             public String convert(Set<GerritAccount> accounts) {
@@ -93,7 +92,37 @@ public class DashboardApplication {
                 for (GerritAccount account : accounts) {
                     accountsId.add(account.getId().toString());
                 }
-                return String.join(",", accountsId);
+                return String.join("\n", accountsId);
+            }
+        };
+    }
+
+    @Bean
+    public Converter<String, Set<Folder>> stingToFolderConverter() {
+        return new Converter<String, Set<Folder>>() {
+            @Override
+            public Set<Folder> convert(String folderNames) {
+                Set<Folder> folders = new HashSet<>();
+                for (String name : folderNames.split("\n")) {
+                    Folder folder = new Folder();
+                    folder.setName(name.trim());
+                    folders.add(folder);
+                }
+                return folders;
+            }
+        };
+    }
+
+    @Bean
+    public Converter<Set<Folder>, String> folderToStringConverter() {
+        return new Converter<Set<Folder>, String>() {
+            @Override
+            public String convert(Set<Folder> folders) {
+                List<String> folderNames = new ArrayList<>();
+                for (Folder folder : folders) {
+                    folderNames.add(folder.getName());
+                }
+                return String.join("\n", folderNames);
             }
         };
     }

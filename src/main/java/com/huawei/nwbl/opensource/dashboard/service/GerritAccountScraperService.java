@@ -110,12 +110,6 @@ public class GerritAccountScraperService extends GerritScraperService {
             gerritAccount.setEmail(email);
             gerritAccount.setUsername(username);
             gerritAccount.setLastUpdatedOn(Calendar.getInstance());
-
-            if (name.contains("bharat")) {
-
-                System.out.println("#######################");
-                System.out.println(gerritAccount.toString());
-            }
             gerritAccountRepository.save(gerritAccount);
         }
     }

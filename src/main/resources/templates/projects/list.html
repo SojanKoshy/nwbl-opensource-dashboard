@@ -12,6 +12,7 @@
         <thead>
         <tr>
             <td>Name</td>
+            <td>Project folders</td>
         </tr>
         </thead>
         <tbody>
@@ -20,8 +21,9 @@
         </tr>
         <tr th:each="project : ${projects}">
             <td>
-                <a th:href="@{'/projects/' + ${project.id}}" th:text="${project.name}"> The Most Wanted </a>
+                <a th:href="@{'/projects/' + ${project.id}}" th:text="${project.name}"></a>
             </td>
+            <td th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils).formatFolders(project.folders), ',', '&lt;br /&gt;')}"></td>
         </tr>
         </tbody>
     </table>

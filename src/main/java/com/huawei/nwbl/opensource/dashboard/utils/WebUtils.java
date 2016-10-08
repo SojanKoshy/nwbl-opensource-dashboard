@@ -1,7 +1,11 @@
 package com.huawei.nwbl.opensource.dashboard.utils;
 
+import com.huawei.nwbl.opensource.dashboard.domain.Folder;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -10,13 +14,22 @@ import java.util.Set;
 public class WebUtils {
 
     public static String formatAccounts(Set<GerritAccount> accounts) {
-        StringBuilder sb = new StringBuilder();
+
+        List<String> accountList = new ArrayList<>();
         for (GerritAccount account : accounts) {
-
-            sb.append(account).append("\n");
-
+            accountList.add(account.toString());
         }
-        return sb.toString();
+        Collections.sort(accountList);
+        return String.join(",", accountList);
+    }
+
+    public static String formatFolders(Set<Folder> folders) {
+        List<String> folderList = new ArrayList<>();
+        for (Folder folder : folders) {
+            folderList.add(folder.getName());
+        }
+        Collections.sort(folderList);
+        return String.join(",", folderList);
     }
 
 }

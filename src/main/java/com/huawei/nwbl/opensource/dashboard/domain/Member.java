@@ -13,7 +13,6 @@
 
 package com.huawei.nwbl.opensource.dashboard.domain;
 
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.CascadeType;
@@ -26,6 +25,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.Set;
 
@@ -44,15 +44,13 @@ public class Member {
     @Column(unique = true)
     private String name;
 
-    @NotEmpty(message = "Valid account is required.")
+    @NotEmpty(message = "Account is required.")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "mem_id")
+    @JoinColumn(name = "member_id")
     private Set<GerritAccount> accounts;
 
     private Calendar created = Calendar.getInstance();
 
-    @Column(columnDefinition = "TINYINT")
-    @Type(type = "org.hibernate.type.NumericBooleanType")
     private boolean visible = true;
 
     public Long getId() {

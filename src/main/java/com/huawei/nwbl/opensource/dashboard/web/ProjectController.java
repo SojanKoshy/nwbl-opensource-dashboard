@@ -16,10 +16,11 @@
 
 package com.huawei.nwbl.opensource.dashboard.web;
 
+import com.huawei.nwbl.opensource.dashboard.domain.Folder;
+import com.huawei.nwbl.opensource.dashboard.domain.FolderRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.Project;
 import com.huawei.nwbl.opensource.dashboard.domain.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -44,6 +45,9 @@ public class ProjectController {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private FolderRepository folderRepository;
+
     @GetMapping
     public ModelAndView list() {
         List<Project> projects = projectRepository.findAllByOrderByName();
@@ -66,10 +70,13 @@ public class ProjectController {
         if (result.hasErrors()) {
             return new ModelAndView("projects/form", "formErrors", result.getAllErrors());
         }
+        for (Folder folder : project.getFolders()) {
+            folder.setProject(project);
+        }
         try {
             project = projectRepository.save(project);
-        } catch (DataIntegrityViolationException e) {
-            result.addError(new ObjectError("globalProject", "Project name already exists"));
+        } catch (Exception e) {
+            result.addError(new ObjectError("globalProject", "Cannot Save"));
             return new ModelAndView("projects/form", "formErrors", result.getAllErrors());
         }
         redirect.addFlashAttribute("globalProject", "Successfully created a new project");

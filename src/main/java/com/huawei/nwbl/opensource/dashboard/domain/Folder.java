@@ -15,35 +15,33 @@ package com.huawei.nwbl.opensource.dashboard.domain;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.Calendar;
-import java.util.Set;
 
 /**
  * Project entity in Project table
  */
 @Entity
 @Table
-public class Project {
+public class Folder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotEmpty(message = "Name is required.")
-    @Column(unique = true)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
-    private Set<Folder> folders;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "projectId")
+    private Project project;
 
     private Calendar created = Calendar.getInstance();
 
@@ -63,12 +61,12 @@ public class Project {
         this.name = name;
     }
 
-    public Set<Folder> getFolders() {
-        return folders;
+    public Project getProject() {
+        return project;
     }
 
-    public void setFolders(Set<Folder> folders) {
-        this.folders = folders;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public Calendar getCreated() {
