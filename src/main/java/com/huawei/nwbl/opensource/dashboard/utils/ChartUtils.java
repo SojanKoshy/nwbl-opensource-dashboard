@@ -1,4 +1,4 @@
-package dashboard.utils;
+package com.huawei.nwbl.opensource.dashboard.utils;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -6,7 +6,8 @@ import org.json.simple.JSONObject;
 /**
  * Create Google chart data in json
  */
-public class ChartData {
+@SuppressWarnings("unchecked")
+public class ChartUtils {
     private JSONArray cols = new JSONArray();
     private JSONArray rows = new JSONArray();
 

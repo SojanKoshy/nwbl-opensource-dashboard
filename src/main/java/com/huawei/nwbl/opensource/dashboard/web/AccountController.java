@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package dashboard.controller;
+package com.huawei.nwbl.opensource.dashboard.web;
 
-import dashboard.domain.GerritAccount;
-import dashboard.repository.GerritAccountRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccountRepository;
+import com.huawei.nwbl.opensource.dashboard.service.GerritAccountScraperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class AccountController {
 
     @Autowired
+    private GerritAccountScraperService gerritAccountScraperService;
+
+    @Autowired
     private GerritAccountRepository gerritAccountRepository;
 
     @GetMapping
@@ -46,5 +50,10 @@ public class AccountController {
         return new ModelAndView("accounts/view", "account", account);
     }
 
-
+    @GetMapping("update")
+    public ModelAndView update() {
+        gerritAccountScraperService.scrape();
+        Iterable<GerritAccount> accounts = gerritAccountRepository.findAll();
+        return new ModelAndView("accounts/list", "accounts", accounts);
+    }
 }

@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package dashboard.controller;
+package com.huawei.nwbl.opensource.dashboard.web;
 
-import dashboard.domain.Member;
-import dashboard.repository.MemberRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.Member;
+import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,20 +66,21 @@ public class MemberController {
         if (result.hasErrors()) {
             return new ModelAndView("members/form", "formErrors", result.getAllErrors());
         }
-        member = memberRepository.save(member);
+        try {
+            member = memberRepository.save(member);
+        } catch (DataIntegrityViolationException e) {
+            result.addError(new ObjectError("globalProject", "Member name already exists"));
+            return new ModelAndView("members/form", "formErrors", result.getAllErrors());
+        }
+
         redirect.addFlashAttribute("globalMember", "Successfully created a new member");
         return new ModelAndView("redirect:/members/{member.id}", "member.id", member.getId());
     }
 
-    @RequestMapping("foo")
-    public String foo() {
-        throw new RuntimeException("Expected exception in controller");
-    }
-
     @GetMapping(value = "delete/{id}")
     public ModelAndView delete(@PathVariable("id") Long id) {
-        //TODO memberRepository.deleteMember(id);
-        Iterable<Member> members = memberRepository.findAllByOrderByName();
+        memberRepository.delete(id);
+        List<Member> members = memberRepository.findAllByOrderByName();
         return new ModelAndView("members/list", "members", members);
     }
 

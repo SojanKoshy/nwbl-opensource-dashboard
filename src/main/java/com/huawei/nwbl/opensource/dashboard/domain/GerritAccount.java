@@ -1,21 +1,22 @@
-package dashboard.domain;
+package com.huawei.nwbl.opensource.dashboard.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
- * DB entry for gerrit_account table
+ * DB entity for gerrit_account table
  */
 @Entity
-@Table(name = "gerrit_account")
+@Table
 public class GerritAccount {
     @Id
     private Long id;
     private String name;
     private String email;
     private String username;
-    private String company;
+    private Calendar lastUpdatedOn;
 
     public Long getId() {
         return id;
@@ -49,12 +50,12 @@ public class GerritAccount {
         this.username = username;
     }
 
-    public String getCompany() {
-        return company;
+    public Calendar getLastUpdatedOn() {
+        return lastUpdatedOn;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
+    public void setLastUpdatedOn(Calendar lastUpdatedOn) {
+        this.lastUpdatedOn = lastUpdatedOn;
     }
 
     public String toString() {

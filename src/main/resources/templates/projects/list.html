@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+<body>
+<h1 layout:fragment="header">Projects : View all</h1>
+<div layout:fragment="content" class="container">
+    <div class="pull-right">
+        <a th:href="@{/projects/(form)}">Add Projects</a>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <td>Name</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${projects.empty}">
+            <td colspan="4">No projects</td>
+        </tr>
+        <tr th:each="project : ${projects}">
+            <td>
+                <a th:href="@{'/projects/' + ${project.id}}" th:text="${project.name}"> The Most Wanted </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>

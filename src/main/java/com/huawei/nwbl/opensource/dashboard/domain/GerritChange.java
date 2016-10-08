@@ -1,4 +1,4 @@
-package dashboard.domain;
+package com.huawei.nwbl.opensource.dashboard.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import java.sql.Date;
 
 /**
- * DB entry for gerrit_change table
+ * DB entity for gerrit_change table
  */
 @Entity
 @Table

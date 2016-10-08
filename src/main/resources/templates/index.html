@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-
-<html xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="layout">
 <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -109,10 +108,18 @@
    // chart.draw(data, options);
     }
 
+
+
+
+
     </script>
 </head>
 <body>
+<h1 layout:fragment="header">Dashboard</h1>
 <div layout:fragment="content" class="container">
+    <div class="pull-right">
+        <a th:href="@{/download}"><img src="images/excel_icon.png"/></a>
+    </div>
     <!--Table and divs that hold the pie charts-->
     <table class="columns">
         <tr>

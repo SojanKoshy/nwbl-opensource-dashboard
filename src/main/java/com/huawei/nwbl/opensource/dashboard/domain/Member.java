@@ -11,7 +11,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package dashboard.domain;
+package com.huawei.nwbl.opensource.dashboard.domain;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -30,10 +30,10 @@ import java.util.Calendar;
 import java.util.Set;
 
 /**
- *
+ * Member entity in member table
  */
 @Entity
-@Table(name = "member")
+@Table
 public class Member {
 
     @Id
@@ -46,7 +46,7 @@ public class Member {
 
     @NotEmpty(message = "Valid account is required.")
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "mem_id")
     private Set<GerritAccount> accounts;
 
     private Calendar created = Calendar.getInstance();

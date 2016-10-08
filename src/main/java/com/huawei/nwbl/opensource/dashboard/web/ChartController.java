@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package dashboard.controller;
+package com.huawei.nwbl.opensource.dashboard.web;
 
-import dashboard.domain.GerritChange;
-import dashboard.repository.GerritChangeRepository;
-import dashboard.utils.ChartData;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritChange;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
+import com.huawei.nwbl.opensource.dashboard.utils.ChartUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -31,14 +32,15 @@ import java.util.TreeMap;
  *
  */
 @RestController
+@RequestMapping("chart")
 public class ChartController {
 
     @Autowired
     private GerritChangeRepository gerritChangeRepository;
 
-    @GetMapping("chart/1")
+    @GetMapping("1")
     public String chart1() {
-        ChartData data = new ChartData();
+        ChartUtils data = new ChartUtils();
         data.addColumnHeading("Member Name", "string");
         data.addColumnHeading("Code Size", "number");
 
@@ -60,9 +62,9 @@ public class ChartController {
         return data.createJson();
     }
 
-    @GetMapping("chart/2")
+    @GetMapping("2")
     public String chart2() {
-        ChartData data = new ChartData();
+        ChartUtils data = new ChartUtils();
         data.addColumnHeading("Status", "string");
         data.addColumnHeading("Code Size", "number");
 
@@ -84,9 +86,9 @@ public class ChartController {
         return data.createJson();
     }
 
-    @GetMapping("chart/3")
+    @GetMapping("3")
     public String chart3() {
-        ChartData data = new ChartData();
+        ChartUtils data = new ChartUtils();
         data.addColumnHeading("Date", "date");
         data.addColumnHeading("Code Size", "number");
 

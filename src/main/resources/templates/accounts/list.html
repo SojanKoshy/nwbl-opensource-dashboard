@@ -5,6 +5,9 @@
 <body>
 <h1 layout:fragment="header">Gerrit Accounts : View all</h1>
 <div layout:fragment="content" class="container">
+    <div class="pull-right">
+        <a th:href="@{/accounts/update}"> Update </a>
+    </div>
     <table class="table table-bordered table-striped">
         <thead>
         <tr>

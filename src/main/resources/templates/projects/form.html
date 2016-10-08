@@ -3,25 +3,18 @@
       layout:decorator="layout">
 
 <body>
-<h1 layout:fragment="header">Members : Add</h1>
+<h1 layout:fragment="header">Projects : Add</h1>
 <div layout:fragment="content" class="container">
-    <form id="memberForm" th:action="@{/members/(form)}" th:object="${member}" action="#" method="post">
+    <form id="projectForm" th:action="@{/projects/(form)}" th:object="${project}" action="#" method="post">
         <div th:if="${#fields.hasErrors('*')}" class="alert alert-error">
             <p th:each="error : ${#fields.errors('*')}" th:text="${error}"> Validation error</p>
         </div>
         <div class="pull-right">
-            <a th:href="@{/members}"> Members </a>
+            <a th:href="@{/projects}"> Projects </a>
         </div>
         <input type="hidden" th:field="*{id}" th:class="${#fields.hasErrors('id')} ? 'field-error'"/>
         <label>Name</label>
         <input type="text" th:field="*{name}" th:class="${#fields.hasErrors('name')} ? 'field-error'"/>
-        <label>Gerrit Accounts</label>
-        <textarea th:field="*{accounts}" th:class="${#fields.hasErrors('accounts')} ? 'field-error'"></textarea>
-        <label>Visible</label>
-        <select th:field="*{visible}" th:selected="${visible}">
-            <option value="0">false</option>
-            <option value="1">true</option>
-        </select>
         <div class="form-actions">
             <input type="submit" value="Save"/>
         </div>

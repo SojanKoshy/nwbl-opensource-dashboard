@@ -1,6 +1,6 @@
-package dashboard.utils;
+package com.huawei.nwbl.opensource.dashboard.utils;
 
-import dashboard.domain.GerritAccount;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
 
 import java.util.Set;
 
@@ -18,6 +18,5 @@ public class WebUtils {
         }
         return sb.toString();
     }
-
 
 }

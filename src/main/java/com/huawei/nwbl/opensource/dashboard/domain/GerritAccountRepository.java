@@ -1,6 +1,5 @@
-package dashboard.repository;
+package com.huawei.nwbl.opensource.dashboard.domain;
 
-import dashboard.domain.GerritAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

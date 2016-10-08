@@ -1,6 +1,5 @@
-package dashboard.repository;
+package com.huawei.nwbl.opensource.dashboard.domain;
 
-import dashboard.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
