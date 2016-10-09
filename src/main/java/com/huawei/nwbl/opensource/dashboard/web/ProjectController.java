@@ -18,8 +18,16 @@ package com.huawei.nwbl.opensource.dashboard.web;
 
 import com.huawei.nwbl.opensource.dashboard.domain.Folder;
 import com.huawei.nwbl.opensource.dashboard.domain.FolderRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccountRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritChange;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.Member;
+import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.Project;
 import com.huawei.nwbl.opensource.dashboard.domain.ProjectRepository;
+import com.huawei.nwbl.opensource.dashboard.service.GerritChangeListScraperService;
+import com.huawei.nwbl.opensource.dashboard.service.GerritChangeScraperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -33,7 +41,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -48,10 +58,20 @@ public class ProjectController {
     @Autowired
     private FolderRepository folderRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private GerritChangeRepository gerritChangeRepository;
+
     @GetMapping
     public ModelAndView list() {
         List<Project> projects = projectRepository.findAllByOrderByName();
-        return new ModelAndView("projects/list", "projects", projects);
+        List<GerritChange> changes = gerritChangeRepository.findByFolderIsNull();
+        ModelAndView modelAndView = new ModelAndView("projects/list");
+        modelAndView.addObject("projects", projects);
+        modelAndView.addObject("changes", changes);
+        return modelAndView;
     }
 
     @GetMapping("{id}")
@@ -76,6 +96,7 @@ public class ProjectController {
         try {
             project = projectRepository.save(project);
         } catch (Exception e) {
+            e.printStackTrace();
             result.addError(new ObjectError("globalProject", "Cannot Save"));
             return new ModelAndView("projects/form", "formErrors", result.getAllErrors());
         }
@@ -86,8 +107,7 @@ public class ProjectController {
     @GetMapping(value = "delete/{id}")
     public ModelAndView delete(@PathVariable("id") Long id) {
         projectRepository.delete(id);
-        List<Project> projects = projectRepository.findAllByOrderByName();
-        return new ModelAndView("projects/list", "projects", projects);
+        return new ModelAndView("redirect:/projects");
     }
 
     @GetMapping(value = "modify/{id}")
@@ -95,4 +115,44 @@ public class ProjectController {
         return new ModelAndView("projects/form", "project", project);
     }
 
+    @GetMapping("update")
+    public ModelAndView update() {
+        List<Folder> folders = folderRepository.findAll();
+        for (Folder folder : folders) {
+            List<GerritChange> gerritChanges = gerritChangeRepository.findByFirstFilePathContaining(folder.getName());
+            if (gerritChanges != null) {
+                for (GerritChange gerritChange : gerritChanges) {
+                    gerritChange.setFolder(folder);
+                }
+                folder.setGerritChanges(gerritChanges);
+            }
+        }
+        folderRepository.save(folders);
+
+        List<Project> projectList = projectRepository.findAll();
+        for (Project project : projectList) {
+            Set<Member> members = new HashSet<>();
+            for (Folder folder : project.getFolders()) {
+                Set<GerritAccount> gerritAccounts = new HashSet<>();
+                for (GerritChange gerritChange : folder.getGerritChanges()) {
+                    gerritAccounts.add(gerritChange.getAccount());
+                }
+                for (GerritAccount gerritAccount : gerritAccounts) {
+                    members.add(gerritAccount.getMember());
+                }
+            }
+            project.setMembers(members);
+        }
+        for (Member member : memberRepository.findAll()) {
+            Set<Project> projectSet = new HashSet<>();
+            for (Project project : projectList) {
+                if (project.getMembers().contains(member))
+                    projectSet.add(project);
+            }
+            member.setProjects(projectSet);
+        }
+        projectRepository.save(projectList);
+
+        return new ModelAndView("redirect:/projects");
+    }
 }

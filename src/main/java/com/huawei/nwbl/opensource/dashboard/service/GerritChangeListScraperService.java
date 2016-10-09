@@ -54,6 +54,9 @@ public class GerritChangeListScraperService extends GerritScraperService {
     @Autowired
     private GerritChangeRepository gerritChangeRepository;
 
+    @Autowired
+    private GerritChangeScraperService gerritChangeScraperService;
+
     public void scrape(String searchTerm) {
         this.searchTerm = searchTerm;
         url = BASE_URL + QUERY_PAGE_PATH + searchTerm;
@@ -152,6 +155,10 @@ public class GerritChangeListScraperService extends GerritScraperService {
             }
             gerritChange.setSubject(subject);
             gerritChange.setLink(link);
+
+            String branchId = link.split("/")[3];
+            String firstFilePath = gerritChangeScraperService.scrapeAndGetFirstFilePath(branchId);
+            gerritChange.setFirstFilePath(firstFilePath);
         }
     }
 
@@ -229,6 +236,7 @@ public class GerritChangeListScraperService extends GerritScraperService {
             log.debug("DeletedSize is '{}'", deletedSize);
             gerritChange.setAddedSize(addedSize);
             gerritChange.setDeletedSize(deletedSize);
+            gerritChange.setActualSize(addedSize - deletedSize);
         } else {
             log.error("Size '{}' is not matching the pattern '{}'", size, pattern.pattern());
         }

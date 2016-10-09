@@ -23,9 +23,11 @@ public class GerritChangeScraperService extends GerritScraperService {
 
     private static final String PATCH_SETS_XPATH = "//*[@id=\"gerrit_body\"]/div/div/div/div/div/div[1]/div[3]/div[1]/button[2]/div";
 
+    private static final int FIRST_FILE_PATH = 3;
     private static final int SIZE = 5;
 
-    private static final int EXPECT_CELL_SIZE_IN_ROW = 7;
+    private static final int EXPECT_CELL_SIZE_IN_ROW = 9;
+    private static final int EXPECT_CELL_SIZE_IN_LAST_ROW = 7;
     private String branchId;
 
     private boolean hasNextPage = false;
@@ -44,6 +46,46 @@ public class GerritChangeScraperService extends GerritScraperService {
             scrapePatchSets();
         } while (hasNextPage);
     }
+
+    public String scrapeAndGetFirstFilePath(String branchId) {
+        this.branchId = branchId;
+        this.url = BASE_URL + CHANGE_PAGE_PATH + branchId;
+        loadPage();
+        return scrapeFirstFilePath();
+    }
+
+    private String scrapeFirstFilePath() {
+        HtmlTable changeTable = page.getFirstByXPath(CHANGE_TABLE_XPATH);
+
+        if (changeTable == null || !changeTable.getAttribute("class").contains(CHANGE_TABLE_CLASS)) {
+            log.error("Change table is not found in page. Please check the url '{}'", url);
+            return null;
+        }
+
+        HtmlTableBody tableBody = changeTable.getBodies().get(0);
+
+        int rowSize = tableBody.getRows().size();
+        log.info("Number of rows in change table are {}", rowSize);
+
+        //*[@id="gerrit_body"]/div/div/div/div/div/div[3]/table/tbody/tr[3]/td[4]/a
+
+        List<HtmlTableRow> rowList = tableBody.getRows();
+        List<HtmlTableCell> cellList = rowList.get(2).getCells();
+        int cellsInRow = cellList.size();
+        if (cellsInRow != EXPECT_CELL_SIZE_IN_ROW) {
+            log.error("Number of cells in row are {} while expected is {}. Please check the url '{}'",
+                    cellsInRow, EXPECT_CELL_SIZE_IN_ROW, url);
+            return null;
+        }
+        return getFirstFilePath(cellList.get(FIRST_FILE_PATH));
+    }
+
+    private String getFirstFilePath(HtmlTableCell cell) {
+        String firstFilePath = cell.asText();
+        log.info("firstFilePath is '{}'", firstFilePath);
+        return firstFilePath;
+    }
+
 
     private void scrapeChangeTable() {
         HtmlTable changeTable = page.getFirstByXPath(CHANGE_TABLE_XPATH);
@@ -64,9 +106,9 @@ public class GerritChangeScraperService extends GerritScraperService {
         List<HtmlTableCell> cellList = rowList.get(rowSize - 1).getCells();
         int cellsInRow = cellList.size();
 
-        if (cellsInRow != EXPECT_CELL_SIZE_IN_ROW) {
+        if (cellsInRow != EXPECT_CELL_SIZE_IN_LAST_ROW) {
             log.error("Number of cells in row are {} while expected is {}. Please check the url '{}'",
-                    cellsInRow, EXPECT_CELL_SIZE_IN_ROW, url);
+                    cellsInRow, EXPECT_CELL_SIZE_IN_LAST_ROW, url);
             return;
         }
         storeSize(cellList.get(SIZE));

@@ -1,9 +1,15 @@
 package com.huawei.nwbl.opensource.dashboard.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * DB entity for gerrit_account table
@@ -16,6 +22,14 @@ public class GerritAccount {
     private String name;
     private String email;
     private String username;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "memberId")
+    private Member member;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "account")
+    private List<GerritChange> gerritChanges;
+
     private Calendar lastUpdatedOn;
 
     public Long getId() {
@@ -50,6 +64,14 @@ public class GerritAccount {
         this.username = username;
     }
 
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
     public Calendar getLastUpdatedOn() {
         return lastUpdatedOn;
     }
@@ -58,7 +80,16 @@ public class GerritAccount {
         this.lastUpdatedOn = lastUpdatedOn;
     }
 
-    public String toString() {
-        return String.format("%s - %s (%s %s)", id, name, email, username);
+    public List<GerritChange> getGerritChanges() {
+        return gerritChanges;
     }
+
+    public void setGerritChanges(List<GerritChange> gerritChanges) {
+        this.gerritChanges = gerritChanges;
+    }
+
+    public String toString() {
+        return String.format("%s \"%s <%s>\" - %s (%d found)", id, name, email, username, getGerritChanges().size());
+    }
+
 }

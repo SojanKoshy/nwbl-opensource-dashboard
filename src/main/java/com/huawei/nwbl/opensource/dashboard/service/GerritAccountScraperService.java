@@ -104,7 +104,10 @@ public class GerritAccountScraperService extends GerritScraperService {
             log.debug("email : {}", email);
             log.debug("username : {}", username);
 
-            GerritAccount gerritAccount = new GerritAccount();
+            GerritAccount gerritAccount = gerritAccountRepository.findOne(id);
+            if (gerritAccount == null) {
+                gerritAccount = new GerritAccount();
+            }
             gerritAccount.setId(id);
             gerritAccount.setName(name);
             gerritAccount.setEmail(email);

@@ -15,6 +15,7 @@ package com.huawei.nwbl.opensource.dashboard.domain;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,8 +23,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Project entity in Project table
@@ -37,11 +40,15 @@ public class Folder {
     private Long id;
 
     @NotEmpty(message = "Name is required.")
+    @Column(unique = true)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId")
     private Project project;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "folder")
+    private List<GerritChange> gerritChanges;
 
     private Calendar created = Calendar.getInstance();
 
@@ -69,11 +76,23 @@ public class Folder {
         this.project = project;
     }
 
+    public List<GerritChange> getGerritChanges() {
+        return gerritChanges;
+    }
+
+    public void setGerritChanges(List<GerritChange> gerritChanges) {
+        this.gerritChanges = gerritChanges;
+    }
+
     public Calendar getCreated() {
         return created;
     }
 
     public void setCreated(Calendar created) {
         this.created = created;
+    }
+
+    public String toString() {
+        return String.format("%s (%d found)", getName(), getGerritChanges().size());
     }
 }

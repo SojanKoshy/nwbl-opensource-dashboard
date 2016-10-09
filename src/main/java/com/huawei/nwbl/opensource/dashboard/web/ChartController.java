@@ -16,8 +16,12 @@
 
 package com.huawei.nwbl.opensource.dashboard.web;
 
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccountRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritChange;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.Member;
+import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
 import com.huawei.nwbl.opensource.dashboard.utils.ChartUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,27 +42,27 @@ public class ChartController {
     @Autowired
     private GerritChangeRepository gerritChangeRepository;
 
+    @Autowired
+    private GerritAccountRepository gerritAccountRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
     @GetMapping("1")
     public String chart1() {
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Member Name", "string");
         data.addColumnHeading("Code Size", "number");
 
-        List<GerritChange> changes = gerritChangeRepository.findByStatus("Merged");
-        Map<String, Integer> map = new TreeMap<>();
-        for (GerritChange change : changes) {
-            String key = change.getOwner();
-            Integer value = change.getActualSize();
-            if (map.containsKey(key)) {
-                map.put(key, map.get(key) + value);
-            } else {
-                map.put(key, value);
+        for (Member member : memberRepository.findAll()) {
+            Integer codeSize = 0;
+            for (GerritAccount account : member.getAccounts()) {
+                for (GerritChange gerritChange : account.getGerritChanges()) {
+                    codeSize += gerritChange.getActualSize();
+                }
             }
+            data.addRow(member.getName(), codeSize / 1000);
         }
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            data.addRow(entry.getKey(), entry.getValue() / 1000);
-        }
-
         return data.createJson();
     }
 

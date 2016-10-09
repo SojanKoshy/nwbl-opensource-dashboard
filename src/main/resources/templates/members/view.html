@@ -17,12 +17,12 @@
         <dd id="created" th:text="${#calendars.format(member.created)}"> July 11, 2012 2:17:16 PM CDT</dd>
         <dt>Name</dt>
         <dd id="name" th:text="${member.name}">A short summary...</dd>
-        <dt>Gerrit Accounts</dt>
-        <dd th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils).formatAccounts(member.accounts), ',', '&lt;br /&gt;')}">
-            1000147, 1000127
-        </dd>
         <dt>Visible</dt>
         <dd th:text="${member.visible}">True</dd>
+        <dt>Gerrit Accounts</dt>
+        <dd th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils).formatSet(member.accounts), ',', '&lt;br /&gt;')}">
+            1000147, 1000127
+        </dd>
     </dl>
     <div class="pull-left">
         <a th:href="@{'delete/' + ${member.id}}"> delete </a> |

@@ -1,7 +1,10 @@
 package com.huawei.nwbl.opensource.dashboard.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.sql.Date;
 
@@ -26,6 +29,15 @@ public class GerritChange {
     private Integer actualSize;
     private String codeReviewScore;
     private String moduleOwnerScore;
+    private String firstFilePath;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "folderId")
+    private Folder folder;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "accountId")
+    private GerritAccount account;
 
     public Integer getId() {
         return id;
@@ -137,5 +149,29 @@ public class GerritChange {
 
     public void setModuleOwnerScore(String moduleOwnerScore) {
         this.moduleOwnerScore = moduleOwnerScore;
+    }
+
+    public String getFirstFilePath() {
+        return firstFilePath;
+    }
+
+    public void setFirstFilePath(String firstFilePath) {
+        this.firstFilePath = firstFilePath;
+    }
+
+    public Folder getFolder() {
+        return folder;
+    }
+
+    public void setFolder(Folder folder) {
+        this.folder = folder;
+    }
+
+    public GerritAccount getAccount() {
+        return account;
+    }
+
+    public void setAccount(GerritAccount account) {
+        this.account = account;
     }
 }

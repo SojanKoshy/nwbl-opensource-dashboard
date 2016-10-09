@@ -16,8 +16,13 @@
 
 package com.huawei.nwbl.opensource.dashboard.web;
 
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccountRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritChange;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.Member;
 import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
+import com.huawei.nwbl.opensource.dashboard.service.GerritChangeListScraperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -44,10 +49,24 @@ public class MemberController {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private GerritChangeRepository gerritChangeRepository;
+
+    @Autowired
+    private GerritAccountRepository gerritAccountRepository;
+
+    @Autowired
+    private GerritChangeListScraperService gerritChangeListScraperService;
+
     @GetMapping
     public ModelAndView list() {
+
         List<Member> members = memberRepository.findAllByOrderByName();
-        return new ModelAndView("members/list", "members", members);
+        List<GerritChange> changes = gerritChangeRepository.findByAccountIsNull();
+        ModelAndView modelAndView = new ModelAndView("members/list");
+        modelAndView.addObject("members", members);
+        modelAndView.addObject("changes", changes);
+        return modelAndView;
     }
 
     @GetMapping("{id}")
@@ -66,6 +85,16 @@ public class MemberController {
         if (result.hasErrors()) {
             return new ModelAndView("members/form", "formErrors", result.getAllErrors());
         }
+        if (member.getId() != null) {
+            for (GerritAccount account : memberRepository.findOne(member.getId()).getAccounts()) {
+                account.setMember(null);
+            }
+        }
+        if (member.getAccounts() != null) {
+            for (GerritAccount account : member.getAccounts()) {
+                account.setMember(member);
+            }
+        }
         try {
             member = memberRepository.save(member);
         } catch (DataIntegrityViolationException e) {
@@ -80,8 +109,7 @@ public class MemberController {
     @GetMapping(value = "delete/{id}")
     public ModelAndView delete(@PathVariable("id") Long id) {
         memberRepository.delete(id);
-        List<Member> members = memberRepository.findAllByOrderByName();
-        return new ModelAndView("members/list", "members", members);
+        return new ModelAndView("redirect:/members");
     }
 
     @GetMapping(value = "modify/{id}")
@@ -89,4 +117,28 @@ public class MemberController {
         return new ModelAndView("members/form", "member", member);
     }
 
+    @GetMapping("update")
+    public ModelAndView update() {
+
+//        for (Member member : memberRepository.findAllByOrderByName()) {
+//            for (GerritAccount account : member.getAccounts()) {
+//                String searchTerm = String.format("owner:\"%s <%s>\"", account.getName(), account.getEmail());
+//                gerritChangeListScraperService.scrape(searchTerm);
+//            }
+//        }
+
+        List<GerritAccount> gerritAccounts = gerritAccountRepository.findByMemberIsNotNull();
+        for (GerritAccount account : gerritAccounts) {
+            List<GerritChange> gerritChanges = gerritChangeRepository.findByOwner(account.getName());
+            if (gerritChanges != null) {
+                for (GerritChange gerritChange : gerritChanges) {
+                    gerritChange.setAccount(account);
+                }
+                account.setGerritChanges(gerritChanges);
+            }
+        }
+        gerritAccountRepository.save(gerritAccounts);
+
+        return new ModelAndView("redirect:/members");
+    }
 }

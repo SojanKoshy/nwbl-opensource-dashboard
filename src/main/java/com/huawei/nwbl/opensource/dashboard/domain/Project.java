@@ -22,6 +22,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Calendar;
@@ -42,8 +45,15 @@ public class Project {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project")
     private Set<Folder> folders;
+
+    @ManyToMany
+    @JoinTable(
+            name = "ProjectMembers",
+            joinColumns = @JoinColumn(name = "projectId", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "memberId", referencedColumnName = "id"))
+    private Set<Member> members;
 
     private Calendar created = Calendar.getInstance();
 
@@ -71,11 +81,23 @@ public class Project {
         this.folders = folders;
     }
 
+    public Set<Member> getMembers() {
+        return members;
+    }
+
+    public void setMembers(Set<Member> members) {
+        this.members = members;
+    }
+
     public Calendar getCreated() {
         return created;
     }
 
     public void setCreated(Calendar created) {
         this.created = created;
+    }
+
+    public String toString() {
+        return String.format("%s", getName());
     }
 }

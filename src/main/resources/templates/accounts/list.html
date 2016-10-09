@@ -3,7 +3,7 @@
       layout:decorator="layout">
 
 <body>
-<h1 layout:fragment="header">Gerrit Accounts : View all</h1>
+<h1 layout:fragment="header">Gerrit Accounts</h1>
 <div layout:fragment="content" class="container">
     <div class="pull-right">
         <a th:href="@{/accounts/update}"> Update </a>
@@ -22,12 +22,13 @@
             <td colspan="4">No accounts</td>
         </tr>
         <tr th:each="account : ${accounts}">
-            <td th:text="${account.id}">1</td>
-            <td>
-                <a th:href="@{'/accounts/' + ${account.id}}" th:text="${account.name}"> The Most Wanted </a>
+            <td th:text="${account.id}"></td>
+            <td th:switch="${account.member}">
+                <p th:case="null" th:text="${account.name}"></p>
+                <a th:case="*" th:href="@{'/accounts/' + ${account.id}}" th:text="${account.name}"></a>
             </td>
-            <td th:text="${account.username}"> TheMostWanted</td>
-            <td th:text="${account.email}"> 1000147, 1000127</td>
+            <td th:text="${account.username}"></td>
+            <td th:text="${account.email}"></td>
         </tr>
         </tbody>
     </table>

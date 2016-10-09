@@ -22,10 +22,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
-import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.Set;
 
@@ -44,33 +44,27 @@ public class Member {
     @Column(unique = true)
     private String name;
 
-    @NotEmpty(message = "Account is required.")
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @NotEmpty(message = "Valid account id is required.")
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "member")
     private Set<GerritAccount> accounts;
 
-    private Calendar created = Calendar.getInstance();
+    @ManyToMany(mappedBy = "members")
+    private Set<Project> projects;
 
     private boolean visible = true;
 
+    private Calendar created = Calendar.getInstance();
+
     public Long getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Calendar getCreated() {
-        return this.created;
-    }
-
-    public void setCreated(Calendar created) {
-        this.created = created;
-    }
-
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public void setName(String name) {
@@ -78,11 +72,19 @@ public class Member {
     }
 
     public Set<GerritAccount> getAccounts() {
-        return this.accounts;
+        return accounts;
     }
 
     public void setAccounts(Set<GerritAccount> accounts) {
         this.accounts = accounts;
+    }
+
+    public Set<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
     }
 
     public boolean isVisible() {
@@ -93,4 +95,25 @@ public class Member {
         this.visible = visible;
     }
 
+    public Calendar getCreated() {
+        return created;
+    }
+
+    public void setCreated(Calendar created) {
+        this.created = created;
+    }
+
+    public String toString() {
+        return String.format("%s", getName());
+    }
+
+    @PreRemove
+    public void removeMemberFromOthers() {
+        for (Project project : projects) {
+            project.getMembers().remove(this);
+        }
+        for (GerritAccount account : accounts) {
+            account.setMember(null);
+        }
+    }
 }

@@ -3,16 +3,18 @@
       layout:decorator="layout">
 
 <body>
-<h1 layout:fragment="header">Projects : View all</h1>
+<h1 layout:fragment="header">Projects</h1>
 <div layout:fragment="content" class="container">
     <div class="pull-right">
-        <a th:href="@{/projects/(form)}">Add Projects</a>
+        <a th:href="@{/projects/(form)}">Add Projects</a> |
+        <a th:href="@{/projects/update}"> Update </a>
     </div>
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
             <td>Name</td>
-            <td>Project folders</td>
+            <td>Project Folders - (Commits Found)</td>
+            <td>Members Found</td>
         </tr>
         </thead>
         <tbody>
@@ -23,7 +25,37 @@
             <td>
                 <a th:href="@{'/projects/' + ${project.id}}" th:text="${project.name}"></a>
             </td>
-            <td th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils).formatFolders(project.folders), ',', '&lt;br /&gt;')}"></td>
+            <td th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils).formatSet(project.folders), ',', '&lt;br /&gt;')}"></td>
+
+            <td th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils).formatSet(project.members), ',', '&lt;br /&gt;')}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h1>Gerrit Commits - Project not found</h1>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <td>Change Id</td>
+            <td>Status</td>
+            <td>Owner</td>
+            <td>Size</td>
+            <td>Date</td>
+            <td>First File Path</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${changes.empty}">
+            <td colspan="6">No changes</td>
+        </tr>
+        <tr th:each="change : ${changes}">
+            <td>
+                <a th:href="${change.link}" th:text="${change.id}"></a>
+            </td>
+            <td th:text="${change.status}"></td>
+            <td th:text="${change.owner}"></td>
+            <td th:text="${change.actualSize}"></td>
+            <td th:text="${change.updatedOn}"></td>
+            <td th:text="${change.firstFilePath}"></td>
         </tr>
         </tbody>
     </table>
