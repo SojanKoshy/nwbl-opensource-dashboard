@@ -9,13 +9,15 @@
         <p th:text="${error}"> </p>
     </div>
     <div class="pull-right">
-        <a th:href="@{/projects/(form)}">Add Projects</a>
+        <a th:href="@{/projects/(form)}">Add Projects</a> |
+        <a th:href="@{/projects/update}"> Update </a>
     </div>
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
             <th>Name</th>
             <th>Project Folders (commits found)</th>
+            <th>Merged Code Size, in KLOC</th>
             <th>Members Found</th>
         </tr>
         </thead>
@@ -28,7 +30,7 @@
                 <a th:href="@{'/projects/' + ${project.id}}" th:text="${project.name}"></a>
             </td>
             <td th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils).formatSet(project.folders), ',', '&lt;br /&gt;')}"></td>
-
+            <td th:text="${project.calculateMergedCodeSize()/1000.0}" style="text-align: center"></td>
             <td th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils).formatSet(project.members), ',', '&lt;br /&gt;')}"></td>
         </tr>
         </tbody>

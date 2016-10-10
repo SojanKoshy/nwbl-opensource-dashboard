@@ -23,6 +23,7 @@ import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.Member;
 import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
 import com.huawei.nwbl.opensource.dashboard.service.GerritChangeListScraperService;
+import com.huawei.nwbl.opensource.dashboard.service.GerritChangeScraperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -57,6 +58,9 @@ public class MemberController {
 
     @Autowired
     private GerritChangeListScraperService gerritChangeListScraperService;
+
+    @Autowired
+    private GerritChangeScraperService gerritChangeScraperService;
 
     @GetMapping
     public ModelAndView list() {
@@ -130,6 +134,12 @@ public class MemberController {
 //                gerritChangeListScraperService.scrape(searchTerm);
 //            }
 //        }
+        List<GerritChange> gerritChanges = gerritChangeRepository.findAllByFolderIsNullOrderByIdDesc();
+        for (GerritChange gerritChange : gerritChanges) {
+            String branchId = gerritChange.getLink().split("/")[3];
+            gerritChange.setFirstFilePath(gerritChangeScraperService.scrapeAndGetFirstFilePath(branchId));
+        }
+        gerritChangeRepository.save(gerritChanges);
 
         return new ModelAndView("redirect:/members");
     }

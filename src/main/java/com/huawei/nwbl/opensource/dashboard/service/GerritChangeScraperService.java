@@ -70,13 +70,22 @@ public class GerritChangeScraperService extends GerritScraperService {
         //*[@id="gerrit_body"]/div/div/div/div/div/div[3]/table/tbody/tr[3]/td[4]/a
 
         List<HtmlTableRow> rowList = tableBody.getRows();
-        List<HtmlTableCell> cellList = rowList.get(2).getCells();
-        int cellsInRow = cellList.size();
-        if (cellsInRow != EXPECT_CELL_SIZE_IN_ROW) {
-            log.error("Number of cells in row are {} while expected is {}. Please check the url '{}'",
-                    cellsInRow, EXPECT_CELL_SIZE_IN_ROW, url);
-            return null;
+
+        for (int rowId = 2; rowId < rowSize - 2; rowId++) {
+            List<HtmlTableCell> cellList = rowList.get(rowId).getCells();
+            int cellsInRow = cellList.size();
+            if (cellsInRow != EXPECT_CELL_SIZE_IN_ROW) {
+                log.error("Number of cells in row are {} while expected is {}. Please check the url '{}'",
+                        cellsInRow, EXPECT_CELL_SIZE_IN_ROW, url);
+                return null;
+            }
+            String filePath = getFirstFilePath(cellList.get(FIRST_FILE_PATH));
+            if(filePath.trim().endsWith(".java")) {
+                return filePath;
+            }
         }
+
+        List<HtmlTableCell> cellList = rowList.get(2).getCells();
         return getFirstFilePath(cellList.get(FIRST_FILE_PATH));
     }
 

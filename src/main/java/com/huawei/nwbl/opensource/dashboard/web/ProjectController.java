@@ -114,7 +114,7 @@ public class ProjectController {
             result.addError(new ObjectError("globalProject", "Project name already exists"));
             return new ModelAndView("projects/form", "formErrors", result.getAllErrors());
         }
-        update();
+        updateAll();
         redirect.addFlashAttribute("globalProject", "Successfully created a new project");
         return new ModelAndView("redirect:/projects/{project.id}", "project.id", project.getId());
     }
@@ -130,7 +130,13 @@ public class ProjectController {
         return new ModelAndView("projects/form", "project", project);
     }
 
-    public void update() {
+    @GetMapping("update")
+    public ModelAndView update() {
+        updateAll();
+        return new ModelAndView("redirect:/projects");
+    }
+
+    public void updateAll() {
         updateFolders();
         updateAccounts();
         updateProjects();

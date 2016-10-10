@@ -13,8 +13,9 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Username</th>
+            <th>User Name</th>
             <th>Email</th>
+            <th>Member Name</th>
         </tr>
         </thead>
         <tbody>
@@ -25,10 +26,11 @@
             <td th:text="${account.id}"></td>
             <td th:switch="${account.member}">
                 <p th:case="null" th:text="${account.name}"></p>
-                <a th:case="*" th:href="@{'/accounts/' + ${account.id}}" th:text="${account.name}"></a>
+                <a th:case="*" th:href="@{'/members/' + ${account.member.id}}" th:text="${account.name}"></a>
             </td>
             <td th:text="${account.username}"></td>
             <td th:text="${account.email}"></td>
+            <td th:text="${account.member} != null ? ${account.member.name} : ''"></td>
         </tr>
         </tbody>
     </table>

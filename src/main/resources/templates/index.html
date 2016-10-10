@@ -22,14 +22,14 @@
     data.sort({column: 1, desc:true});
 
     var options = {
-        title : 'Code Merged by Members, In KLOC',
+        title : 'Code Merged by Members, in KLOC',
         legend: { position: "none" },
         animation:{
             duration: 1000,
             easing: 'out',
             startup:true
         },
-        width:300,
+        width:400,
         height:300};
 
     var chart = new google.visualization.BarChart(document.getElementById('chart1_div'));
@@ -47,14 +47,14 @@
     data.sort({column: 1, desc:true});
 
     var options = {
-        title : 'Code Status, In KLOC',
+        title : 'Code Status, in KLOC',
         legend: "none",
         animation:{
             duration: 1000,
             easing: 'out',
             startup:true
         },
-        width:300,
+        width:400,
         height:300}
 
     var chart = new google.visualization.ColumnChart(document.getElementById('chart2_div'));
@@ -72,14 +72,14 @@
     data.sort({column: 0});
 
     var options = {
-        title : 'Code Merged Timeline, In KLOC',
+        title : 'Code Merged Timeline, in KLOC',
         legend: "none",
         animation:{
             duration: 1000,
             easing: 'out',
             startup:true
         },
-        width:300,
+        width:400,
         height:300}
     var dashboard = new google.visualization.Dashboard(document.getElementById('dashboard3_div'));
     var dateRangeSlider = new google.visualization.ControlWrapper({
@@ -99,13 +99,37 @@
                 easing: 'out',
                 startup:true
             },
-            width:300,
+            width:400,
             height:280}});
 
     dashboard.bind(dateRangeSlider, lineChart);
     dashboard.draw(data);
-    // var chart = new google.visualization.LineChart(document.getElementById('chart3_div'));
-   // chart.draw(data, options);
+
+
+    // Chart 4
+    var arrayData =   $.ajax({
+        url: 'chart/4',
+        type: 'GET',
+        dataType: "json",
+        async: false
+    }).responseText;
+
+    var data = new google.visualization.DataTable(arrayData)
+    data.sort({column: 1, desc:true});
+
+    var options = {
+        title : 'Code Merged by Project, in KLOC',
+        legend: { position: "none" },
+        animation:{
+            duration: 1000,
+            easing: 'out',
+            startup:true
+        },
+        width:400,
+        height:300};
+
+    var chart = new google.visualization.ColumnChart(document.getElementById('chart4_div'));
+    chart.draw(data, options);
     }
 
 
@@ -121,13 +145,18 @@
     <table class="columns">
         <tr>
             <td>
-                <div id="chart1_div" style="border: 1px solid #ccc"></div>
+                <div id="chart1_div"></div>
             </td>
             <td>
-                <div id="chart2_div" style="border: 1px solid #ccc"></div>
+                <div id="chart2_div"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="chart4_div"></div>
             </td>
             <td>
-                <div id="dashboard3_div" style="border: 1px solid #ccc">
+                <div id="dashboard3_div">
                     <div id="chart3_div"></div>
                     <div id="filter3_div"></div>
                 </div>

@@ -104,6 +104,13 @@ public class Project {
         return String.format("%s", getName());
     }
 
+    public Integer calculateMergedCodeSize() {
+        Integer mergedCodeSize = 0;
+        for (Folder folder : folders) {
+            mergedCodeSize += folder.calculateMergedCodeSize();
+        }
+        return mergedCodeSize;
+    }
 
     @PreRemove
     public void removeProjectFromOthers() {

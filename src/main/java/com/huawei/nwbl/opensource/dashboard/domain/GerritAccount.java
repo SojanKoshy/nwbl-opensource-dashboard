@@ -89,7 +89,8 @@ public class GerritAccount {
     }
 
     public String toString() {
-        return String.format("%s \"%s <%s>\" - %s (%d found)", id, name, email, username, getGerritChanges().size());
+        return String.format("%s \"%s &lt;%s&gt;\" - %s (%d found)", id, name, email,
+                (username != null ? username : ""), getGerritChanges().size());
     }
 
 }

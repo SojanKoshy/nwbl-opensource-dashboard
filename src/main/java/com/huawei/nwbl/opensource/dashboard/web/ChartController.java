@@ -22,6 +22,8 @@ import com.huawei.nwbl.opensource.dashboard.domain.GerritChange;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.Member;
 import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.Project;
+import com.huawei.nwbl.opensource.dashboard.domain.ProjectRepository;
 import com.huawei.nwbl.opensource.dashboard.utils.ChartUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,21 +50,18 @@ public class ChartController {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
     @GetMapping("1")
     public String plotCodeMergedByMembers() {
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Member Name", "string");
         data.addColumnHeading("Code Size", "number");
 
-        // FIXME Use @Query for faster access
         for (Member member : memberRepository.findAll()) {
-            Integer codeSize = 0;
-            for (GerritAccount account : member.getAccounts()) {
-                for (GerritChange gerritChange : account.getGerritChanges()) {
-                    codeSize += gerritChange.getActualSize();
-                }
-            }
-            if (codeSize / 1000.0 > 0) {
+            Integer codeSize = gerritChangeRepository.getSumActualSizeByMemberAndStatus(member.getId(), "Merged");
+            if (codeSize != null && (codeSize / 1000.0) > 0) {
                 data.addRow(member.getName(), codeSize / 1000.0);
             }
         }
@@ -75,20 +74,14 @@ public class ChartController {
         data.addColumnHeading("Status", "string");
         data.addColumnHeading("Code Size", "number");
 
-        // FIXME Use @Query for faster access
-        List<GerritChange> changes = gerritChangeRepository.findAll();
-        Map<String, Integer> map = new TreeMap<>();
-        for (GerritChange change : changes) {
-            String key = change.getStatus();
-            Integer value = change.getActualSize();
-            if (map.containsKey(key)) {
-                map.put(key, map.get(key) + value);
-            } else {
-                map.put(key, value);
+        String[] statusTypes = new String[] {"Merged", "Abandoned", "Merge Conflict" ,""};
+        String[] statusDisplay = new String[] {"Merged", "Abandoned", "Conflict" ,"Open"};
+
+        for (int i = 0; i < 4; i++) {
+            Integer codeSize = gerritChangeRepository.getSumActualSizeByStatus(statusTypes[i]);
+            if (codeSize != null && (codeSize / 1000.0) > 0) {
+                data.addRow(statusDisplay[i], codeSize / 1000.0);
             }
-        }
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            data.addRow(entry.getKey(), entry.getValue() / 1000.0);
         }
 
         return data.createJson();
@@ -103,7 +96,24 @@ public class ChartController {
         //TODO Add status selection in chart
         List<GerritChange> changes = gerritChangeRepository.findAll();
         for (GerritChange change : changes) {
-            data.addRow(data.stringToGoogleDate(change.getUpdatedOn()), change.getActualSize() / 1000);
+            data.addRow(data.stringToGoogleDate(change.getUpdatedOn()), change.getActualSize() / 1000.0);
+        }
+        return data.createJson();
+    }
+
+
+    @GetMapping("4")
+    public String plotCodeMergedByProject() {
+        ChartUtils data = new ChartUtils();
+        data.addColumnHeading("Project Name", "string");
+        data.addColumnHeading("Code Size", "number");
+
+        List<Project> projects = projectRepository.findAll();
+        for (Project project : projects) {
+            Integer codeSize = gerritChangeRepository.getSumActualSizeByProjectAndStatus(project.getId(), "Merged");
+            if (codeSize != null && (codeSize / 1000.0) > 0) {
+                data.addRow(project.getName(), codeSize / 1000.0);
+            }
         }
         return data.createJson();
     }
