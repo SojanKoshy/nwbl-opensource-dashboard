@@ -74,6 +74,7 @@ public class ProjectController {
         ModelAndView modelAndView = new ModelAndView("projects/list");
         modelAndView.addObject("projects", projectRepository.findAllByOrderByName());
         modelAndView.addObject("changes", gerritChangeRepository.findAllByFolderIsNullOrderByIdDesc());
+       // modelAndView.addObject("error", "Conflict");
         return modelAndView;
     }
 
@@ -113,9 +114,7 @@ public class ProjectController {
             result.addError(new ObjectError("globalProject", "Project name already exists"));
             return new ModelAndView("projects/form", "formErrors", result.getAllErrors());
         }
-        updateFolders();
-        updateAccounts();
-        updateProjects();
+        update();
         redirect.addFlashAttribute("globalProject", "Successfully created a new project");
         return new ModelAndView("redirect:/projects/{project.id}", "project.id", project.getId());
     }
@@ -131,12 +130,10 @@ public class ProjectController {
         return new ModelAndView("projects/form", "project", project);
     }
 
-    @GetMapping("update")
-    public ModelAndView update() {
+    public void update() {
         updateFolders();
         updateAccounts();
         updateProjects();
-        return new ModelAndView("redirect:/projects");
     }
 
     private void updateFolders() {

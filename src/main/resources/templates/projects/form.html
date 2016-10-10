@@ -3,7 +3,7 @@
       layout:decorator="layout">
 
 <body>
-<h1 layout:fragment="header">Projects : Add</h1>
+<h1 layout:fragment="header">Project : Add</h1>
 <div layout:fragment="content" class="container">
     <form id="projectForm" th:action="@{/projects/(form)}" th:object="${project}" action="#" method="post">
         <div th:if="${#fields.hasErrors('*')}" class="alert alert-error">
