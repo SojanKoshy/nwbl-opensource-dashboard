@@ -16,6 +16,7 @@
 
 package com.huawei.nwbl.opensource.dashboard;
 
+import com.huawei.nwbl.opensource.dashboard.domain.Folder;
 import com.huawei.nwbl.opensource.dashboard.domain.FolderRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritAccountRepository;
@@ -53,7 +54,7 @@ public class DashboardApplication {
         return new Converter<String, Member>() {
             @Override
             public Member convert(String id) {
-                return memberRepository.findOne(Long.valueOf(id));
+                return memberRepository.getOne(Long.valueOf(id));
             }
         };
     }
@@ -69,12 +70,14 @@ public class DashboardApplication {
     }
 
     @Bean
-    public Converter<String, Set<GerritAccount>> stringToAccountsConverter() {
+    public Converter<String, Set<GerritAccount>> stringToAccountSetConverter() {
         return new Converter<String, Set<GerritAccount>>() {
             @Override
             public Set<GerritAccount> convert(String accounts) {
                 Set<GerritAccount> gerritAccounts = new HashSet<>();
-                for (String id : accounts.trim().split("\n")) {
+                for (String id : accounts.trim().split("\r\n")) {
+                    if (id.trim().isEmpty())
+                        continue;
                     GerritAccount account = gerritAccountRepository.findOne(Long.valueOf(id.trim()));
                     if (account == null) {
                         return null;
@@ -87,49 +90,44 @@ public class DashboardApplication {
     }
 
     @Bean
-    public Converter<Set<GerritAccount>, String> accountsToStringConverter() {
-        return new Converter<Set<GerritAccount>, String>() {
+    public Converter<String, Set<Folder>> stingToFolderSetConverter() {
+        return new Converter<String, Set<Folder>>() {
             @Override
-            public String convert(Set<GerritAccount> accounts) {
-                List<String> accountsId = new ArrayList<>();
-                for (GerritAccount account : accounts) {
-                    accountsId.add(account.getId().toString());
+            public Set<Folder> convert(String folderNames) {
+                Set<Folder> folders = new HashSet<>();
+                for (String name : folderNames.trim().split("\r\n")) {
+                    if (name.trim().isEmpty())
+                        continue;
+                    Folder folder = folderRepository.findByName(name.trim());
+                    if (folder == null) {
+                        folder = new Folder();
+                    }
+                    folder.setName(name.trim());
+                    folders.add(folder);
                 }
-                return String.join("\n", accountsId);
+                return folders;
             }
         };
     }
 
-//    @Bean
-//    public Converter<String, Set<Folder>> stingToFolderConverter() {
-//        return new Converter<String, Set<Folder>>() {
-//            @Override
-//            public Set<Folder> convert(String folderNames) {
-//                Set<Folder> folders = new HashSet<>();
-//                for (String name : folderNames.split("\n")) {
-//                    Folder folder = folderRepository.findByName(name.trim());
-//                    if (folder == null) {
-//                        folder = new Folder();
-//                    }
-//                    folder.setName(name.trim());
-//                    folders.add(folder);
-//                }
-//                return folders;
-//            }
-//        };
-//    }
-//
-//    @Bean
-//    public Converter<Set<Folder>, String> folderToStringConverter() {
-//        return new Converter<Set<Folder>, String>() {
-//            @Override
-//            public String convert(Set<Folder> folders) {
-//                List<String> folderNames = new ArrayList<>();
-//                for (Folder folder : folders) {
-//                    folderNames.add(folder.getName());
-//                }
-//                return String.join("\n", folderNames);
-//            }
-//        };
-//    }
+    @Bean
+    public Converter<Set<Object>, String> setToStringConverter() {
+        return new Converter<Set<Object>, String>() {
+            @Override
+            public String convert(Set<Object> objects) {
+                List<String> stringList = new ArrayList<>();
+                for (Object object : objects) {
+                    if (object instanceof GerritAccount) {
+                        GerritAccount account = (GerritAccount) object;
+                        stringList.add(account.getId().toString());
+                    } else {
+                        Folder folder = (Folder) object;
+                        stringList.add(folder.getName());
+                    }
+                }
+                return String.join("\r\n", stringList);
+            }
+        };
+    }
+
 }

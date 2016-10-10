@@ -26,8 +26,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,7 +47,8 @@ public class Project {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project")
+    @NotEmpty(message = "Folder is required.")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
     private Set<Folder> folders;
 
     @ManyToMany
@@ -53,7 +56,7 @@ public class Project {
             name = "ProjectMembers",
             joinColumns = @JoinColumn(name = "projectId", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "memberId", referencedColumnName = "id"))
-    private Set<Member> members;
+    private List<Member> members;
 
     private Calendar created = Calendar.getInstance();
 
@@ -81,11 +84,11 @@ public class Project {
         this.folders = folders;
     }
 
-    public Set<Member> getMembers() {
+    public List<Member> getMembers() {
         return members;
     }
 
-    public void setMembers(Set<Member> members) {
+    public void setMembers(List<Member> members) {
         this.members = members;
     }
 
@@ -100,4 +103,13 @@ public class Project {
     public String toString() {
         return String.format("%s", getName());
     }
+
+
+    @PreRemove
+    public void removeProjectFromOthers() {
+        for (Member member : members) {
+            member.getProjects().remove(this);
+        }
+    }
+
 }

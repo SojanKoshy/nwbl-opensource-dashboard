@@ -49,11 +49,12 @@ public class ChartController {
     private MemberRepository memberRepository;
 
     @GetMapping("1")
-    public String chart1() {
+    public String plotCodeMergedByMembers() {
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Member Name", "string");
         data.addColumnHeading("Code Size", "number");
 
+        // FIXME Use @Query for faster access
         for (Member member : memberRepository.findAll()) {
             Integer codeSize = 0;
             for (GerritAccount account : member.getAccounts()) {
@@ -61,17 +62,20 @@ public class ChartController {
                     codeSize += gerritChange.getActualSize();
                 }
             }
-            data.addRow(member.getName(), codeSize / 1000);
+            if (codeSize / 1000.0 > 0) {
+                data.addRow(member.getName(), codeSize / 1000.0);
+            }
         }
         return data.createJson();
     }
 
     @GetMapping("2")
-    public String chart2() {
+    public String plotCodeStatus() {
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Status", "string");
         data.addColumnHeading("Code Size", "number");
 
+        // FIXME Use @Query for faster access
         List<GerritChange> changes = gerritChangeRepository.findAll();
         Map<String, Integer> map = new TreeMap<>();
         for (GerritChange change : changes) {
@@ -84,18 +88,19 @@ public class ChartController {
             }
         }
         for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            data.addRow(entry.getKey(), entry.getValue() / 1000);
+            data.addRow(entry.getKey(), entry.getValue() / 1000.0);
         }
 
         return data.createJson();
     }
 
     @GetMapping("3")
-    public String chart3() {
+    public String plotCodeMergeTimeline() {
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Date", "date");
         data.addColumnHeading("Code Size", "number");
 
+        //TODO Add status selection in chart
         List<GerritChange> changes = gerritChangeRepository.findAll();
         for (GerritChange change : changes) {
             data.addRow(data.stringToGoogleDate(change.getUpdatedOn()), change.getActualSize() / 1000);

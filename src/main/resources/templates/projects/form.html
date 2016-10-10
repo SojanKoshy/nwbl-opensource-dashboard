@@ -16,7 +16,7 @@
         <label>Name</label>
         <input type="text" th:field="*{name}" th:class="${#fields.hasErrors('name')} ? 'field-error'"/>
         <label>Project folders</label>
-        <textarea th:field="*{folders}" th:class="${#fields.hasErrors('name')} ? 'field-error'"/>
+        <textarea th:field="*{folders}" th:class="${#fields.hasErrors('folders')} ? 'field-error'"/>
         <div class="form-actions">
             <input type="submit" value="Save"/>
         </div>

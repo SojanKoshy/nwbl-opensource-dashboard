@@ -8,5 +8,5 @@ import java.util.List;
  * Gerrit account repository
  */
 public interface GerritAccountRepository extends JpaRepository<GerritAccount, Long> {
-    List<GerritAccount> findByMemberIsNotNull();
+    List<GerritAccount> findAllByMemberIsNotNull();
 }

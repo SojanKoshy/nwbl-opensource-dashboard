@@ -62,7 +62,7 @@ public class MemberController {
     public ModelAndView list() {
 
         List<Member> members = memberRepository.findAllByOrderByName();
-        List<GerritChange> changes = gerritChangeRepository.findByAccountIsNull();
+        List<GerritChange> changes = gerritChangeRepository.findAllByAccountIsNullOrderByIdDesc();
         ModelAndView modelAndView = new ModelAndView("members/list");
         modelAndView.addObject("members", members);
         modelAndView.addObject("changes", changes);
@@ -71,7 +71,11 @@ public class MemberController {
 
     @GetMapping("{id}")
     public ModelAndView view(@PathVariable("id") Member member) {
-        return new ModelAndView("members/view", "member", member);
+        List<GerritChange> changes = gerritChangeRepository.getAllByMember(member.getId());
+        ModelAndView modelAndView = new ModelAndView("members/view");
+        modelAndView.addObject("member", member);
+        modelAndView.addObject("changes", changes);
+        return modelAndView;
     }
 
     @GetMapping(params = "form")
@@ -126,18 +130,6 @@ public class MemberController {
 //                gerritChangeListScraperService.scrape(searchTerm);
 //            }
 //        }
-
-        List<GerritAccount> gerritAccounts = gerritAccountRepository.findByMemberIsNotNull();
-        for (GerritAccount account : gerritAccounts) {
-            List<GerritChange> gerritChanges = gerritChangeRepository.findByOwner(account.getName());
-            if (gerritChanges != null) {
-                for (GerritChange gerritChange : gerritChanges) {
-                    gerritChange.setAccount(account);
-                }
-                account.setGerritChanges(gerritChanges);
-            }
-        }
-        gerritAccountRepository.save(gerritAccounts);
 
         return new ModelAndView("redirect:/members");
     }

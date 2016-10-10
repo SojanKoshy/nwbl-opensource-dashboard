@@ -24,6 +24,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PreRemove;
 import javax.persistence.Table;
 import java.util.Calendar;
 import java.util.List;
@@ -95,4 +96,12 @@ public class Folder {
     public String toString() {
         return String.format("%s (%d found)", getName(), getGerritChanges().size());
     }
+
+    @PreRemove
+    public void removeFoldersFromOthers() {
+        for (GerritChange gerritChange : gerritChanges) {
+            gerritChange.setFolder(null);
+        }
+    }
+
 }

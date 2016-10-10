@@ -41,6 +41,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -64,19 +66,23 @@ public class ProjectController {
     @Autowired
     private GerritChangeRepository gerritChangeRepository;
 
+    @Autowired
+    private GerritAccountRepository gerritAccountRepository;
+
     @GetMapping
     public ModelAndView list() {
-        List<Project> projects = projectRepository.findAllByOrderByName();
-        List<GerritChange> changes = gerritChangeRepository.findByFolderIsNull();
         ModelAndView modelAndView = new ModelAndView("projects/list");
-        modelAndView.addObject("projects", projects);
-        modelAndView.addObject("changes", changes);
+        modelAndView.addObject("projects", projectRepository.findAllByOrderByName());
+        modelAndView.addObject("changes", gerritChangeRepository.findAllByFolderIsNullOrderByIdDesc());
         return modelAndView;
     }
 
     @GetMapping("{id}")
     public ModelAndView view(@PathVariable("id") Project project) {
-        return new ModelAndView("projects/view", "project", project);
+        ModelAndView modelAndView = new ModelAndView("projects/view");
+        modelAndView.addObject("project", project);
+        modelAndView.addObject("changes", gerritChangeRepository.getAllByProject(project.getId()));
+        return modelAndView;
     }
 
     @GetMapping(params = "form")
@@ -90,16 +96,26 @@ public class ProjectController {
         if (result.hasErrors()) {
             return new ModelAndView("projects/form", "formErrors", result.getAllErrors());
         }
-        for (Folder folder : project.getFolders()) {
-            folder.setProject(project);
+        if (project.getId() != null) {
+            for (Folder folder : projectRepository.findOne(project.getId()).getFolders()) {
+                folder.setProject(null);
+            }
+        }
+        if (project.getFolders() != null) {
+            for (Folder folder : project.getFolders()) {
+                folder.setProject(project);
+            }
         }
         try {
             project = projectRepository.save(project);
         } catch (Exception e) {
             e.printStackTrace();
-            result.addError(new ObjectError("globalProject", "Cannot Save"));
+            result.addError(new ObjectError("globalProject", "Project name already exists"));
             return new ModelAndView("projects/form", "formErrors", result.getAllErrors());
         }
+        updateFolders();
+        updateAccounts();
+        updateProjects();
         redirect.addFlashAttribute("globalProject", "Successfully created a new project");
         return new ModelAndView("redirect:/projects/{project.id}", "project.id", project.getId());
     }
@@ -117,9 +133,16 @@ public class ProjectController {
 
     @GetMapping("update")
     public ModelAndView update() {
+        updateFolders();
+        updateAccounts();
+        updateProjects();
+        return new ModelAndView("redirect:/projects");
+    }
+
+    private void updateFolders() {
         List<Folder> folders = folderRepository.findAll();
         for (Folder folder : folders) {
-            List<GerritChange> gerritChanges = gerritChangeRepository.findByFirstFilePathContaining(folder.getName());
+            List<GerritChange> gerritChanges = gerritChangeRepository.findAllByFirstFilePathContaining(folder.getName());
             if (gerritChanges != null) {
                 for (GerritChange gerritChange : gerritChanges) {
                     gerritChange.setFolder(folder);
@@ -129,30 +152,35 @@ public class ProjectController {
         }
         folderRepository.save(folders);
 
-        List<Project> projectList = projectRepository.findAll();
-        for (Project project : projectList) {
-            Set<Member> members = new HashSet<>();
-            for (Folder folder : project.getFolders()) {
-                Set<GerritAccount> gerritAccounts = new HashSet<>();
-                for (GerritChange gerritChange : folder.getGerritChanges()) {
-                    gerritAccounts.add(gerritChange.getAccount());
+    }
+    private void updateAccounts() {
+        List<GerritAccount> gerritAccounts = gerritAccountRepository.findAllByMemberIsNotNull();
+        for (GerritAccount account : gerritAccounts) {
+            List<GerritChange> gerritChanges = gerritChangeRepository.findAllByOwner(account.getName());
+            if (gerritChanges != null) {
+                for (GerritChange gerritChange : gerritChanges) {
+                    gerritChange.setAccount(account);
                 }
-                for (GerritAccount gerritAccount : gerritAccounts) {
-                    members.add(gerritAccount.getMember());
-                }
+                account.setGerritChanges(gerritChanges);
             }
+        }
+        gerritAccountRepository.save(gerritAccounts);
+    }
+
+    private void updateProjects() {
+        List<Project> projects = projectRepository.findAll();
+        for (Project project : projects) {
+            List<Member> members = memberRepository.getDistinctByProject(project.getId());
             project.setMembers(members);
         }
         for (Member member : memberRepository.findAll()) {
             Set<Project> projectSet = new HashSet<>();
-            for (Project project : projectList) {
+            for (Project project : projects) {
                 if (project.getMembers().contains(member))
                     projectSet.add(project);
             }
             member.setProjects(projectSet);
         }
-        projectRepository.save(projectList);
-
-        return new ModelAndView("redirect:/projects");
+        projectRepository.save(projects);
     }
 }
