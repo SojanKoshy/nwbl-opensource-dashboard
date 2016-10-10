@@ -2,137 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
       layout:decorator="layout">
 <head>
+    <link rel="stylesheet" type="text/css" media="all" href="css/daterangepicker.css" />
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="js/moment.js"></script>
+    <script type="text/javascript" src="js/daterangepicker.js"></script>
+    <script type="text/javascript" src="js/dashboard.daterange.js"></script>
+    <script type="text/javascript" src="js/dashboard.charts.js"></script>
     <script type="text/javascript">
-
       google.charts.load('current', {'packages':['corechart', 'controls']});
-      google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-    // Chart 1
-    var arrayData =   $.ajax({
-        url: 'chart/1',
-        type: 'GET',
-        dataType: "json",
-        async: false
-    }).responseText;
-
-    var data = new google.visualization.DataTable(arrayData)
-    data.sort({column: 1, desc:true});
-
-    var options = {
-        title : 'Code Merged by Members, in KLOC',
-        legend: { position: "none" },
-        animation:{
-            duration: 1000,
-            easing: 'out',
-            startup:true
-        },
-        width:400,
-        height:300};
-
-    var chart = new google.visualization.BarChart(document.getElementById('chart1_div'));
-    chart.draw(data, options);
-
-    // Chart 2
-    var arrayData =   $.ajax({
-        url: 'chart/2',
-        type: 'GET',
-        dataType: "json",
-        async: false
-    }).responseText;
-
-    var data = new google.visualization.DataTable(arrayData)
-    data.sort({column: 1, desc:true});
-
-    var options = {
-        title : 'Code Status, in KLOC',
-        legend: "none",
-        animation:{
-            duration: 1000,
-            easing: 'out',
-            startup:true
-        },
-        width:400,
-        height:300}
-
-    var chart = new google.visualization.ColumnChart(document.getElementById('chart2_div'));
-    chart.draw(data, options);
-
-    // Chart 3
-    var arrayData =   $.ajax({
-        url: 'chart/3',
-        type: 'GET',
-        dataType: "json",
-        async: false
-    }).responseText;
-
-    var data = new google.visualization.DataTable(arrayData)
-    data.sort({column: 0});
-
-    var options = {
-        title : 'Code Merged Timeline, in KLOC',
-        legend: "none",
-        animation:{
-            duration: 1000,
-            easing: 'out',
-            startup:true
-        },
-        width:400,
-        height:300}
-    var dashboard = new google.visualization.Dashboard(document.getElementById('dashboard3_div'));
-    var dateRangeSlider = new google.visualization.ControlWrapper({
-          'controlType': 'DateRangeFilter',
-          'containerId': 'filter3_div',
-          'options': {
-            'filterColumnLabel': 'Date'
-          }});
-    var lineChart = new google.visualization.ChartWrapper({
-          'chartType': 'LineChart',
-          'containerId': 'chart3_div',
-          'options': {
-            title : 'Code Merge Timeline, In KLOC',
-            legend: "none",
-            animation:{
-                duration: 1000,
-                easing: 'out',
-                startup:true
-            },
-            width:400,
-            height:280}});
-
-    dashboard.bind(dateRangeSlider, lineChart);
-    dashboard.draw(data);
-
-
-    // Chart 4
-    var arrayData =   $.ajax({
-        url: 'chart/4',
-        type: 'GET',
-        dataType: "json",
-        async: false
-    }).responseText;
-
-    var data = new google.visualization.DataTable(arrayData)
-    data.sort({column: 1, desc:true});
-
-    var options = {
-        title : 'Code Merged by Project, in KLOC',
-        legend: { position: "none" },
-        animation:{
-            duration: 1000,
-            easing: 'out',
-            startup:true
-        },
-        width:400,
-        height:300};
-
-    var chart = new google.visualization.ColumnChart(document.getElementById('chart4_div'));
-    chart.draw(data, options);
-    }
-
-
+      google.charts.setOnLoadCallback(drawDashboardCharts);
     </script>
 </head>
 <body>
@@ -140,6 +19,11 @@
 <div layout:fragment="content" class="container">
     <div class="pull-right">
         <a th:href="@{/download}"><img src="images/excel_icon.png"/></a>
+    </div>
+    <br/>
+    <div id="reportrange" class="col-md-4">
+        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+        <span></span> <b class="caret"></b>
     </div>
     <!--Table and divs that hold the pie charts-->
     <table class="columns">
