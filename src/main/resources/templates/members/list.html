@@ -57,7 +57,7 @@
                 <a th:href="${change.link}" th:text="${change.id}"></a>
             </td>
             <td th:text="${change.status}"></td>
-            <td th:text="${change.account.member.name}"></td>
+            <td th:text="${change.owner}"></td>
             <td th:text="${change.actualSize}"></td>
             <td th:text="${change.updatedOn}"></td>
             <td th:text="${change.account != null} ? ${change.account.name} : ''"></td>

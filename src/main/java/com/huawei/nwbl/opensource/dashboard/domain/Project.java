@@ -58,6 +58,9 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "memberId", referencedColumnName = "id"))
     private List<Member> members;
 
+    @Column(columnDefinition = "CHAR(1)")
+    private boolean visible = true;
+
     private Calendar created = Calendar.getInstance();
 
     public Long getId() {
@@ -92,6 +95,14 @@ public class Project {
         this.members = members;
     }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
     public Calendar getCreated() {
         return created;
     }
@@ -104,10 +115,10 @@ public class Project {
         return String.format("%s", getName());
     }
 
-    public Integer calculateMergedCodeSize() {
+    public Integer calculateCodeSize() {
         Integer mergedCodeSize = 0;
         for (Folder folder : folders) {
-            mergedCodeSize += folder.calculateMergedCodeSize();
+            mergedCodeSize += folder.calculateCodeSize();
         }
         return mergedCodeSize;
     }

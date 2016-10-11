@@ -52,6 +52,6 @@ public class ChartUtils {
 
     public String stringToGoogleDate(java.sql.Date date) {
         String[] d = date.toString().split("-");
-        return String.format("Date(%s, %s, %s)", d[0], d[1], d[2]);
+        return String.format("Date(%s, %s, %s)", d[0], Integer.valueOf(d[1]) - 1, Integer.valueOf(d[2]) - 1);
     }
 }

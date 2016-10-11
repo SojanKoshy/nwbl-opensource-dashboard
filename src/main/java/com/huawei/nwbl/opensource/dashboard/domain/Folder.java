@@ -95,7 +95,7 @@ public class Folder {
 
     public String toString() {
         return String.format("%s (%d found: %d lines)", getName(), getGerritChanges().size(),
-                calculateMergedCodeSize());
+                calculateCodeSize());
     }
 
     @PreRemove
@@ -105,10 +105,10 @@ public class Folder {
         }
     }
 
-    public Integer calculateMergedCodeSize() {
+    public Integer calculateCodeSize() {
         Integer mergedCodeSize = 0;
         for (GerritChange gerritChange : gerritChanges) {
-            if (gerritChange.getStatus().equals("Merged")) {
+            if (!gerritChange.getStatus().equals("Abandoned")) {
                 mergedCodeSize += gerritChange.getActualSize();
             }
         }

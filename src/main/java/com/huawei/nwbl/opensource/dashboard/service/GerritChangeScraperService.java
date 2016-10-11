@@ -80,7 +80,7 @@ public class GerritChangeScraperService extends GerritScraperService {
                 return null;
             }
             String filePath = getFirstFilePath(cellList.get(FIRST_FILE_PATH));
-            if(filePath.trim().endsWith(".java")) {
+            if (filePath.trim().endsWith(".java")) {
                 return filePath;
             }
         }

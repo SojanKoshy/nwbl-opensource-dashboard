@@ -69,6 +69,11 @@ public class GerritAccount {
     }
 
     public void setMember(Member member) {
+        if (member == null) {
+            for (GerritChange gerritChange : gerritChanges) {
+                gerritChange.setAccount(null);
+            }
+        }
         this.member = member;
     }
 

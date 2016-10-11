@@ -50,7 +50,6 @@ public class GerritAccountController {
     @GetMapping("update")
     public ModelAndView update() {
         gerritAccountScraperService.scrape();
-        Iterable<GerritAccount> accounts = gerritAccountRepository.findAll();
-        return new ModelAndView("accounts/list", "accounts", accounts);
+        return new ModelAndView("redirect:/accounts");
     }
 }

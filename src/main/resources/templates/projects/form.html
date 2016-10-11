@@ -15,6 +15,11 @@
         <input type="hidden" th:field="*{id}" th:class="${#fields.hasErrors('id')} ? 'field-error'"/>
         <label>Name</label>
         <input type="text" th:field="*{name}" th:class="${#fields.hasErrors('name')} ? 'field-error'"/>
+        <label>Visible</label>
+        <select th:field="*{visible}" th:selected="${visible}">
+            <option value="0">false</option>
+            <option value="1">true</option>
+        </select>
         <label>Project folders</label>
         <textarea th:field="*{folders}" th:class="${#fields.hasErrors('folders')} ? 'field-error'"/>
         <div class="form-actions">

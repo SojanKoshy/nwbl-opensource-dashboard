@@ -26,8 +26,6 @@ import com.huawei.nwbl.opensource.dashboard.domain.Member;
 import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.Project;
 import com.huawei.nwbl.opensource.dashboard.domain.ProjectRepository;
-import com.huawei.nwbl.opensource.dashboard.service.GerritChangeListScraperService;
-import com.huawei.nwbl.opensource.dashboard.service.GerritChangeScraperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -41,8 +39,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -74,7 +70,7 @@ public class ProjectController {
         ModelAndView modelAndView = new ModelAndView("projects/list");
         modelAndView.addObject("projects", projectRepository.findAllByOrderByName());
         modelAndView.addObject("changes", gerritChangeRepository.findAllByFolderIsNullOrderByIdDesc());
-       // modelAndView.addObject("error", "Conflict");
+        // TODO modelAndView.addObject("error", "Conflict");
         return modelAndView;
     }
 
@@ -156,6 +152,7 @@ public class ProjectController {
         folderRepository.save(folders);
 
     }
+
     private void updateAccounts() {
         List<GerritAccount> gerritAccounts = gerritAccountRepository.findAllByMemberIsNotNull();
         for (GerritAccount account : gerritAccounts) {

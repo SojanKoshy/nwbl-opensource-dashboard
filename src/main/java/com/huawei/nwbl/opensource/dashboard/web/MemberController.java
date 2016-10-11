@@ -128,18 +128,31 @@ public class MemberController {
     @GetMapping("update")
     public ModelAndView update() {
 
+//        Member member = memberRepository.findByName("CTS");
+//        for (GerritAccount account : member.getAccounts()) {
+//            String searchTerm = String.format("owner:\"%s <%s>\"", account.getName(), account.getEmail());
+//            gerritChangeListScraperService.scrape(searchTerm);
+//        }
+
 //        for (Member member : memberRepository.findAllByOrderByName()) {
 //            for (GerritAccount account : member.getAccounts()) {
 //                String searchTerm = String.format("owner:\"%s <%s>\"", account.getName(), account.getEmail());
 //                gerritChangeListScraperService.scrape(searchTerm);
 //            }
+
+//        List<GerritChange> gerritChanges = gerritChangeRepository.findAllByFolderIsNullOrderByIdDesc();
+//        for (GerritChange gerritChange : gerritChanges) {
+//            String branchId = gerritChange.getLink().split("/")[3];
+//            gerritChange.setFirstFilePath(gerritChangeScraperService.scrapeAndGetFirstFilePath(branchId));
 //        }
-        List<GerritChange> gerritChanges = gerritChangeRepository.findAllByFolderIsNullOrderByIdDesc();
-        for (GerritChange gerritChange : gerritChanges) {
-            String branchId = gerritChange.getLink().split("/")[3];
-            gerritChange.setFirstFilePath(gerritChangeScraperService.scrapeAndGetFirstFilePath(branchId));
-        }
-        gerritChangeRepository.save(gerritChanges);
+//        gerritChangeRepository.save(gerritChanges);
+
+//        List<GerritChange> gerritChanges = gerritChangeRepository.findAllByFirstFilePathIsNotContaining(".java");
+//        for (GerritChange gerritChange : gerritChanges) {
+//            String branchId = gerritChange.getLink().split("/")[3];
+//            gerritChange.setFirstFilePath(gerritChangeScraperService.scrapeAndGetFirstFilePath(branchId));
+//        }
+//        gerritChangeRepository.save(gerritChanges);
 
         return new ModelAndView("redirect:/members");
     }

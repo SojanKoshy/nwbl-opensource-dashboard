@@ -16,7 +16,9 @@
         <!--<dt>Date</dt>-->
         <!--<dd id="created" th:text="${#calendars.format(project.created)}"> July 11, 2012 2:17:16 PM CDT</dd>-->
         <dt>Name</dt>
-        <dd id="name" th:text="${project.name}">A short summary...</dd>
+        <dd id="name" th:text="${project.name}"></dd>
+        <dt>Visible</dt>
+        <dd th:text="${project.visible}"></dd>
         <dt>Project Folders</dt>
         <dd id="folders" th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils)
         .formatSet(project.folders),',', '&lt;br /&gt;')}">

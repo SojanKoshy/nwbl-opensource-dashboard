@@ -99,6 +99,11 @@ public class GerritAccountScraperService extends GerritScraperService {
             String email = (String) jsonObject.get("email");
             String username = (String) jsonObject.get("username");
 
+            // Remove multiple spaces in between first and last name to match gerrit commit owner
+            if (name != null) {
+                name = name.replaceAll("\\s+", " ");
+            }
+
             log.debug("_account_id : {}", id);
             log.debug("name : {}", name);
             log.debug("email : {}", email);

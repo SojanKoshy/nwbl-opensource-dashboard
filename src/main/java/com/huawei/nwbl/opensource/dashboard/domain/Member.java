@@ -51,7 +51,7 @@ public class Member {
     @ManyToMany(mappedBy = "members")
     private Set<Project> projects;
 
-    @Column(columnDefinition="CHAR(1)")
+    @Column(columnDefinition = "CHAR(1)")
     private boolean visible = true;
 
     private Calendar created = Calendar.getInstance();
@@ -112,6 +112,9 @@ public class Member {
     public void removeMemberFromOthers() {
         for (Project project : projects) {
             project.getMembers().remove(this);
+        }
+        for (GerritAccount account : accounts) {
+            account.setMember(null);
         }
     }
 }
