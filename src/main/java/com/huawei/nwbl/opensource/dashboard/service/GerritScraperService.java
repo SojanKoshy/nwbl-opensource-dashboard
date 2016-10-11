@@ -4,6 +4,7 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.html.HtmlSpan;
+import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptJobManager;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 @Service
 public class GerritScraperService {
     static final String BASE_URL = "https://gerrit.onosproject.org";
-    private static final String PAGE_LOADING_XPATH = "/html/body/span";
-    private static final String PAGE_LOADING_TEXT = "Working ...";
     final Logger log = getLogger(getClass());
     private final WebClient webClient = new WebClient(BrowserVersion.CHROME);
     String url;
@@ -40,7 +39,6 @@ public class GerritScraperService {
             log.info("Loading page {}", url);
             long lStartTime = new Date().getTime();
             page = webClient.getPage(url);
-            waitForPageToLoad(page);
             long lEndTime = new Date().getTime();
             long elapsedTime = (lEndTime - lStartTime) / 1000;
 
@@ -51,31 +49,15 @@ public class GerritScraperService {
 
             log.info("Page loaded in {} sec", elapsedTime);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Error in loading page {}", url);
         }
-    }
-
-    private void waitForPageToLoad(final HtmlPage page) {
-        log.info("Page title is '{}'", page.getTitleText());
-
-        int tries = 5;
-        while (isLoading(page) && tries > 0) {
-            tries--;
-            synchronized (page) {
-                try {
-                    page.wait(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        JavaScriptJobManager manager = page.getEnclosingWindow().getJobManager();
+        while (manager.getJobCount() > 0) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                log.error("Error in js while loading page {}", url);
             }
         }
-    }
-
-    private boolean isLoading(final HtmlPage page) {
-        String loadingStatus = ((HtmlSpan) page.getByXPath(PAGE_LOADING_XPATH).get(0)).asText();
-        if (!loadingStatus.isEmpty()) {
-            log.info("Page loading status is '{}'", loadingStatus);
-        }
-        return loadingStatus.equalsIgnoreCase(PAGE_LOADING_TEXT);
     }
 }
