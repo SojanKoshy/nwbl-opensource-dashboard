@@ -4,7 +4,6 @@
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="css/daterangepicker.css"/>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="js/moment.js"></script>
     <script type="text/javascript" src="js/daterangepicker.js"></script>
     <script type="text/javascript" src="js/dashboard.charts.js"></script>
@@ -12,43 +11,34 @@
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart', 'controls']});
         google.charts.setOnLoadCallback(drawDashboard);
-
+        $(function () {
+          $("#downloadButton").click(function () {
+            getDashboardChartData('chart/1/' +  $('#reportrange').startDate)
+          });
+        });
     </script>
 </head>
 <body>
 <h1 layout:fragment="header">Dashboard</h1>
 <div layout:fragment="content" class="container">
     <div class="pull-right">
-        <a th:href="@{/download}"><img src="images/excel_icon.png"/></a>
+        <img src="images/excel_icon.png" alt="download" id="downloadButton" />
     </div>
     <br/>
     <div id="reportrange" class="col-md-4">
-        <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+        <i class="glyphicon glyphicon-calendar"></i>&nbsp;
         <span></span> <b class="caret"></b>
     </div>
     <br/>
-    <!--Table and divs that hold the pie charts-->
-    <table class="columns">
-        <tr>
-            <td>
-                <div id="chart1_div"></div>
-            </td>
-            <td>
-                <div id="chart2_div"></div>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div id="chart3_div"></div>
-            </td>
-            <td>
-                <div id="dashboard4_div">
-                    <div id="chart4_div"></div>
-                    <div id="filter4_div"></div>
-                </div>
-            </td>
-        </tr>
-    </table>
+    <div>
+        <div class="col-md-6" id="chart1_div"></div>
+        <div class="col-md-6" id="chart2_div"></div>
+        <div class="col-md-6" id="chart3_div"></div>
+        <div class="col-md-6" id="dashboard4_div">
+            <div id="chart4_div"></div>
+            <div id="filter4_div"></div>
+        </div>
+    </div>
 </div>
 </body>
 

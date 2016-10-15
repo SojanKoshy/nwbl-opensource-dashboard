@@ -7,8 +7,10 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.4.1.RELEASE</version>
     </parent>
-    <artifactId>nwbl-opensource-dashboard</artifactId>
 
+    <groupId>com.huawei</groupId>
+    <artifactId>nwbl-opensource-dashboard</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
