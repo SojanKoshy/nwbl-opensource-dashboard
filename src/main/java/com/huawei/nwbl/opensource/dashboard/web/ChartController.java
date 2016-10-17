@@ -59,13 +59,14 @@ public class ChartController {
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Project Name", "string");
         data.addColumnHeading("Code Size", "number");
+        data.addColumnAnnotation();
 
         List<Object[]> gerritChanges = gerritChangeRepository.getSumActualSizeGroupByProject(startDate, endDate);
         for (Object[] gerritChange : gerritChanges) {
             String projectName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
             if (codeSize != null && codeSize / 1000.0 > 0) {
-                data.addRow(projectName, codeSize / 1000.0);
+                data.addRow(projectName, codeSize / 1000.0, String.valueOf(codeSize / 1000.0));
             }
         }
         return data.createJson();
@@ -79,13 +80,14 @@ public class ChartController {
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Member Name", "string");
         data.addColumnHeading("Code Size", "number");
+        data.addColumnAnnotation();
 
         List<Object[]> gerritChanges = gerritChangeRepository.getSumActualSizeGroupByMember(startDate, endDate);
         for (Object[] gerritChange : gerritChanges) {
             String memberName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
             if (codeSize != null && codeSize / 1000.0 > 0) {
-                data.addRow(memberName, codeSize / 1000.0);
+                data.addRow(memberName, codeSize / 1000.0, String.valueOf(codeSize / 1000.0));
             }
         }
         return data.createJson();
@@ -99,15 +101,16 @@ public class ChartController {
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Status", "string");
         data.addColumnHeading("Code Size", "number");
+        data.addColumnAnnotation();
 
         Integer mergedCodeSize = gerritChangeRepository.getSumActualSizeByStatusIsMerged(startDate, endDate);
         if (mergedCodeSize != null && mergedCodeSize / 1000.0 > 0) {
-            data.addRow("Merged", mergedCodeSize / 1000.0);
+            data.addRow("Merged", mergedCodeSize / 1000.0, String.valueOf(mergedCodeSize / 1000.0));
         }
 
         Integer openCodeSize = gerritChangeRepository.getSumActualSizeByStatusIsOpen(startDate, endDate);
         if (openCodeSize != null && openCodeSize / 1000.0 > 0) {
-            data.addRow("Open", openCodeSize / 1000.0);
+            data.addRow("Open", openCodeSize / 1000.0, String.valueOf(openCodeSize / 1000.0));
         }
         return data.createJson();
     }
@@ -120,12 +123,13 @@ public class ChartController {
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Date", "date");
         data.addColumnHeading("Code Size", "number");
+        data.addColumnAnnotation();
 
         List<Object[]> gerritChanges = gerritChangeRepository.getSumActualSizeGroupByUpdatedOn(startDate, endDate);
         for (Object[] gerritChange : gerritChanges) {
             java.sql.Date date = new java.sql.Date(((Date) gerritChange[0]).getTime());
             Long codeSize = (Long) gerritChange[1];
-            data.addRow(data.stringToGoogleDate(date), codeSize / 1000.0);
+            data.addRow(data.stringToGoogleDate(date), codeSize / 1000.0, String.valueOf(codeSize / 1000.0));
         }
         return data.createJson();
     }

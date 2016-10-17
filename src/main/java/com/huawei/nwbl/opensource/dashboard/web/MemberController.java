@@ -22,6 +22,7 @@ import com.huawei.nwbl.opensource.dashboard.domain.GerritChange;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.Member;
 import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.ProjectRepository;
 import com.huawei.nwbl.opensource.dashboard.service.GerritChangeListScraperService;
 import com.huawei.nwbl.opensource.dashboard.service.GerritChangeScraperService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,9 @@ public class MemberController {
     private MemberRepository memberRepository;
 
     @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
     private GerritChangeRepository gerritChangeRepository;
 
     @Autowired
@@ -61,6 +65,9 @@ public class MemberController {
 
     @Autowired
     private GerritChangeScraperService gerritChangeScraperService;
+
+    @Autowired
+    private ProjectController projectController;
 
     @GetMapping
     public ModelAndView list() {
@@ -157,6 +164,15 @@ public class MemberController {
 //            gerritChange.setFirstFilePath(gerritChangeScraperService.scrapeAndGetFirstFilePath(branchId));
 //        }
 //        gerritChangeRepository.save(gerritChanges);
+//
+//        for (Member member : memberRepository.getDistinctByProject(5L)) {
+        for (Member member : memberRepository.findAllByOrderByName()) {
+            for (GerritAccount account : member.getAccounts()) {
+                String searchTerm = String.format("owner:\"%s <%s>\"", account.getName(), account.getEmail());
+                gerritChangeListScraperService.scrape(searchTerm);
+            }
+        }
+        projectController.update();
 
         return new ModelAndView("redirect:/members");
     }

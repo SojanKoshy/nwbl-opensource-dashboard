@@ -38,6 +38,17 @@ public class ChartUtils {
         cols.add(colHeading);
     }
 
+    public void addColumnAnnotation() {
+        JSONObject colHeading = new JSONObject();
+
+        colHeading.put("label", "");
+        colHeading.put("type", "string");
+        JSONObject p = new JSONObject();
+        p.put("role", "annotation");
+        colHeading.put("p", p);
+        cols.add(colHeading);
+    }
+
     public void addRow(Object... elements) {
         JSONObject row = new JSONObject();
         JSONArray cells = new JSONArray();

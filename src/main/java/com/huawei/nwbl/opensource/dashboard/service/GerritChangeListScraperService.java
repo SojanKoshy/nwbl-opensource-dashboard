@@ -102,7 +102,10 @@ public class GerritChangeListScraperService extends GerritScraperService {
             }
 
             gerritChange = new GerritChange();
-            storeSubject(cellList.get(SUBJECT));
+            String branchId = storeSubject(cellList.get(SUBJECT));
+            if (branchId != null) {
+                storeFirstFilePath(branchId);
+            }
             storeStatus(cellList.get(STATUS));
             storeOwner(cellList.get(OWNER));
             storeProject(cellList.get(PROJECT));
@@ -138,7 +141,7 @@ public class GerritChangeListScraperService extends GerritScraperService {
         nextPageUrl = BASE_URL + '/' + nextLink;
     }
 
-    private void storeSubject(HtmlTableCell cell) {
+    private String storeSubject(HtmlTableCell cell) {
         if (cell.getFirstChild() instanceof HtmlAnchor) {
             HtmlAnchor anchor = (HtmlAnchor) cell.getFirstChild();
             String link = anchor.getHrefAttribute();
@@ -148,7 +151,12 @@ public class GerritChangeListScraperService extends GerritScraperService {
             Pattern pattern = Pattern.compile("\\d+");
             Matcher matcher = pattern.matcher(link);
             if (matcher.find()) {
-                Integer id = Integer.valueOf(matcher.group(0));
+                Long id = Long.valueOf(matcher.group(0));
+                if(gerritChangeRepository.findOne(id) != null) {
+                    gerritChange = gerritChangeRepository.findOne(id);
+                    log.info("branchId {} exists", id);
+                    return null;
+                }
                 gerritChange.setId(id);
             } else {
                 log.error("Unable to parse id from link '{}'", link);
@@ -157,9 +165,14 @@ public class GerritChangeListScraperService extends GerritScraperService {
             gerritChange.setLink(link);
 
             String branchId = link.split("/")[3];
-            String firstFilePath = gerritChangeScraperService.scrapeAndGetFirstFilePath(branchId);
-            gerritChange.setFirstFilePath(firstFilePath);
+            return branchId;
         }
+        return null;
+    }
+
+    private void storeFirstFilePath(String branchId) {
+        String firstFilePath = gerritChangeScraperService.scrapeAndGetFirstFilePath(branchId);
+        gerritChange.setFirstFilePath(firstFilePath);
     }
 
     private void storeStatus(HtmlTableCell cell) {

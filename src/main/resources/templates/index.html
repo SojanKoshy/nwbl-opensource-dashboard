@@ -3,33 +3,60 @@
       layout:decorator="layout">
 <head>
     <link rel="stylesheet" type="text/css" media="all" href="css/daterangepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-multiselect.css"/>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
     <script type="text/javascript" src="js/moment.js"></script>
     <script type="text/javascript" src="js/daterangepicker.js"></script>
     <script type="text/javascript" src="js/dashboard.charts.js"></script>
     <script type="text/javascript" src="js/dashboard.daterange.js"></script>
     <script type="text/javascript">
+
+
+        var startingDate = moment().subtract(29, 'days');
+        var endingDate = moment();
+
         google.charts.load('current', {'packages':['corechart', 'controls']});
         google.charts.setOnLoadCallback(drawDashboard);
         $(function () {
-          $("#downloadButton").click(function () {
-            getDashboardChartData('chart/1/' +  $('#reportrange').startDate)
-          });
+            $("#downloadButton").click(function () {
+                alert(startingDate.format('D MMMM YYYY') + " - " + endingDate.format('D MMMM YYYY'));
+            });
         });
+        $(document).ready(function() {
+            $('#projectsOption').multiselect({
+                includeSelectAllOption: true,
+                selectAllJustVisible: false,
+                selectAllText: 'All Projects'
+            });
+        })
     </script>
 </head>
 <body>
 <h1 layout:fragment="header">Dashboard</h1>
 <div layout:fragment="content" class="container">
     <div class="pull-right">
-        <img src="images/excel_icon.png" alt="download" id="downloadButton" />
     </div>
     <br/>
-    <div id="reportrange" class="col-md-4">
-        <i class="glyphicon glyphicon-calendar"></i>&nbsp;
-        <span></span> <b class="caret"></b>
+    <div class="row">
+        <div class="col-md-4">
+            <div id="reportrange"  class="btn">
+                <i class="glyphicon glyphicon-calendar"></i>&nbsp;
+                <span></span> <b class="caret"></b>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <i class="glyphicon glyphicon-list-alt"></i> &nbsp; Projects &nbsp;
+            <select id="projectsOption" multiple="multiple">
+                <option th:each="project : ${projects}" th:value="${project.id}" th:text="${project.name}"></option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <div class="pull-right btn" id="downloadButton">
+                <i class="glyphicon glyphicon-download-alt"></i> &nbsp; Download
+            </div>
+        </div>
     </div>
-    <br/>
     <div>
         <div class="col-md-6" id="chart1_div"></div>
         <div class="col-md-6" id="chart2_div"></div>

@@ -1,17 +1,15 @@
 function drawDashboard() {
-
-    var start = moment().subtract(29, 'days');
-    var end = moment();
-
     function cb(start, end) {
         $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         drawDashboardCharts(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+        startingDate = start;
+        endingDate = end;
     }
 
     $('#reportrange').daterangepicker({
         showDropdowns: true,
-        startDate: start,
-        endDate: end,
+        startDate: startingDate,
+        endDate: endingDate,
         ranges: {
            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
@@ -24,5 +22,5 @@ function drawDashboard() {
         }
     }, cb);
 
-    cb(start, end);
+    cb(startingDate, endingDate);
 }
