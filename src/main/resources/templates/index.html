@@ -9,36 +9,19 @@
     <script type="text/javascript" src="js/moment.js"></script>
     <script type="text/javascript" src="js/daterangepicker.js"></script>
     <script type="text/javascript" src="js/dashboard.charts.js"></script>
-    <script type="text/javascript" src="js/dashboard.daterange.js"></script>
+    <script type="text/javascript" src="js/dashboard.elements.js"></script>
     <script type="text/javascript">
 
-
-        var projectsSelected;
-        var startingDate = moment().subtract(29, 'days');
-        var endingDate = moment();
-
-        function onChangeProjects(value) {
-            projectsSelected = value;
-            drawDashboard();
-        }
-        $(document).ready(function() {
-            $('#projectsOption').multiselect({
-                includeSelectAllOption: true,
-                selectAllText: 'All Projects',
-                onInitialized: function() {projectsSelected = this.$select.val();},
-                onChange: function() {onChangeProjects(this.$select.val());},
-                onSelectAll: function() {onChangeProjects(this.$select.val());},
-                onDeselectAll: function() {onChangeProjects(this.$select.val());}
-            });
-        })
-
         google.charts.load('current', {'packages':['corechart', 'controls']});
-        google.charts.setOnLoadCallback(drawDashboard);
-        $(function () {
-            $("#downloadButton").click(function () {
-                alert(startingDate.format('D MMMM YYYY-') + endingDate.format('D MMMM YYYY-') + projectsSelected);
-            });
+
+        $(document).ready(function() {
+            google.charts.setOnLoadCallback(activateDashboardCharts);
+            activateDateRangePicker();
+            activateProjectMultiSelectDropDown();
+            activateDownload();
         });
+
+
     </script>
 </head>
 <body>
@@ -49,7 +32,7 @@
     <br/>
     <div class="row">
         <div class="col-md-4">
-            <div id="reportrange"  class="btn">
+            <div id="reportrange" class="btn">
                 <i class="glyphicon glyphicon-calendar"></i>&nbsp;
                 <span></span> <b class="caret"></b>
             </div>

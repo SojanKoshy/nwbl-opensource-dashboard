@@ -1,4 +1,8 @@
-function drawDashboard() {
+var projectsSelected;
+var startingDate = moment().subtract(29, 'days');
+var endingDate = moment();
+
+function activateDateRangePicker() {
     function cb(start, end) {
         $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         startingDate = start;
@@ -23,4 +27,26 @@ function drawDashboard() {
     }, cb);
 
     cb(startingDate, endingDate);
+}
+
+function activateProjectMultiSelectDropDown() {
+    function onChangeProjects(value) {
+        projectsSelected = value;
+        drawDashboardCharts();
+    }
+    $('#projectsOption').multiselect({
+        includeSelectAllOption: true,
+        selectAllText: 'All Projects',
+        onInitialized: function() {projectsSelected = this.$select.val();},
+        onChange: function() {onChangeProjects(this.$select.val());},
+        onSelectAll: function() {onChangeProjects(this.$select.val());},
+        onDeselectAll: function() {onChangeProjects(this.$select.val());}
+    });
+}
+
+function activateDownload() {
+    $("#downloadButton").click(function () {
+        alert("Under construction!" +startingDate.format('D MMMM YYYY-') + endingDate.format('D MMMM YYYY-')
+            + projectsSelected);
+    });
 }

@@ -1,6 +1,13 @@
+var googleChartsLoaded = false;
+
+function activateDashboardCharts() {
+    googleChartsLoaded = true;
+    drawDashboardCharts()
+}
+
 function drawDashboardCharts() {
 
-    if(projectsSelected == null) {
+    if(!googleChartsLoaded || projectsSelected == null) {
         return
     }
 

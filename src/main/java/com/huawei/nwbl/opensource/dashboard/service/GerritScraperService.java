@@ -3,7 +3,6 @@ package com.huawei.nwbl.opensource.dashboard.service;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlSpan;
 import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptJobManager;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;

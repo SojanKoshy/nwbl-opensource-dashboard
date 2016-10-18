@@ -152,7 +152,7 @@ public class GerritChangeListScraperService extends GerritScraperService {
             Matcher matcher = pattern.matcher(link);
             if (matcher.find()) {
                 Long id = Long.valueOf(matcher.group(0));
-                if(gerritChangeRepository.findOne(id) != null) {
+                if (gerritChangeRepository.findOne(id) != null) {
                     gerritChange = gerritChangeRepository.findOne(id);
                     log.info("branchId {} exists", id);
                     return null;

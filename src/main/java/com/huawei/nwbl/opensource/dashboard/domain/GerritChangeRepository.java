@@ -42,7 +42,7 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
             " where gc.folder = fd.id" +
             " and fd.project = pj.id" +
             " and pj.visible = '1'" +
-            " and pj.id in (?3)"+
+            " and pj.id in (?3)" +
             " and gc.status != 'Abandoned'" +
             " and gc.updatedOn between ?1 and ?2" +
             " group by pj.name")
@@ -55,7 +55,7 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
             " and fd.project = pj.id" +
             " and ga.member = mb.id" +
             " and mb.visible = '1'" +
-            " and pj.id in (?3)"+
+            " and pj.id in (?3)" +
             " and gc.status != 'Abandoned'" +
             " and gc.updatedOn between ?1 and ?2" +
             " group by mb.name")
@@ -66,7 +66,7 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
             " where gc.folder = fd.id" +
             " and fd.project = pj.id" +
             " and gc.status = 'Merged'" +
-            " and pj.id in (?3)"+
+            " and pj.id in (?3)" +
             " and gc.updatedOn between ?1 and ?2")
     Integer getSumActualSizeByStatusIsMerged(Date startDate, Date endDate, ArrayList<Long> projectsId);
 
@@ -75,7 +75,7 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
             " where gc.folder = fd.id" +
             " and fd.project = pj.id" +
             " and (gc.status = '' or gc.status = 'Merge Conflict')" +
-            " and pj.id in (?3)"+
+            " and pj.id in (?3)" +
             " and gc.updatedOn between ?1 and ?2")
     Integer getSumActualSizeByStatusIsOpen(Date startDate, Date endDate, ArrayList<Long> projectsId);
 
@@ -83,7 +83,7 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
             " from GerritChange gc, Folder fd, Project pj" +
             " where gc.folder = fd.id" +
             " and fd.project = pj.id" +
-            " and pj.id in (?3)"+
+            " and pj.id in (?3)" +
             " and gc.status != 'Abandoned'" +
             " and gc.updatedOn between ?1 and ?2" +
             " group by gc.updatedOn")
