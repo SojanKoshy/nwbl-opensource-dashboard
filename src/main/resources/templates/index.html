@@ -13,23 +13,32 @@
     <script type="text/javascript">
 
 
+        var projectsSelected;
         var startingDate = moment().subtract(29, 'days');
         var endingDate = moment();
+
+        function onChangeProjects(value) {
+            projectsSelected = value;
+            drawDashboard();
+        }
+        $(document).ready(function() {
+            $('#projectsOption').multiselect({
+                includeSelectAllOption: true,
+                selectAllText: 'All Projects',
+                onInitialized: function() {projectsSelected = this.$select.val();},
+                onChange: function() {onChangeProjects(this.$select.val());},
+                onSelectAll: function() {onChangeProjects(this.$select.val());},
+                onDeselectAll: function() {onChangeProjects(this.$select.val());}
+            });
+        })
 
         google.charts.load('current', {'packages':['corechart', 'controls']});
         google.charts.setOnLoadCallback(drawDashboard);
         $(function () {
             $("#downloadButton").click(function () {
-                alert(startingDate.format('D MMMM YYYY') + " - " + endingDate.format('D MMMM YYYY'));
+                alert(startingDate.format('D MMMM YYYY-') + endingDate.format('D MMMM YYYY-') + projectsSelected);
             });
         });
-        $(document).ready(function() {
-            $('#projectsOption').multiselect({
-                includeSelectAllOption: true,
-                selectAllJustVisible: false,
-                selectAllText: 'All Projects'
-            });
-        })
     </script>
 </head>
 <body>
@@ -48,11 +57,12 @@
         <div class="col-md-4">
             <i class="glyphicon glyphicon-list-alt"></i> &nbsp; Projects &nbsp;
             <select id="projectsOption" multiple="multiple">
-                <option th:each="project : ${projects}" th:value="${project.id}" th:text="${project.name}"></option>
+                <option th:each="project : ${projects}" th:value="${project.id}" th:text="${project.name}"
+                        selected="selected"></option>
             </select>
         </div>
         <div class="col-md-4">
-            <div class="pull-right btn" id="downloadButton">
+            <div id="downloadButton" class="pull-right btn">
                 <i class="glyphicon glyphicon-download-alt"></i> &nbsp; Download
             </div>
         </div>

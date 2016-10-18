@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -51,17 +52,18 @@ public class ChartController {
     private ProjectRepository projectRepository;
 
 
-    @GetMapping("1/{startDate}/{endDate}")
+    @GetMapping("1/{startDate}/{endDate}/{projectsId}")
     public String getCodeContributionProjectwise(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
-
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+            @PathVariable ArrayList<Long> projectsId) {
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Project Name", "string");
         data.addColumnHeading("Code Size", "number");
         data.addColumnAnnotation();
 
-        List<Object[]> gerritChanges = gerritChangeRepository.getSumActualSizeGroupByProject(startDate, endDate);
+        List<Object[]> gerritChanges = gerritChangeRepository.getSumActualSizeGroupByProject(startDate, endDate,
+                projectsId);
         for (Object[] gerritChange : gerritChanges) {
             String projectName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
@@ -72,17 +74,18 @@ public class ChartController {
         return data.createJson();
     }
 
-    @GetMapping("2/{startDate}/{endDate}")
+    @GetMapping("2/{startDate}/{endDate}/{projectsId}")
     public String getCodeContributionMemberwise(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
-
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+            @PathVariable ArrayList<Long> projectsId) {
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Member Name", "string");
         data.addColumnHeading("Code Size", "number");
         data.addColumnAnnotation();
 
-        List<Object[]> gerritChanges = gerritChangeRepository.getSumActualSizeGroupByMember(startDate, endDate);
+        List<Object[]> gerritChanges = gerritChangeRepository.getSumActualSizeGroupByMember(startDate, endDate,
+                projectsId);
         for (Object[] gerritChange : gerritChanges) {
             String memberName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
@@ -93,43 +96,47 @@ public class ChartController {
         return data.createJson();
     }
 
-    @GetMapping("3/{startDate}/{endDate}")
+    @GetMapping("3/{startDate}/{endDate}/{projectsId}")
     public String getOverallCodeStatus(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+            @PathVariable ArrayList<Long> projectsId) {
 
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Status", "string");
         data.addColumnHeading("Code Size", "number");
         data.addColumnAnnotation();
 
-        Integer mergedCodeSize = gerritChangeRepository.getSumActualSizeByStatusIsMerged(startDate, endDate);
+        Integer mergedCodeSize = gerritChangeRepository.getSumActualSizeByStatusIsMerged(startDate, endDate,
+                projectsId);
         if (mergedCodeSize != null && mergedCodeSize / 1000.0 > 0) {
             data.addRow("Merged", mergedCodeSize / 1000.0, String.valueOf(mergedCodeSize / 1000.0));
         }
 
-        Integer openCodeSize = gerritChangeRepository.getSumActualSizeByStatusIsOpen(startDate, endDate);
+        Integer openCodeSize = gerritChangeRepository.getSumActualSizeByStatusIsOpen(startDate, endDate,
+                projectsId);
         if (openCodeSize != null && openCodeSize / 1000.0 > 0) {
             data.addRow("Open", openCodeSize / 1000.0, String.valueOf(openCodeSize / 1000.0));
         }
         return data.createJson();
     }
 
-    @GetMapping("4/{startDate}/{endDate}")
+    @GetMapping("4/{startDate}/{endDate}/{projectsId}")
     public String getCodeCommittedTimeline(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+            @PathVariable ArrayList<Long> projectsId) {
 
         ChartUtils data = new ChartUtils();
         data.addColumnHeading("Date", "date");
         data.addColumnHeading("Code Size", "number");
-        data.addColumnAnnotation();
 
-        List<Object[]> gerritChanges = gerritChangeRepository.getSumActualSizeGroupByUpdatedOn(startDate, endDate);
+        List<Object[]> gerritChanges = gerritChangeRepository.getSumActualSizeGroupByUpdatedOn(startDate, endDate,
+                projectsId);
         for (Object[] gerritChange : gerritChanges) {
             java.sql.Date date = new java.sql.Date(((Date) gerritChange[0]).getTime());
             Long codeSize = (Long) gerritChange[1];
-            data.addRow(data.stringToGoogleDate(date), codeSize / 1000.0, String.valueOf(codeSize / 1000.0));
+            data.addRow(data.stringToGoogleDate(date), codeSize / 1000.0);
         }
         return data.createJson();
     }

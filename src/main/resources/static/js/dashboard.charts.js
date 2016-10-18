@@ -1,16 +1,20 @@
-function drawDashboardCharts(start, end) {
+function drawDashboardCharts() {
 
-    var dateRange = start + '/' + end
+    if(projectsSelected == null) {
+        return
+    }
 
-    drawChart('1', dateRange)
-    drawChart('2', dateRange)
-    drawChart('3', dateRange)
-    drawChart('4', dateRange)
+    drawChart('1')
+    drawChart('2')
+    drawChart('3')
+    drawChart('4')
 }
 
-function drawChart(chartId, dateRange) {
+function drawChart(chartId) {
+    var params = startingDate.format('/YYYY-MM-DD/') + endingDate.format('YYYY-MM-DD/') + projectsSelected
+
     $.ajax({
-        url: 'chart/' + chartId + '/' + dateRange,
+        url: 'chart/' + chartId + params,
         type: 'GET',
         dataType: "json",
         success: function(json) {
