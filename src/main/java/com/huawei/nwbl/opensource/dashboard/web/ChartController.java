@@ -21,6 +21,9 @@ import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.ProjectRepository;
 import com.huawei.nwbl.opensource.dashboard.utils.ChartUtils;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +31,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +56,44 @@ public class ChartController {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @GetMapping("download/{startDate}/{endDate}/{projectsId}")
+    public void download(
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
+            @PathVariable ArrayList<Long> projectsId,
+            HttpServletResponse response) {
+
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("Gerrit Changes");
+
+        Short rowId = 0;
+        HSSFRow rowhead = sheet.createRow(rowId);
+        rowhead.createCell(0).setCellValue("No.");
+        rowhead.createCell(1).setCellValue("Name");
+        rowhead.createCell(2).setCellValue("Address");
+        rowhead.createCell(3).setCellValue("Email");
+        List<Object[]> gerritChanges = gerritChangeRepository.getAllByUpdatedOnBetween(startDate, endDate,
+                projectsId);
+        for (Object[] gerritChange : gerritChanges) {
+            rowId++;
+//            java.sql.Date date = new java.sql.Date(((Date) gerritChange[0]).getTime());
+//            Long codeSize = (Long) gerritChange[1];
+
+            HSSFRow row = sheet.createRow(rowId);
+            row.createCell(0).setCellValue("1");
+            row.createCell(1).setCellValue("Sankumarsingh");
+            row.createCell(2).setCellValue("India");
+            row.createCell(3).setCellValue("sankumarsingh@gmail.com");
+
+        }
+        try {
+            workbook.write(response.getOutputStream());
+            response.setHeader("Content-Disposition", "attachment; filename=gerrit-changes.xlsx");
+            response.flushBuffer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @GetMapping("1/{startDate}/{endDate}/{projectsId}")
     public String getCodeContributionProjectwise(

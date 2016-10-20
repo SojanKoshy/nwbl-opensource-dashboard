@@ -21,6 +21,16 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
 
     List<GerritChange> findAllByFirstFilePathIsNotContaining(String folder);
 
+    @Query("select gc.id,gc.link,pj.name,mb.name,gc.actualSize,gc.status,gc.updatedOn,gc.subject,gc.firstFilePath" +
+            " from GerritChange gc, Folder fd, Project pj, GerritAccount ga, Member mb" +
+            " where gc.folder = fd.id" +
+            " and fd.project = pj.id" +
+            " and pj.id in (?3)" +
+            " and gc.account = ga.id" +
+            " and ga.member = mb.id" +
+            " and gc.updatedOn between ?1 and ?2")
+    List<Object[]> getAllByUpdatedOnBetween(Date startDate, Date endDate, ArrayList<Long> projectsId);
+
     @Query("select gc" +
             " from GerritChange gc, GerritAccount ga, Member mb" +
             " where gc.account = ga.id" +

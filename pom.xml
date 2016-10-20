@@ -60,6 +60,11 @@
             <artifactId>jetty-util</artifactId>
             <version>9.2.19.v20160908</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.7</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
