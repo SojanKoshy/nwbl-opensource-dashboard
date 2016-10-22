@@ -47,6 +47,6 @@ function activateProjectMultiSelectDropDown() {
 function activateDownload() {
     $("#downloadButton").click(function () {
         var params = startingDate.format('YYYY-MM-DD/') + endingDate.format('YYYY-MM-DD/') + projectsSelected
-        window.location = "chart/download/" + params;
+        location = "download/" + params;
     });
 }

@@ -21,7 +21,7 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
 
     List<GerritChange> findAllByFirstFilePathIsNotContaining(String folder);
 
-    @Query("select gc.id,gc.link,pj.name,mb.name,gc.actualSize,gc.status,gc.updatedOn,gc.subject,gc.firstFilePath" +
+    @Query("select gc.id, gc.link, pj.name, mb.name, gc.actualSize, gc.status, gc.updatedOn" +
             " from GerritChange gc, Folder fd, Project pj, GerritAccount ga, Member mb" +
             " where gc.folder = fd.id" +
             " and fd.project = pj.id" +
@@ -47,7 +47,7 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
             " order by gc.id desc")
     List<GerritChange> getAllByProject(Long id);
 
-    @Query("select pj.name,sum(gc.actualSize)" +
+    @Query("select pj.name, sum(gc.actualSize)" +
             " from GerritChange gc, Folder fd, Project pj" +
             " where gc.folder = fd.id" +
             " and fd.project = pj.id" +
@@ -58,7 +58,7 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
             " group by pj.name")
     List<Object[]> getSumActualSizeGroupByProject(Date startDate, Date endDate, ArrayList<Long> projectsId);
 
-    @Query("select mb.name,sum(gc.actualSize)" +
+    @Query("select mb.name, sum(gc.actualSize)" +
             " from GerritChange gc, GerritAccount ga, Member mb, Folder fd, Project pj" +
             " where gc.account = ga.id" +
             " and gc.folder = fd.id" +
