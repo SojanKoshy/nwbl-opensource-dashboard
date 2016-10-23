@@ -2,10 +2,13 @@ package com.huawei.nwbl.opensource.dashboard.web;
 
 import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.ProjectRepository;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -90,6 +93,14 @@ public class HomeController {
             HSSFHyperlink url_link = new HSSFHyperlink(HSSFHyperlink.LINK_URL);
             url_link.setAddress(link);
             cell0.setHyperlink(url_link);
+
+            HSSFCellStyle hlinkstyle = workbook.createCellStyle();
+            HSSFFont hlinkfont = workbook.createFont();
+            hlinkfont.setUnderline(HSSFFont.U_SINGLE);
+            hlinkfont.setColor(HSSFColor.BLUE.index);
+            hlinkstyle.setFont(hlinkfont);
+            cell0.setCellStyle(hlinkstyle);
+
             row.createCell(1).setCellValue(project);
             row.createCell(2).setCellValue(member);
             row.createCell(3).setCellValue(codeSize);
