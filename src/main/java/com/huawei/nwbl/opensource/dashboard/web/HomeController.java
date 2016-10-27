@@ -2,12 +2,12 @@ package com.huawei.nwbl.opensource.dashboard.web;
 
 import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.ProjectRepository;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFHyperlink;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +38,13 @@ public class HomeController {
     private GerritChangeRepository gerritChangeRepository;
 
     @GetMapping
-    public ModelAndView index() {
+    public ModelAndView home() {
         return new ModelAndView("index", "projects", projectRepository.getAllByIsVisibleOrderByName());
+    }
+
+    @GetMapping("login")
+    public ModelAndView login() {
+        return new ModelAndView("login");
     }
 
     @GetMapping("download/{startDate}/{endDate}/{projectsId}")
@@ -53,7 +58,7 @@ public class HomeController {
                 projectsId));
 
         try {
-            response.setHeader("Content-Disposition", "attachment; filename=gerrit-changes.xlsx");
+            response.setHeader("Content-Disposition", "attachment; filename=gerrit-changes.xls");
             response.setContentType("text/html");
             workbook.write(response.getOutputStream());
             response.flushBuffer();
@@ -66,6 +71,12 @@ public class HomeController {
 
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("Gerrit Changes");
+
+        HSSFCellStyle hLinkStyle= workbook.createCellStyle();
+        HSSFFont hLinkFont = workbook.createFont();
+        hLinkFont.setUnderline(HSSFFont.U_SINGLE);
+        hLinkFont.setColor(HSSFColor.BLUE.index);
+        hLinkStyle.setFont(hLinkFont);
 
         Integer rowId = 0;
         HSSFRow rowhead = sheet.createRow(rowId);
@@ -87,19 +98,12 @@ public class HomeController {
             java.sql.Date updatedOn = new java.sql.Date(((Date) gerritChange[6]).getTime());
 
             HSSFRow row = sheet.createRow(rowId);
-            Cell cell0 = row.createCell(0);
-            cell0.setCellValue(id);
+            row.createCell(0).setCellValue(id);
 
             HSSFHyperlink url_link = new HSSFHyperlink(HSSFHyperlink.LINK_URL);
             url_link.setAddress(link);
-            cell0.setHyperlink(url_link);
-
-            HSSFCellStyle hlinkstyle = workbook.createCellStyle();
-            HSSFFont hlinkfont = workbook.createFont();
-            hlinkfont.setUnderline(HSSFFont.U_SINGLE);
-            hlinkfont.setColor(HSSFColor.BLUE.index);
-            hlinkstyle.setFont(hlinkfont);
-            cell0.setCellStyle(hlinkstyle);
+            row.getCell(0).setHyperlink(url_link);
+            row.getCell(0).setCellStyle(hLinkStyle);
 
             row.createCell(1).setCellValue(project);
             row.createCell(2).setCellValue(member);

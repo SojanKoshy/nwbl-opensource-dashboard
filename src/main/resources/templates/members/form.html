@@ -9,7 +9,7 @@
     <div class="row">
         <form class="form" th:action="@{/members/(form)}" th:object="${member}" action="#" method="post">
             <div class="col-md-12">
-                <div th:if="${#fields.hasErrors('*')}" class="  alert alert-danger">
+                <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
                     <p th:each="error : ${#fields.errors('*')}" th:text="${error}"> Validation error</p>
                 </div>
                 <div class="pull-right">
@@ -31,7 +31,7 @@
                 <div class="form-group">
                     <label for="pwd">Gerrit Accounts:</label>
                     <textarea rows="5" class="form-control" id="pwd" placeholder="Enter account IDs"
-                              th:field="*{accounts}" required="true"/>
+                              th:field="*{accounts}" required="true"> </textarea>
                 </div>
             </div>
             <div class="col-md-12">
