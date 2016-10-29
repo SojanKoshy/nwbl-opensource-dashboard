@@ -4,16 +4,16 @@ var endingDate = moment();
 
 function activateDateRangePicker() {
     function cb(start, end) {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        $('#date span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         startingDate = start;
         endingDate = end;
         drawDashboardCharts();
     }
 
-    $('#reportrange').daterangepicker({
-        showDropdowns: true,
+    $('#date').daterangepicker({
         startDate: startingDate,
         endDate: endingDate,
+        opens: "center",
         ranges: {
            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
@@ -34,9 +34,11 @@ function activateProjectMultiSelectDropDown() {
         projectsSelected = value;
         drawDashboardCharts();
     }
-    $('#projectsOption').multiselect({
+    $('#projects').multiselect({
         includeSelectAllOption: true,
         selectAllText: 'All Projects',
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
         onInitialized: function() {projectsSelected = this.$select.val();},
         onChange: function() {onChangeProjects(this.$select.val());},
         onSelectAll: function() {onChangeProjects(this.$select.val());},
@@ -45,7 +47,7 @@ function activateProjectMultiSelectDropDown() {
 }
 
 function activateDownload() {
-    $("#downloadButton").click(function () {
+    $("#download").click(function () {
         var params = startingDate.format('YYYY-MM-DD/') + endingDate.format('YYYY-MM-DD/') + projectsSelected
         location = "download/" + params;
     });
