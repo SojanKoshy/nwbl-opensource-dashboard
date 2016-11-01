@@ -15,33 +15,32 @@
 <style>
     html {
        height: 101%;
-       _width: expression( document.body.clientWidth > 1000 ? "1000px" : "auto" );
     }
 </style>
 <body>
-<div class="container">
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" th:href="@{/}"> Network BL Open-Source Dashboard </a>
-            </div>
-            <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav navbar-right">
-
-                    <li><a th:href="@{/}"> Home </a></li>
-                    <li><a th:href="@{/projects}"> Project </a></li>
-                    <li><a th:href="@{/members}"> Members </a></li>
-                    <li><a th:href="@{/accounts}"> Gerrit Accounts </a></li>
-                    <!--<li><a href="http://121.244.84.163:8081/" style="color:lightblue;"> Local CI </a></li>-->
-                </ul>
-            </div>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" th:href="@{/dashboard}"> Network BL Open-Source Dashboard </a>
         </div>
-    </nav>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+
+                <li><a th:href="@{/}"> Home </a></li>
+                <li><a th:href="@{/projects}"> Project </a></li>
+                <li><a th:href="@{/members}"> Member </a></li>
+                <li><a th:href="@{/accounts}"> Gerrit Account </a></li>
+                <!--<li><a href="http://121.244.84.163:8081/" style="color:lightblue;"> Local CI </a></li>-->
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
     <h1 layout:fragment="header">Default Layout Header</h1>
     <div layout:fragment="content">Default layout content</div>
 </div>

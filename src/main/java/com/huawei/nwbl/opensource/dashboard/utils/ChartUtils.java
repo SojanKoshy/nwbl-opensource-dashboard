@@ -65,4 +65,9 @@ public class ChartUtils {
         String[] d = date.toString().split("-");
         return String.format("Date(%s, %s, %s)", d[0], Integer.valueOf(d[1]) - 1, Integer.valueOf(d[2]) - 1);
     }
+
+    public String stringToHighChartDate(java.sql.Date date) {
+        String[] d = date.toString().split("-");
+        return String.format("Date.UTC(%s,%s,%s)", d[0], Integer.valueOf(d[1]) - 1, Integer.valueOf(d[2]) - 1);
+    }
 }
