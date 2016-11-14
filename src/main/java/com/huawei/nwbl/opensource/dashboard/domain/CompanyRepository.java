@@ -1,6 +1,7 @@
 package com.huawei.nwbl.opensource.dashboard.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -9,9 +10,15 @@ import java.util.List;
  */
 public interface CompanyRepository extends JpaRepository<Company, Long> {
 
-    List<Company> findAllByOrderByName();
+    @Query("select distinct co" +
+            " from Company co, GerritAccount ga" +
+            " where ga.company = co.id" +
+            " order by co.name")
+    List<Company> getDistinctHasAccountsOrderByName();
 
-    Company findByName(String name);
-
-    Company findByEmailDomain(String emailDomain);
+    @Query("select co" +
+            " from Company co, CompanyEmailDomain ed" +
+            " where ed.company = co.id" +
+            " and ed.domain = ?1")
+    Company getByEmailDomain(String emailDomain);
 }

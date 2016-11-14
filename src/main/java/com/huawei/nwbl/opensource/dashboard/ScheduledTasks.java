@@ -1,6 +1,7 @@
 package com.huawei.nwbl.opensource.dashboard;
 
 import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccountRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.Member;
 import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
 import com.huawei.nwbl.opensource.dashboard.service.GerritChangeListScraperService;
@@ -29,6 +30,9 @@ public class ScheduledTasks {
     private MemberRepository memberRepository;
 
     @Autowired
+    private GerritAccountRepository gerritAccountRepository;
+
+    @Autowired
     private ProjectController projectController;
 
     @Scheduled(cron = "0 0 0 * * ?")
@@ -36,11 +40,16 @@ public class ScheduledTasks {
     public void autoUpdate() {
         log.info("Scheduled update started at {}", dateFormat.format(new Date()));
 
-        for (Member member : memberRepository.findAllByOrderByName()) {
-            for (GerritAccount account : member.getAccounts()) {
-                String searchTerm = String.format("owner:\"%s <%s>\"", account.getName(), account.getEmail());
-                gerritChangeListScraperService.scrape(searchTerm);
-            }
+//        for (Member member : memberRepository.findAllByOrderByName()) {
+//            for (GerritAccount account : member.getAccounts()) {
+//                String searchTerm = String.format("owner:\"%s <%s>\"", account.getName(), account.getEmail());
+//                gerritChangeListScraperService.scrape(searchTerm);
+//            }
+//        }
+
+        for (GerritAccount account : gerritAccountRepository.findAll()) {
+            String searchTerm = String.format("owner:\"%s <%s>\"", account.getName(), account.getEmail());
+            gerritChangeListScraperService.scrape(searchTerm);
         }
         projectController.update();
 

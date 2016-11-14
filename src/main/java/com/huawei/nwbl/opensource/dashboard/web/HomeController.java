@@ -44,7 +44,7 @@ public class HomeController {
     @GetMapping
     public ModelAndView home() {
         ModelAndView modelAndView = new ModelAndView("dashboard");
-        modelAndView.addObject("companies", companyRepository.findAllByOrderByName());
+        modelAndView.addObject("companies", companyRepository.getDistinctHasAccountsOrderByName());
         modelAndView.addObject("projects", projectRepository.getAllByIsVisibleOrderByName());
         return modelAndView;
     }

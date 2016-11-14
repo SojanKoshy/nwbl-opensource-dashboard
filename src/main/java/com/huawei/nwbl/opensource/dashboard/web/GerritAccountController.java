@@ -16,6 +16,8 @@
 
 package com.huawei.nwbl.opensource.dashboard.web;
 
+import com.huawei.nwbl.opensource.dashboard.domain.Company;
+import com.huawei.nwbl.opensource.dashboard.domain.CompanyRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritAccountRepository;
 import com.huawei.nwbl.opensource.dashboard.service.GerritAccountScraperService;
@@ -35,6 +37,9 @@ import java.util.List;
 public class GerritAccountController {
 
     @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
     private GerritAccountRepository gerritAccountRepository;
 
     @Autowired
@@ -50,6 +55,30 @@ public class GerritAccountController {
     @GetMapping("update")
     public ModelAndView update() {
         gerritAccountScraperService.scrape();
+        return new ModelAndView("redirect:/accounts");
+    }
+
+
+    @GetMapping("update_company")
+    public ModelAndView updateCompany() {
+
+        List<GerritAccount> huaweiAccounts = gerritAccountRepository.getAllOrderByMemberName();
+        Company huawei = companyRepository.getByEmailDomain("huawei.com");
+        for (GerritAccount account : huaweiAccounts) {
+            account.setCompany(huawei);
+        }
+
+        List<GerritAccount> accounts = gerritAccountRepository.findAllByMemberIsNullOrderByName();
+        for (GerritAccount account : accounts) {
+            String email = account.getEmail();
+            if (email != null && email.contains("@")) {
+                String emailDomain = email.split("@")[1];
+                account.setCompany(companyRepository.getByEmailDomain(emailDomain));
+            }
+        }
+        accounts.addAll(huaweiAccounts);
+        gerritAccountRepository.save(accounts);
+
         return new ModelAndView("redirect:/accounts");
     }
 }

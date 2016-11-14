@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 /**
- * Created by root on 14/11/16.
+ * Created by Saravana on 14/11/16.
  */
 @Entity
 @Table
@@ -18,11 +18,11 @@ public class Company {
     @Column(unique = true)
     private String name;
 
-    @Column(unique = true)
-    private String emailDomain;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    private List<CompanyEmailDomain> emailDomains;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
-    List<GerritAccount> gerritAccounts;
+    private List<GerritAccount> gerritAccounts;
 
     public Long getId() {
         return id;
@@ -40,12 +40,12 @@ public class Company {
         this.name = name;
     }
 
-    public String getEmailDomain() {
-        return emailDomain;
+    public List<CompanyEmailDomain> getEmailDomains() {
+        return emailDomains;
     }
 
-    public void setEmailDomain(String emailDomain) {
-        this.emailDomain = emailDomain;
+    public void setEmailDomains(List<CompanyEmailDomain> emailDomains) {
+        this.emailDomains = emailDomains;
     }
 
     public List<GerritAccount> getGerritAccounts() {

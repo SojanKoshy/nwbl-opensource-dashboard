@@ -37,7 +37,7 @@
             <label for="companies" class="col-md-12">Company</label>
             <select id="companies" multiple="multiple">
                 <option th:each="company : ${companies}" th:value="${company.id}" th:text="${company.name}"
-                        selected="selected"></option>
+                        th:selected="${company.name == 'Huawei'}"></option>
             </select>
         </div>
         <div class="col-md-2">
