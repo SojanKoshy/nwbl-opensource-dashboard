@@ -23,14 +23,6 @@ public class GerritAccount {
     private String email;
     private String username;
 
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "companyId")
     private Company company;
@@ -74,6 +66,14 @@ public class GerritAccount {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public Member getMember() {

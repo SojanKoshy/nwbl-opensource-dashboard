@@ -55,4 +55,9 @@ public class Company {
     public void setGerritAccounts(List<GerritAccount> gerritAccounts) {
         this.gerritAccounts = gerritAccounts;
     }
+
+    public String toString() {
+        return String.format("%s", getName());
+    }
+
 }

@@ -1,3 +1,4 @@
+var companiesSelected;
 var projectsSelected;
 var startingDate = moment().subtract(29, 'days');
 var endingDate = moment();
@@ -29,6 +30,23 @@ function activateDateRangePicker() {
     cb(startingDate, endingDate);
 }
 
+function activateCompanyMultiSelectDropDown() {
+    function onChangeProjects(value) {
+        companiesSelected = value;
+        drawDashboardCharts();
+    }
+    $('#companies').multiselect({
+        includeSelectAllOption: true,
+        selectAllText: 'All Companies',
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        onInitialized: function() {companiesSelected = this.$select.val();},
+        onChange: function() {onChangeProjects(this.$select.val());},
+        onSelectAll: function() {onChangeProjects(this.$select.val());},
+        onDeselectAll: function() {onChangeProjects(this.$select.val());}
+    });
+}
+
 function activateProjectMultiSelectDropDown() {
     function onChangeProjects(value) {
         projectsSelected = value;
@@ -45,6 +63,7 @@ function activateProjectMultiSelectDropDown() {
         onDeselectAll: function() {onChangeProjects(this.$select.val());}
     });
 }
+
 
 function activateDownload() {
     $("#download").click(function () {

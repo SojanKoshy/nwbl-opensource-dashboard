@@ -1,5 +1,6 @@
 package com.huawei.nwbl.opensource.dashboard.web;
 
+import com.huawei.nwbl.opensource.dashboard.domain.CompanyRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.ProjectRepository;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -32,6 +33,9 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
+    CompanyRepository companyRepository;
+
+    @Autowired
     ProjectRepository projectRepository;
 
     @Autowired
@@ -39,7 +43,10 @@ public class HomeController {
 
     @GetMapping
     public ModelAndView home() {
-        return new ModelAndView("dashboard", "projects", projectRepository.getAllByIsVisibleOrderByName());
+        ModelAndView modelAndView = new ModelAndView("dashboard");
+        modelAndView.addObject("companies", companyRepository.findAllByOrderByName());
+        modelAndView.addObject("projects", projectRepository.getAllByIsVisibleOrderByName());
+        return modelAndView;
     }
 
     @GetMapping("login")
