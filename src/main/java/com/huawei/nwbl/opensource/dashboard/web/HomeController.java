@@ -39,7 +39,7 @@ public class HomeController {
 
     @GetMapping
     public ModelAndView home() {
-        return new ModelAndView("index", "projects", projectRepository.getAllByIsVisibleOrderByName());
+        return new ModelAndView("dashboard", "projects", projectRepository.getAllByIsVisibleOrderByName());
     }
 
     @GetMapping("login")

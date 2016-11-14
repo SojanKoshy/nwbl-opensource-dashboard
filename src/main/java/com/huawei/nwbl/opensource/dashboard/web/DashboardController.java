@@ -194,23 +194,29 @@ public class DashboardController {
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
             @PathVariable ArrayList<Long> projectsId) {
 
-        ChartUtils data = new ChartUtils();
-        data.addColumnHeading("Status", "string");
-        data.addColumnHeading("Code Size", "number");
-        data.addColumnAnnotation();
+
+        JSONObject data = new JSONObject();
+        JSONArray seriesdata = new JSONArray();
+        JSONObject seriesdata1 = new JSONObject();
+        JSONObject seriesdata2 = new JSONObject();
 
         Integer mergedCodeSize = gerritChangeRepository.getSumActualSizeByStatusIsMerged(startDate, endDate,
                 projectsId);
         if (mergedCodeSize != null && mergedCodeSize / 1000.0 > 0) {
-            data.addRow("Merged", mergedCodeSize / 1000.0, String.valueOf(mergedCodeSize / 1000.0));
+            seriesdata1.put("y", mergedCodeSize / 1000.0);
         }
 
         Integer openCodeSize = gerritChangeRepository.getSumActualSizeByStatusIsOpen(startDate, endDate,
                 projectsId);
         if (openCodeSize != null && openCodeSize / 1000.0 > 0) {
-            data.addRow("Open", openCodeSize / 1000.0, String.valueOf(openCodeSize / 1000.0));
+            seriesdata2.put("y", openCodeSize / 1000.0);
         }
-        return data.createJson();
+        seriesdata1.put("name", "Merged");
+        seriesdata2.put("name", "Open");
+        seriesdata.add(seriesdata2);
+        seriesdata.add(seriesdata1);
+        data.put("data", seriesdata);
+        return data.toJSONString();
     }
 
     @GetMapping("4/{startDate}/{endDate}/{projectsId}")
@@ -227,7 +233,7 @@ public class DashboardController {
             java.sql.Date date = new java.sql.Date(((Date) gerritChange[0]).getTime());
             Long codeSize = (Long) gerritChange[1];
             JSONArray row = new JSONArray();
-            row.add(chartUtils.stringToHighChartDate(date));
+            row.add(date.getTime());
             row.add(codeSize / 1000.0);
             data.add(row);
         }
