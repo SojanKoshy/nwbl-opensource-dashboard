@@ -29,6 +29,11 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="company">Company:</label>
+                    <input type="text" class="form-control" id="company" placeholder="Enter company" th:field="*{company}"
+                           required="true"/>
+                </div>
+                <div class="form-group">
                     <label for="pwd">Gerrit Accounts:</label>
                     <textarea rows="5" class="form-control" id="pwd" placeholder="Enter account IDs"
                               th:field="*{accounts}" required="true"> </textarea>

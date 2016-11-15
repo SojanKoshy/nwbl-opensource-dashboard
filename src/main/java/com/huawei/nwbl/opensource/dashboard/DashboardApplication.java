@@ -16,6 +16,8 @@
 
 package com.huawei.nwbl.opensource.dashboard;
 
+import com.huawei.nwbl.opensource.dashboard.domain.Company;
+import com.huawei.nwbl.opensource.dashboard.domain.CompanyRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.Folder;
 import com.huawei.nwbl.opensource.dashboard.domain.FolderRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
@@ -42,6 +44,9 @@ public class DashboardApplication {
     private MemberRepository memberRepository;
 
     @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
     private GerritAccountRepository gerritAccountRepository;
 
     @Autowired
@@ -57,6 +62,16 @@ public class DashboardApplication {
             @Override
             public Member convert(String id) {
                 return memberRepository.getOne(Long.valueOf(id));
+            }
+        };
+    }
+
+    @Bean
+    public Converter<String, Company> stringToCompany() {
+        return new Converter<String, Company>() {
+            @Override
+            public Company convert(String name) {
+                return companyRepository.findByName(name);
             }
         };
     }

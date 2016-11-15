@@ -19,6 +19,8 @@
         <dd id="name" th:text="${member.name}"></dd>
         <dt>Visible</dt>
         <dd th:text="${member.visible}"></dd>
+        <dt>Company</dt>
+        <dd id="company" th:text="${member.company}"></dd>
         <dt>Gerrit Accounts</dt>
         <dd th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils)
         .formatSet(member.accounts), ',', '&lt;br /&gt;')}">

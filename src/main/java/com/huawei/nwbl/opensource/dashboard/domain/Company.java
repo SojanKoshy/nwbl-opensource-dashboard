@@ -24,6 +24,10 @@ public class Company {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
     private List<GerritAccount> gerritAccounts;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    private List<Member> members;
+
+
     public Long getId() {
         return id;
     }
@@ -56,8 +60,17 @@ public class Company {
         this.gerritAccounts = gerritAccounts;
     }
 
+    public List<Member> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<Member> members) {
+        this.members = members;
+    }
+
     public String toString() {
         return String.format("%s", getName());
     }
+
 
 }

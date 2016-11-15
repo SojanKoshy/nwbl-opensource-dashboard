@@ -22,7 +22,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
@@ -47,6 +49,10 @@ public class Member {
     @NotEmpty(message = "Valid account id is required.")
     @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "member")
     private Set<GerritAccount> accounts;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "companyId")
+    private Company company;
 
     @ManyToMany(mappedBy = "members")
     private Set<Project> projects;
@@ -78,6 +84,14 @@ public class Member {
 
     public void setAccounts(Set<GerritAccount> accounts) {
         this.accounts = accounts;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public Set<Project> getProjects() {
