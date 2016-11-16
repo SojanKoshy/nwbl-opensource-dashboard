@@ -40,8 +40,7 @@ public class CompanyController {
     @GetMapping
     public ModelAndView list() {
         List<Company> companies = companyRepository.getDistinctHasAccountsOrderByName();
-        //companies.addAll(CompanyRepository.findAllByMemberIsNullOrderByName());
-        return new ModelAndView("company/list", "company", companies);
+        return new ModelAndView("company/list", "companies", companies);
     }
 
 
