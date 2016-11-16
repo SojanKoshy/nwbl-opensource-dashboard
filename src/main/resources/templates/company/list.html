@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+<body>
+<h1 layout:fragment="header">Company Information</h1>
+<div layout:fragment="content">
+    <div class="pull-right">
+
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Company</th>
+            <th>EmailDomain</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${company.empty}">
+            <td colspan="4">No Company</td>
+        </tr>
+        <tr th:each="company : ${company}">
+            <td th:text="${company.name}"></td>
+            <!--<td th:text="${company.emailDomains}"></td>-->
+            <td th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils)
+            .formatSet(company.emailDomains), ',', '&lt;br /&gt;')}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>

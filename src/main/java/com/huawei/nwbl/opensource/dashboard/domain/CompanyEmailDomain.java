@@ -50,4 +50,8 @@ public class CompanyEmailDomain {
     public void setCompany(Company company) {
         this.company = company;
     }
+
+    public String toString() {
+        return String.format("%s", getDomain());
+    }
 }
