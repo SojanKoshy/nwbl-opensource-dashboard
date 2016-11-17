@@ -35,7 +35,7 @@ public class ScheduledTasks {
     @Autowired
     private ProjectController projectController;
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * SAT")
     @Transactional
     public void autoUpdate() {
         log.info("Scheduled update started at {}", dateFormat.format(new Date()));
