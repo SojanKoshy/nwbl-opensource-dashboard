@@ -1,7 +1,14 @@
 var companiesSelected;
+var companiesJson;
 var projectsSelected;
+var membersSelected;
 var startingDate = moment().subtract(29, 'days');
 var endingDate = moment();
+
+$.getJSON("company/json", function(data) {
+    companiesJson = data;
+    rebuildMemberMultiSelectDropDown();
+});
 
 function activateDateRangePicker() {
     function cb(start, end) {
@@ -31,8 +38,9 @@ function activateDateRangePicker() {
 }
 
 function activateCompanyMultiSelectDropDown() {
-    function onChangeProjects(value) {
+    function onChangeCompanies(value) {
         companiesSelected = value;
+        rebuildMemberMultiSelectDropDown();
         drawDashboardCharts();
     }
     $('#companies').multiselect({
@@ -43,10 +51,51 @@ function activateCompanyMultiSelectDropDown() {
         maxHeight: 300,
         numberDisplayed: 1,
         onInitialized: function() {companiesSelected = this.$select.val();},
-        onChange: function() {onChangeProjects(this.$select.val());},
-        onSelectAll: function() {onChangeProjects(this.$select.val());},
-        onDeselectAll: function() {onChangeProjects(this.$select.val());}
+        onChange: function() {onChangeCompanies(this.$select.val());},
+        onSelectAll: function() {onChangeCompanies(this.$select.val());},
+        onDeselectAll: function() {onChangeCompanies(this.$select.val());}
     });
+}
+
+function activateMemberMultiSelectDropDown() {
+    function onChangeMembers(value) {
+        membersSelected = value;
+        drawDashboardCharts();
+    }
+
+    $('#members').multiselect({
+        includeSelectAllOption: true,
+        selectAllText: 'All Members',
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true,
+        maxHeight: 300,
+        numberDisplayed: 1,
+        onInitialized: function() {membersSelected = this.$select.val();},
+        onChange: function() {onChangeMembers(this.$select.val());},
+        onSelectAll: function() {onChangeMembers(this.$select.val());},
+        onDeselectAll: function() {onChangeMembers(this.$select.val());}
+    });
+}
+
+function rebuildMemberMultiSelectDropDown() {
+    var vals = [];
+
+    $.each(companiesSelected, function(index, value) {
+        vals = vals.concat(companiesJson[parseInt(value)]);
+    });
+
+    var $members = $("#members");
+    $members.empty();
+    vals.sort();
+    $.each(vals, function(index, value) {
+        $('#members').append($('<option>', {
+             value: value,
+             text: value,
+             selected: 'selected'
+         }));
+    });
+
+    $('#members').multiselect('rebuild');
 }
 
 function activateProjectMultiSelectDropDown() {

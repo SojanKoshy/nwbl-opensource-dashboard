@@ -10,7 +10,6 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -79,7 +78,7 @@ public class HomeController {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("Gerrit Changes");
 
-        HSSFCellStyle hLinkStyle= workbook.createCellStyle();
+        HSSFCellStyle hLinkStyle = workbook.createCellStyle();
         HSSFFont hLinkFont = workbook.createFont();
         hLinkFont.setUnderline(HSSFFont.U_SINGLE);
         hLinkFont.setColor(HSSFColor.BLUE.index);

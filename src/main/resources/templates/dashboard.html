@@ -15,6 +15,7 @@
         $(document).ready(function() {
             activateDateRangePicker();
             activateCompanyMultiSelectDropDown();
+            activateMemberMultiSelectDropDown();
             activateProjectMultiSelectDropDown();
             activateDownload();
             activateDashboardCharts();
@@ -37,7 +38,7 @@
             <label for="companies" class="col-md-12">Company</label>
             <select id="companies" multiple="multiple">
                 <option th:each="company : ${companies}" th:value="${company.id}" th:text="${company.name}"
-                        th:selected="${company.name == 'Huawei'}"></option>
+                        th:selected="${company.name == 'Huawei-India'}"></option>
             </select>
         </div>
         <div class="col-md-2">
@@ -49,7 +50,8 @@
         </div>
         <div class="col-md-2">
             <label for="members" class="col-md-12">Member</label>
-            <!--TODO Add members selection-->
+            <select id="members" multiple="multiple">
+            </select>
         </div>
         <div class="col-md-2">
             <label for="download" class="col-md-12">Download</label>

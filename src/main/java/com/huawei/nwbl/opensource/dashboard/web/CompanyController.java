@@ -18,10 +18,13 @@ package com.huawei.nwbl.opensource.dashboard.web;
 
 import com.huawei.nwbl.opensource.dashboard.domain.Company;
 import com.huawei.nwbl.opensource.dashboard.domain.CompanyRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -29,7 +32,7 @@ import java.util.List;
 /**
  *
  */
-@Controller
+@RestController
 @RequestMapping("company")
 public class CompanyController {
 
@@ -44,5 +47,23 @@ public class CompanyController {
     }
 
 
+    @GetMapping("json")
+    public String getMembers() {
 
+        List<Company> companies = companyRepository.getDistinctHasAccountsOrderByName();
+
+
+        JSONObject companiesJson = new JSONObject();
+
+        for (Company company : companies) {
+            JSONArray members = new JSONArray();
+            for (GerritAccount account : company.getGerritAccounts()) {
+                members.add(account.getName());
+            }
+
+            companiesJson.put(company.getId(), members);
+        }
+
+        return companiesJson.toJSONString();
+    }
 }

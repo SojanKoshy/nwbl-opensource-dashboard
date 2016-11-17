@@ -63,9 +63,8 @@ public class GerritAccountController {
     public ModelAndView updateCompany() {
 
         List<GerritAccount> huaweiAccounts = gerritAccountRepository.getAllOrderByMemberName();
-        Company huawei = companyRepository.getByEmailDomain("huawei.com");
         for (GerritAccount account : huaweiAccounts) {
-            account.setCompany(huawei);
+            account.setCompany(account.getMember().getCompany());
         }
 
         List<GerritAccount> accounts = gerritAccountRepository.findAllByMemberIsNullOrderByName();
