@@ -2,6 +2,7 @@ package com.huawei.nwbl.opensource.dashboard.domain;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Saravana on 14/11/16.
@@ -19,7 +20,7 @@ public class Company {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
-    private List<CompanyEmailDomain> emailDomains;
+    private Set<CompanyEmailDomain> emailDomains;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
     private List<GerritAccount> gerritAccounts;
@@ -44,11 +45,11 @@ public class Company {
         this.name = name;
     }
 
-    public List<CompanyEmailDomain> getEmailDomains() {
+    public Set<CompanyEmailDomain> getEmailDomains() {
         return emailDomains;
     }
 
-    public void setEmailDomains(List<CompanyEmailDomain> emailDomains) {
+    public void setEmailDomains(Set<CompanyEmailDomain> emailDomains) {
         this.emailDomains = emailDomains;
     }
 

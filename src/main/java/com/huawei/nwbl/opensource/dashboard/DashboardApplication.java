@@ -81,7 +81,7 @@ public class DashboardApplication {
 
 
     @Bean
-    public Converter<String, Set<CompanyEmailDomain>> stingToEmailDomainSetConverter() {
+    public Converter<String, Set<CompanyEmailDomain>> stringToEmailDomainSetConverter() {
         return new Converter<String, Set<CompanyEmailDomain>>() {
             @Override
             public Set<CompanyEmailDomain> convert(String emailDomainsNames) {
@@ -149,9 +149,12 @@ public class DashboardApplication {
                     if (object instanceof GerritAccount) {
                         GerritAccount account = (GerritAccount) object;
                         stringList.add(account.getId().toString());
-                    } else {
+                    } else if (object instanceof Folder) {
                         Folder folder = (Folder) object;
                         stringList.add(folder.getName());
+                    } else if (object instanceof CompanyEmailDomain) {
+                        CompanyEmailDomain emailDomain = (CompanyEmailDomain) object;
+                        stringList.add(emailDomain.getDomain());
                     }
                 }
                 return String.join("\r\n", stringList);
