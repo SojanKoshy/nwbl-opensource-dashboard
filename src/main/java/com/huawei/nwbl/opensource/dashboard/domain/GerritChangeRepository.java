@@ -171,4 +171,19 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
     List<Object[]> getSumActualSizeGroupByUpdatedOn(Date startDate, Date endDate, ArrayList<Long> projectsId,
     ArrayList<Long> accountsId);
 
+
+    @Query("select co.name,sum(gc.actualSize)" +
+            " from GerritChange gc, GerritAccount ga, Folder fd, Project pj, Company co" +
+            " where gc.folder = fd.id" +
+            " and fd.project = pj.id" +
+            " and gc.account = ga.id" +
+            " and ga.company = co.id" +
+            " and pj.id in (?3)" +
+            " and ga.id in (?4)" +
+            " and gc.status != 'Abandoned'" +
+            " and gc.updatedOn between ?1 and ?2" +
+            " group by co.name")
+    List<Object[]> getSumActualSizeGroupByCompany(Date startDate, Date endDate, ArrayList<Long> projectsId,
+                                                    ArrayList<Long> accountsId);
+
 }

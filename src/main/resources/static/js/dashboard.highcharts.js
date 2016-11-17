@@ -161,7 +161,7 @@ function drawChartCallback(chartId, data) {
                     shadow: true
                 },
                 title: {
-                    text: 'Overall Code Status'
+                    text: 'Company wise Code Status'
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)'
@@ -177,7 +177,7 @@ function drawChartCallback(chartId, data) {
                         }
                     }
                 },
-                colors: ['#f7a35c', '#7cb5ec'],
+                //colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
                 },

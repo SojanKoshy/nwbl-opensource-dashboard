@@ -216,24 +216,16 @@ public class DashboardController {
 
         JSONObject data = new JSONObject();
         JSONArray seriesdata = new JSONArray();
-        JSONObject seriesdata1 = new JSONObject();
-        JSONObject seriesdata2 = new JSONObject();
-
-        Integer mergedCodeSize = gerritChangeRepository.getSumActualSizeByStatusIsMerged(startDate, endDate,
+        List<Object[]> objectsList = gerritChangeRepository.getSumActualSizeGroupByCompany(startDate, endDate,
                 projectsId, accountsId);
-        if (mergedCodeSize != null && mergedCodeSize / 1000.0 > 0) {
-            seriesdata1.put("y", mergedCodeSize / 1000.0);
+        for (Object[] objects : objectsList) {
+            JSONObject seriesdata1 = new JSONObject();
+            String companyName = (String) objects[0];
+            Long codeSize = (Long) objects[1];
+            seriesdata1.put("name", companyName);
+            seriesdata1.put("y", codeSize / 1000.0);
+            seriesdata.add(seriesdata1);
         }
-
-        Integer openCodeSize = gerritChangeRepository.getSumActualSizeByStatusIsOpen(startDate, endDate,
-                projectsId, accountsId);
-        if (openCodeSize != null && openCodeSize / 1000.0 > 0) {
-            seriesdata2.put("y", openCodeSize / 1000.0);
-        }
-        seriesdata1.put("name", "Merged");
-        seriesdata2.put("name", "Open");
-        seriesdata.add(seriesdata2);
-        seriesdata.add(seriesdata1);
         data.put("data", seriesdata);
         return data.toJSONString();
     }
