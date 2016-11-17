@@ -5,7 +5,7 @@ var membersSelected;
 var startingDate = moment().subtract(29, 'days');
 var endingDate = moment();
 
-$.getJSON("company/json", function(data) {
+$.getJSON("companies/json", function(data) {
     companiesJson = data;
     rebuildMemberMultiSelectDropDown();
 });
@@ -30,7 +30,14 @@ function activateDateRangePicker() {
            'Last 3 Months': [moment().subtract(3, 'month').startOf('month'), moment()],
            'Last 6 Months': [moment().subtract(6, 'month').startOf('month'), moment()],
            'This Year': [moment().startOf('year'), moment().endOf('month')],
-           'Last 3 Years': [moment().subtract(3, 'year').startOf('year'), moment()]
+           'Last 3 Years': [moment().subtract(3, 'year').startOf('year'), moment()],
+           "I Release 1.8.0 [current]": [{ y:2016, M:9, d:26}, moment()],
+           "H Release 1.7.1": [{ y:2016, M:8, d:24}, { y:2016, M:9, d:25}],
+           "H Release 1.7.0": [{ y:2016, M:5, d:25}, { y:2016, M:8, d:23}],
+           "G Release 1.6.0": [{ y:2016, M:3, d:21}, { y:2016, M:5, d:24}],
+           "F Release 1.5.1": [{ y:2016, M:2, d:11}, { y:2016, M:3, d:20}],
+           "F Release 1.5.0": [{ y:2015, M:11, d:17}, { y:2016, M:2, d:10}],
+           "E Release 1.4.0": [{ y:2015, M:8, d:19}, { y:2015, M:11, d:16}]
         }
     }, cb);
 
