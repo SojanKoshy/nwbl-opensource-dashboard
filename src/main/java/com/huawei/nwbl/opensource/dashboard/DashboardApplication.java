@@ -16,14 +16,7 @@
 
 package com.huawei.nwbl.opensource.dashboard;
 
-import com.huawei.nwbl.opensource.dashboard.domain.Company;
-import com.huawei.nwbl.opensource.dashboard.domain.CompanyRepository;
-import com.huawei.nwbl.opensource.dashboard.domain.Folder;
-import com.huawei.nwbl.opensource.dashboard.domain.FolderRepository;
-import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
-import com.huawei.nwbl.opensource.dashboard.domain.GerritAccountRepository;
-import com.huawei.nwbl.opensource.dashboard.domain.Member;
-import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -82,6 +75,25 @@ public class DashboardApplication {
             @Override
             public GerritAccount convert(String id) {
                 return gerritAccountRepository.findOne(Long.valueOf(id));
+            }
+        };
+    }
+
+
+    @Bean
+    public Converter<String, Set<CompanyEmailDomain>> stingToEmailDomainSetConverter() {
+        return new Converter<String, Set<CompanyEmailDomain>>() {
+            @Override
+            public Set<CompanyEmailDomain> convert(String emailDomainsNames) {
+                Set<CompanyEmailDomain> emailDomains = new HashSet<>();
+                for (String name : emailDomainsNames.trim().split("\r\n")) {
+                    if (name.trim().isEmpty())
+                        continue;
+                    CompanyEmailDomain emailDomain = new CompanyEmailDomain();
+                    emailDomain.setDomain(name.trim());
+                    emailDomains.add(emailDomain);
+                }
+                return emailDomains;
             }
         };
     }
