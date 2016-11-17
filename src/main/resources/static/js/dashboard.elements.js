@@ -5,7 +5,7 @@ var membersSelected;
 var startingDate = moment().subtract(29, 'days');
 var endingDate = moment();
 
-$.getJSON("companies/json", function(data) {
+$.getJSON("dashboard/company_json", function(data) {
     companiesJson = data;
     rebuildMemberMultiSelectDropDown();
     activateDashboardCharts();

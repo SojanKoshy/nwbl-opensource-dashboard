@@ -24,6 +24,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,13 +41,12 @@ import java.util.List;
 /**
  *
  */
-@RestController
+@Controller
 @RequestMapping("companies")
 public class CompanyController {
 
     @Autowired
     private CompanyRepository companyRepository;
-
 
     @GetMapping
     public ModelAndView list() {
@@ -79,28 +79,5 @@ public class CompanyController {
 
         redirect.addFlashAttribute("globalCompany", "Successfully created a new company");
         return new ModelAndView("redirect:/companies/{company.id}", "company.id", company.getId());
-    }
-
-
-    @GetMapping("json")
-    public String getMembers() {
-
-        List<Company> companies = companyRepository.getDistinctHasAccountsOrderByName();
-
-
-        JSONObject companiesJson = new JSONObject();
-
-        for (Company company : companies) {
-            JSONArray members = new JSONArray();
-            for (GerritAccount account : company.getGerritAccounts()) {
-                JSONArray member = new JSONArray();
-                member.add(account.getId());
-                member.add(account.getName());
-                members.add(member);
-            }
-            companiesJson.put(company.getId(), members);
-        }
-
-        return companiesJson.toJSONString();
     }
 }

@@ -16,10 +16,7 @@
 
 package com.huawei.nwbl.opensource.dashboard.web;
 
-import com.huawei.nwbl.opensource.dashboard.domain.GerritAccountRepository;
-import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
-import com.huawei.nwbl.opensource.dashboard.domain.MemberRepository;
-import com.huawei.nwbl.opensource.dashboard.domain.ProjectRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.*;
 import com.huawei.nwbl.opensource.dashboard.utils.ChartUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -47,6 +44,9 @@ import java.util.TreeMap;
 public class DashboardController {
 
     @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
     private GerritChangeRepository gerritChangeRepository;
 
     @Autowired
@@ -58,6 +58,27 @@ public class DashboardController {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @GetMapping("company_json")
+    public String getMembers() {
+
+        List<Company> companies = companyRepository.getDistinctHasAccountsOrderByName();
+
+
+        JSONObject companiesJson = new JSONObject();
+
+        for (Company company : companies) {
+            JSONArray members = new JSONArray();
+            for (GerritAccount account : company.getGerritAccounts()) {
+                JSONArray member = new JSONArray();
+                member.add(account.getId());
+                member.add(account.getName());
+                members.add(member);
+            }
+            companiesJson.put(company.getId(), members);
+        }
+
+        return companiesJson.toJSONString();
+    }
     @GetMapping("1/{startDate}/{endDate}/{projectsId}/{accountsId}")
     public String getCodeContributionProjectwise(
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
