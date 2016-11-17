@@ -19,7 +19,7 @@ public class Company {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "company")
     private Set<CompanyEmailDomain> emailDomains;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
