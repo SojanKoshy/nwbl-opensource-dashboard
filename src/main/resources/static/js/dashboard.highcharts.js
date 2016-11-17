@@ -16,7 +16,8 @@ function drawDashboardCharts() {
 }
 
 function drawChart(chartId) {
-    var params = startingDate.format('/YYYY-MM-DD/') + endingDate.format('YYYY-MM-DD/') + projectsSelected
+    var params = startingDate.format('/YYYY-MM-DD/') + endingDate.format('YYYY-MM-DD/') + projectsSelected + '/'
+          + membersSelected
 
     $.ajax({
         url: 'dashboard/' + chartId + params,

@@ -8,6 +8,7 @@ var endingDate = moment();
 $.getJSON("companies/json", function(data) {
     companiesJson = data;
     rebuildMemberMultiSelectDropDown();
+    activateDashboardCharts();
 });
 
 function activateDateRangePicker() {
@@ -90,6 +91,7 @@ function rebuildMemberMultiSelectDropDown() {
     $.each(companiesSelected, function(index, value) {
         vals = vals.concat(companiesJson[parseInt(value)]);
     });
+    membersSelected = []
 
     var $members = $("#members");
     $members.empty();
@@ -100,6 +102,7 @@ function rebuildMemberMultiSelectDropDown() {
              text: value[1],
              selected: 'selected'
          }));
+         membersSelected.push(value[0]);
     });
 
     $('#members').multiselect('rebuild');
