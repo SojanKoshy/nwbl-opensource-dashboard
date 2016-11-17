@@ -93,9 +93,11 @@ public class CompanyController {
         for (Company company : companies) {
             JSONArray members = new JSONArray();
             for (GerritAccount account : company.getGerritAccounts()) {
-                members.add(account.getName());
+                JSONArray member = new JSONArray();
+                member.add(account.getId());
+                member.add(account.getName());
+                members.add(member);
             }
-
             companiesJson.put(company.getId(), members);
         }
 

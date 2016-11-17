@@ -96,8 +96,8 @@ function rebuildMemberMultiSelectDropDown() {
     vals.sort();
     $.each(vals, function(index, value) {
         $('#members').append($('<option>', {
-             value: value,
-             text: value,
+             value: value[0],
+             text: value[1],
              selected: 'selected'
          }));
     });
