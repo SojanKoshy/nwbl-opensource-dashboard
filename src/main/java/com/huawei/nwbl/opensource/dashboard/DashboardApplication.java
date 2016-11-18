@@ -63,8 +63,8 @@ public class DashboardApplication {
     public Converter<String, Company> stringToCompany() {
         return new Converter<String, Company>() {
             @Override
-            public Company convert(String name) {
-                return companyRepository.findByName(name);
+            public Company convert(String id) {
+                return companyRepository.getOne(Long.valueOf(id));
             }
         };
     }

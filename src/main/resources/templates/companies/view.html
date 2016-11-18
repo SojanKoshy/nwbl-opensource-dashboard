@@ -1,0 +1,24 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      layout:decorator="layout">
+
+<body>
+<h1 layout:fragment="header">Company : View</h1>
+<div layout:fragment="content">
+    <div class="alert alert-success" th:if="${globalProject}" th:text="${globalProject}">Some Success project
+    </div>
+    <div class="pull-right">
+        <a th:href="@{/companies}"> Company</a> |
+        <a th:href="@{/companies/(form)}">Add Company</a>
+    </div>
+    <dl>
+        <dt>Name</dt>
+        <dd id="name" th:text="${company.name}"></dd>
+    </dl>
+    <div class="pull-left">
+        <a th:href="@{'delete/' + ${company.id}}"> delete </a> |
+        <a th:href="@{'modify/' + ${company.id}}"> modify </a>
+    </div>
+</div>
+</body>
+
+</html>

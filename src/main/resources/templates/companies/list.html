@@ -24,8 +24,9 @@
             <td colspan="4">No Company</td>
         </tr>
         <tr th:each="company : ${companies}">
-            <td th:text="${company.name}"></td>
-            <!--<td th:text="${company.emailDomains}"></td>-->
+            <td>
+                <a th:href="@{'/companies/' + ${company.id}}" th:text="${company.name}"></a>
+            </td>
             <td th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils)
             .formatSet(company.emailDomains), ',', '&lt;br /&gt;')}"></td>
             <td th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils)

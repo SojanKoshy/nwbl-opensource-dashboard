@@ -12,6 +12,8 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     Company findByName(String name);
 
+    List<Company> findByOrderByName();
+
     @Query("select distinct co" +
             " from Company co, GerritAccount ga" +
             " where ga.company = co.id" +

@@ -19,7 +19,7 @@ public class Company {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, mappedBy = "company")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "company", orphanRemoval = true)
     private Set<CompanyEmailDomain> emailDomains;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
@@ -27,7 +27,6 @@ public class Company {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
     private List<Member> members;
-
 
     public Long getId() {
         return id;
