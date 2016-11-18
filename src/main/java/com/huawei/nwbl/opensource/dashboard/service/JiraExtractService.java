@@ -29,11 +29,15 @@ public class JiraExtractService {
             System.out.println("https://jira.onosproject.org/rest/api/2/issue/"+i);
 
             String data = get("https://jira.onosproject.org/rest/api/2/issue/"+i);
-            JiraDump jiraDump = new JiraDump();
-            jiraDump.setId(i);
-            jiraDump.setJson(data);
+            if (data != null) {
 
-            jiraDumpRepository.save(jiraDump);
+                JiraDump jiraDump = new JiraDump();
+                jiraDump.setId(i);
+                jiraDump.setJson(data);
+
+                jiraDumpRepository.save(jiraDump);
+
+            }
         }
 
         return "Done";
@@ -49,8 +53,9 @@ public class JiraExtractService {
             conn.setRequestProperty("Accept", "application/json");
 
             if (conn.getResponseCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + conn.getResponseCode());
+                return null;
+//                throw new RuntimeException("Failed : HTTP error code : "
+//                        + conn.getResponseCode());
             }
 
             BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -73,7 +78,7 @@ public class JiraExtractService {
 
         }
 
-        return "";
+        return null;
     }
 
 }
