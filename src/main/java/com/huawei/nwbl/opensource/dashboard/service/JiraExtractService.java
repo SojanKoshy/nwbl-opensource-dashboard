@@ -42,7 +42,7 @@ public class JiraExtractService {
 
             System.out.println("https://jira.onosproject.org/rest/api/2/issue/" + i);
 
-            String data = get("https://jira.onosproject.org/rest/api/2/issue/" + i);
+            String data = getJsonData("https://jira.onosproject.org/rest/api/2/issue/" + i);
             if (data != null) {
 
                 JiraDump jiraDump = jiraDumpRepository.findOne(i);
@@ -142,7 +142,7 @@ public class JiraExtractService {
         return "Done";
     }
 
-    public String get(String urlString) {
+    public String getJsonData(String urlString) {
 
         try {
 

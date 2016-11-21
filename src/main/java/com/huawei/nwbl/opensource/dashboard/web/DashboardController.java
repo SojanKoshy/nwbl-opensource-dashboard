@@ -17,6 +17,7 @@
 package com.huawei.nwbl.opensource.dashboard.web;
 
 import com.huawei.nwbl.opensource.dashboard.domain.*;
+import com.huawei.nwbl.opensource.dashboard.service.GerritExtractService;
 import com.huawei.nwbl.opensource.dashboard.service.JiraExtractService;
 import com.huawei.nwbl.opensource.dashboard.utils.ChartUtils;
 import org.json.simple.JSONArray;
@@ -62,9 +63,17 @@ public class DashboardController {
     @Autowired
     private JiraExtractService jiraExtractService;
 
+    @Autowired
+    private GerritExtractService gerritExtractService;
+
     @GetMapping("jira_json")
     public String getJiraData() {
         return jiraExtractService.getAllData();
+    }
+
+    @GetMapping("gerrit_json")
+    public String getGerritData() {
+        return gerritExtractService.getAllData();
     }
 
     @GetMapping("company_json")
