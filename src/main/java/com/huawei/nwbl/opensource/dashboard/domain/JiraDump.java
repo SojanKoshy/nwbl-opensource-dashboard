@@ -12,9 +12,9 @@ import javax.validation.constraints.Size;
 @Table
 public class JiraDump {
     @Id
-    private long id;
+    private Long id;
 
-    @Size(max = 10000)
+    @Size(max = 100000)
     private String json;
 
     public String getJson() {

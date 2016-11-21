@@ -64,7 +64,7 @@ public class DashboardController {
 
     @GetMapping("jira_json")
     public String getJiraData() {
-        return jiraExtractService.jiraExtract();
+        return jiraExtractService.getAllData();
     }
 
     @GetMapping("company_json")
