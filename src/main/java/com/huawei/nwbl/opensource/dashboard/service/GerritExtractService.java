@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -80,6 +81,7 @@ public class GerritExtractService {
         try {
             for (GerritDump gerritDump : gerritDumps) {
                 JSONObject jObject = (JSONObject) parser.parse(gerritDump.getJsonDetails());
+                JSONObject jsonFileObject = (JSONObject) parser.parse(gerritDump.getJsonFiles());
 
                 Long id = (Long) jObject.get("_number");
 
@@ -120,6 +122,24 @@ public class GerritExtractService {
                 gerritChange.setProject(project);
                 gerritChange.setSubject(subject);
                 gerritChange.setLink("https://gerrit.onosproject.org/" + id);
+
+                JSONObject revisions = (JSONObject) jsonFileObject.get("revisions");
+                String currentRevisionId = (String) revisions.keySet().iterator().next();
+                //JSONObject revisions = (JSONObject) jsonFileObject.keySet()
+                System.out.println("commitedFilesPath >>>>>>" + currentRevisionId);
+                JSONObject commitedfiles = (JSONObject) ((JSONObject)  ((JSONObject) jsonFileObject.get("revisions")).get(currentRevisionId)).get("files");
+                String firstFile = (String) commitedfiles.keySet().iterator().next();
+
+                gerritChange.setFirstFilePath(firstFile);
+
+                Iterator<String> iter = commitedfiles.keySet().iterator();
+
+                while (iter.hasNext()) {
+                    if(iter.next().endsWith(".java")) {
+                        gerritChange.setFirstFilePath(firstFile);
+                        break;
+                    }
+                }
 
                 gerritChangeRepository.save(gerritChange);
 
