@@ -37,8 +37,7 @@ public class JiraExtractService {
     private JiraAccountRepository jiraAccountRepository;
 
     public String getAllData() {
-
-        for (Long i = 10000L; i < 10035L; i++) {
+        for (Long i = 10000L; i < 18000L; i++) {
 
             System.out.println("https://jira.onosproject.org/rest/api/2/issue/" + i);
 

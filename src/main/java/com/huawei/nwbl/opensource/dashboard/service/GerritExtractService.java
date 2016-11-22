@@ -38,7 +38,7 @@ public class GerritExtractService {
 
     public String getAllData() {
 
-        for (Long i = 10000L; i < 10005L; i++) {
+        for (Long i = 1L; i < 11000L; i++) {
 
             System.out.println("https://gerrit.onosproject.org/changes/" + i + "/detail");
 

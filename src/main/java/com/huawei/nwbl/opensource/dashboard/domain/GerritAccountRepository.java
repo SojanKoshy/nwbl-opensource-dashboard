@@ -11,6 +11,8 @@ import java.util.List;
 public interface GerritAccountRepository extends JpaRepository<GerritAccount, Long> {
     List<GerritAccount> findAllByMemberIsNotNull();
 
+    List<GerritAccount> findByEmail(String email);
+
     List<GerritAccount> findAllByMemberIsNullOrderByName();
 
     @Query("select ga" +

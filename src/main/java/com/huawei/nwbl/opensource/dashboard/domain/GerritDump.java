@@ -14,10 +14,10 @@ public class GerritDump {
     @Id
     private Long id;
 
-    @Size(max = 100000)
+    @Size(max = 1000000)
     private String jsonDetails;
 
-    @Size(max = 100000)
+    @Size(max = 1000000)
     private String jsonFiles;
 
     public void setId(Long id) {
