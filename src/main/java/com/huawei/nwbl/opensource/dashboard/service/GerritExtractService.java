@@ -47,7 +47,7 @@ public class GerritExtractService {
 
             if (dataDetails != null) {
 
-                String dataFiles = getJsonData("https://gerrit.onosproject.org/changes/?q=/" + i + "/&o=CURRENT_REVISION&o=CURRENT_COMMIT&o=CURRENT_FILES&o=DOWNLOAD_COMMANDS");
+                String dataFiles = getJsonData("https://gerrit.onosproject.org/changes/?q=" + i + "&o=CURRENT_REVISION&o=CURRENT_COMMIT&o=CURRENT_FILES&o=DOWNLOAD_COMMANDS");
 
                 GerritDump gerritDump = gerritDumpRepository.findOne(i);
                 if (gerritDump == null) {
