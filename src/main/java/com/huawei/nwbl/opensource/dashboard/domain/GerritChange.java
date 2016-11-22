@@ -6,7 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.util.Date;
+
 
 /**
  * DB entity for gerrit_change table
