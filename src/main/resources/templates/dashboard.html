@@ -20,11 +20,21 @@
             activateDownload();
         });
 
+
     </script>
 </head>
 <body>
 <h1 layout:fragment="header">Dashboard</h1>
 <div layout:fragment="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right">
+                <div id="download" class="btn">
+                    <i class="glyphicon glyphicon-download-alt"></i> &nbsp; Download
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-4">
             <label for="date" class="col-md-12">Date</label>
@@ -53,11 +63,19 @@
             </select>
         </div>
         <div class="col-md-2">
-            <label for="download" class="col-md-12">Download</label>
-            <div id="download" class="btn btn-default">
-                <i class="glyphicon glyphicon-download-alt"></i> &nbsp; Excel
-            </div>
+            <label for="metrics" class="col-md-12">Metrics</label>
+            <select id="metrics" class="btn btn-default" onChange="onChangeMetrics(this);">
+                <option selected="selected">Code</option>
+                <option>Review Comment</option>
+                <option>Defect</option>
+            </select>
         </div>
+        <!--<div class="col-md-1">-->
+            <!--<label for="download" class="col-md-12">Download</label>-->
+            <!--<div id="download" class="btn btn-default">-->
+                <!--<i class="glyphicon glyphicon-download-alt"></i> &nbsp; Excel-->
+            <!--</div>-->
+        <!--</div>-->
     </div>
     <br/>
     <div class="row">

@@ -4,12 +4,18 @@ var projectsSelected;
 var membersSelected;
 var startingDate = moment().subtract(29, 'days');
 var endingDate = moment();
+var metricsSelected = 0;
 
 $.getJSON("dashboard/company_json", function(data) {
     companiesJson = data;
     rebuildMemberMultiSelectDropDown();
     activateDashboardCharts();
 });
+
+function onChangeMetrics(elem) {
+    metricsSelected = elem.selectedIndex;
+    drawDashboardCharts();
+}
 
 function activateDateRangePicker() {
     function cb(start, end) {
@@ -128,7 +134,6 @@ function activateProjectMultiSelectDropDown() {
         onDeselectAll: function() {onChangeProjects(this.$select.val());}
     });
 }
-
 
 function activateDownload() {
     $("#download").click(function () {

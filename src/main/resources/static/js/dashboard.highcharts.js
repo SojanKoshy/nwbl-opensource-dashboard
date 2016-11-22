@@ -9,10 +9,24 @@ function drawDashboardCharts() {
     if (!highChartsLoaded || projectsSelected == null) {
         return
     }
-    drawChart('1')
-    drawChart('2')
-    drawChart('3')
-    drawChart('4')
+    if (metricsSelected == 0) {
+        drawChart('c1')
+        drawChart('c2')
+        drawChart('c3')
+        drawChart('c4')
+    }
+    if (metricsSelected == 1) {
+        drawChart('r1')
+        drawChart('r2')
+        drawChart('r3')
+        drawChart('r4')
+    }
+    if (metricsSelected == 2) {
+        drawChart('d1')
+        drawChart('d2')
+        drawChart('d3')
+        drawChart('d4')
+    }
 }
 
 function drawChart(chartId) {
@@ -31,7 +45,7 @@ function drawChart(chartId) {
 
 function drawChartCallback(chartId, data) {
     switch (chartId) {
-        case '1':
+        case 'c1':
             $('#chart1_div').highcharts({
                 chart: {
                     type: 'column',
@@ -91,7 +105,7 @@ function drawChartCallback(chartId, data) {
                 series: data['series']
             });
             break;
-        case '2':
+        case 'c2':
             $('#chart2_div').highcharts({
                 chart: {
                     type: 'column',
@@ -146,7 +160,7 @@ function drawChartCallback(chartId, data) {
                 series: data['series']
             });
             break;
-        case '3':
+        case 'c3':
             $('#chart3_div').highcharts({
                 chart: {
                     type: 'pie',
@@ -161,7 +175,7 @@ function drawChartCallback(chartId, data) {
                     shadow: true
                 },
                 title: {
-                    text: 'Company wise Code Status'
+                    text: 'Company wise Code Contribution'
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)'
@@ -188,7 +202,7 @@ function drawChartCallback(chartId, data) {
                 }]
             });
             break;
-        case '4':
+        case 'c4':
             $('#chart4_div').highcharts({
                 chart: {
                     zoomType: 'x',
@@ -253,22 +267,453 @@ function drawChartCallback(chartId, data) {
                 }]
             });
             break;
-    }
-}
 
-function getDashboardChartOptions(chartTitle) {
-    var options = {
-        title: chartTitle,
-        legend: {
-            position: "none"
-        },
-        animation: {
-            duration: 1000,
-            easing: 'out',
-            startup: true
-        },
-        width: 400,
-        height: 300
-    };
-    return options
+        case 'r1':
+            $('#chart1_div').highcharts({
+                chart: {
+                    type: 'column',
+                    zoomType: 'x',
+                    panning: true,
+                    panKey: 'shift',
+                    shadow: true
+                },
+                title: {
+                    text: 'Review Comment Contribution Project wise'
+                },
+                xAxis: {
+                    categories: data['categories']
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Review Comments'
+                    },
+                    stackLabels: {
+                        enabled: true,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'gray'
+                        }
+                    }
+                },
+                legend: {
+                    align: 'right',
+                    x: -30,
+                    verticalAlign: 'top',
+                    y: 25,
+                    floating: true,
+                    backgroundColor: 'white',
+                    borderColor: '#CCC',
+                    borderWidth: 1,
+                    reversed: true,
+                    shadow: false
+                },
+                tooltip: {
+                    headerFormat: '<b>{point.x}</b><br/>',
+                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                },
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        dataLabels: {
+                            enabled: false,
+                            color: 'white'
+                        }
+                    }
+                },
+                colors: ['#f7a35c', '#7cb5ec'],
+                credits: {
+                    enabled: false
+                },
+                series: data['series']
+            });
+            break;
+        case 'r2':
+            $('#chart2_div').highcharts({
+                chart: {
+                    type: 'column',
+                    zoomType: 'x',
+                    panning: true,
+                    panKey: 'shift',
+                    shadow: true
+                },
+                title: {
+                    text: 'Review Comment Contribution Member wise'
+                },
+                xAxis: {
+                    categories: data['categories']
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Review Comments'
+                    },
+                    stackLabels: {
+                        enabled: true,
+                        style: {
+                            color: 'gray'
+                        },
+                    }
+                },
+                legend: {
+                    align: 'right',
+                    x: -30,
+                    verticalAlign: 'top',
+                    y: 25,
+                    floating: true,
+                    backgroundColor: 'white',
+                    borderColor: '#CCC',
+                    borderWidth: 1,
+                    reversed: true,
+                    shadow: false
+                },
+                tooltip: {
+                    headerFormat: '<b>{point.x}</b><br/>',
+                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal'
+                    }
+                },
+                colors: ['#f7a35c', '#7cb5ec'],
+                credits: {
+                    enabled: false
+                },
+                series: data['series']
+            });
+            break;
+        case 'r3':
+            $('#chart3_div').highcharts({
+                chart: {
+                    type: 'pie',
+                    options3d: {
+                        enabled: true,
+                        alpha: 45,
+                        beta: 0
+                    },
+                    zoomType: 'x',
+                    panning: true,
+                    panKey: 'shift',
+                    shadow: true
+                },
+                title: {
+                    text: 'Company wise Review Comment Contribution'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        depth: 35,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.name}'
+                        }
+                    }
+                },
+                //colors: ['#f7a35c', '#7cb5ec'],
+                credits: {
+                    enabled: false
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Review Comments',
+                    data: data['data']
+                }]
+            });
+            break;
+        case 'r4':
+            $('#chart4_div').highcharts({
+                chart: {
+                    zoomType: 'x',
+                    panning: true,
+                    panKey: 'shift',
+                    shadow: true
+                },
+                title: {
+                    text: 'Review Comment Timeline'
+                },
+                xAxis: {
+                        type: 'datetime'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Review Comments'
+                    }
+                },
+                tooltip: {
+                    formatter: function () {
+                        var point = this.points[0];
+                        return Highcharts.dateFormat('%A %B %e %Y', this.x) + '<br/>Review Comment: <b>' + point.y + '</b>';
+                    },
+                    shared: true
+                },
+                legend: {
+                    enabled: false
+                },
+                credits: {
+                    enabled: false
+                },
+                plotOptions: {
+                    area: {
+                        fillColor: {
+                            linearGradient: {
+                                x1: 0,
+                                y1: 0,
+                                x2: 0,
+                                y2: 1
+                            },
+                            stops: [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            ]
+                        },
+                        marker: {
+                            radius: 2
+                        },
+                        lineWidth: 1,
+                        states: {
+                            hover: {
+                                lineWidth: 1
+                            }
+                        },
+                        threshold: null
+                    }
+                },
+                series: [{
+                    type: 'area',
+                    name: 'Review Comments',
+                    data: data
+                }]
+            });
+            break;
+
+
+
+        case 'd1':
+            $('#chart1_div').highcharts({
+                chart: {
+                    type: 'column',
+                    zoomType: 'x',
+                    panning: true,
+                    panKey: 'shift',
+                    shadow: true
+                },
+                title: {
+                    text: 'Defect Project wise'
+                },
+                xAxis: {
+                    categories: data['categories']
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Code Size (in KLOC)'
+                    },
+                    stackLabels: {
+                        enabled: true,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'gray'
+                        }
+                    }
+                },
+                legend: {
+                    align: 'right',
+                    x: -30,
+                    verticalAlign: 'top',
+                    y: 25,
+                    floating: true,
+                    backgroundColor: 'white',
+                    borderColor: '#CCC',
+                    borderWidth: 1,
+                    reversed: true,
+                    shadow: false
+                },
+                tooltip: {
+                    headerFormat: '<b>{point.x}</b><br/>',
+                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                },
+                plotOptions: {
+                    column: {
+                        stacking: 'normal',
+                        dataLabels: {
+                            enabled: false,
+                            color: 'white'
+                        }
+                    }
+                },
+                colors: ['#f7a35c', '#7cb5ec'],
+                credits: {
+                    enabled: false
+                },
+                series: data['series']
+            });
+            break;
+        case 'd2':
+            $('#chart2_div').highcharts({
+                chart: {
+                    type: 'column',
+                    zoomType: 'x',
+                    panning: true,
+                    panKey: 'shift',
+                    shadow: true
+                },
+                title: {
+                    text: 'Defect Submitted Member wise'
+                },
+                xAxis: {
+                    categories: data['categories']
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: 'Defects submitted'
+                    },
+                    stackLabels: {
+                        enabled: true,
+                        style: {
+                            color: 'gray'
+                        },
+                    }
+                },
+                legend: {
+                    align: 'right',
+                    x: -30,
+                    verticalAlign: 'top',
+                    y: 25,
+                    floating: true,
+                    backgroundColor: 'white',
+                    borderColor: '#CCC',
+                    borderWidth: 1,
+                    reversed: true,
+                    shadow: false
+                },
+                tooltip: {
+                    headerFormat: '<b>{point.x}</b><br/>',
+                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                },
+                plotOptions: {
+                    series: {
+                        stacking: 'normal'
+                    }
+                },
+                colors: ['#f7a35c', '#7cb5ec'],
+                credits: {
+                    enabled: false
+                },
+                series: data['series']
+            });
+            break;
+        case 'd3':
+            $('#chart3_div').highcharts({
+                chart: {
+                    type: 'pie',
+                    options3d: {
+                        enabled: true,
+                        alpha: 45,
+                        beta: 0
+                    },
+                    zoomType: 'x',
+                    panning: true,
+                    panKey: 'shift',
+                    shadow: true
+                },
+                title: {
+                    text: 'Company wise Defect Status'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        depth: 35,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.name}'
+                        }
+                    }
+                },
+                //colors: ['#f7a35c', '#7cb5ec'],
+                credits: {
+                    enabled: false
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Defects',
+                    data: data['data']
+                }]
+            });
+            break;
+        case 'd4':
+            $('#chart4_div').highcharts({
+                chart: {
+                    zoomType: 'x',
+                    panning: true,
+                    panKey: 'shift',
+                    shadow: true
+                },
+                title: {
+                    text: 'Defect Submit Timeline'
+                },
+                xAxis: {
+                        type: 'datetime'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Defects'
+                    }
+                },
+                tooltip: {
+                    formatter: function () {
+                        var point = this.points[0];
+                        return Highcharts.dateFormat('%A %B %e %Y', this.x) + '<br/>Code Size: <b>' + point.y + '</b>';
+                    },
+                    shared: true
+                },
+                legend: {
+                    enabled: false
+                },
+                credits: {
+                    enabled: false
+                },
+                plotOptions: {
+                    area: {
+                        fillColor: {
+                            linearGradient: {
+                                x1: 0,
+                                y1: 0,
+                                x2: 0,
+                                y2: 1
+                            },
+                            stops: [
+                                [0, Highcharts.getOptions().colors[0]],
+                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                            ]
+                        },
+                        marker: {
+                            radius: 2
+                        },
+                        lineWidth: 1,
+                        states: {
+                            hover: {
+                                lineWidth: 1
+                            }
+                        },
+                        threshold: null
+                    }
+                },
+                series: [{
+                    type: 'area',
+                    name: 'Defects',
+                    data: data
+                }]
+            });
+            break;
+    }
 }
