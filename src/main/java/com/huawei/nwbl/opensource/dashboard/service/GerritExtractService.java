@@ -5,6 +5,8 @@ import com.huawei.nwbl.opensource.dashboard.domain.GerritChange;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritDump;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritDumpRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritReview;
+import com.huawei.nwbl.opensource.dashboard.domain.GerritReviewRepository;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -34,6 +36,10 @@ public class GerritExtractService {
 
     @Autowired
     private GerritChangeRepository gerritChangeRepository;
+
+    @Autowired
+    private GerritReviewRepository gerritReviewRepository;
+
 
     public String getAllData() {
 
@@ -69,6 +75,9 @@ public class GerritExtractService {
 
         return parseJson();
     }
+
+
+
 
     public String parseJson() {
 
@@ -152,9 +161,40 @@ public class GerritExtractService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
         return "Done";
+    }
+
+
+    public String setReviewCountTable() {
+
+        List<GerritDump> gerritDumps = gerritDumpRepository.findAll();
+        JSONParser parser = new JSONParser();
+
+
+        try {
+            for (GerritDump gerritDump : gerritDumps) {
+                JSONObject jObject = (JSONObject) parser.parse(gerritDump.getJsonDetails());
+                Long ChangeId = (Long) jObject.get("_number");
+
+
+                GerritReview gerritReview = gerritReviewRepository.findOne(ChangeId);
+                /*if (gerritReview == null) {
+                    gerritReview = new GerritReview();
+                }*/
+                System.out.println("IDddd>>>>>" + ChangeId);
+
+                gerritReview.setChangeId(ChangeId);
+                gerritReviewRepository.save(gerritReview);
+
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return "Ok";
+
     }
 
 
