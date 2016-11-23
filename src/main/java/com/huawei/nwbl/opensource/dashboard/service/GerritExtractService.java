@@ -119,21 +119,32 @@ public class GerritExtractService {
                 gerritChange.setProject(project);
                 gerritChange.setSubject(subject);
                 gerritChange.setLink("https://gerrit.onosproject.org/" + id);
+                String firstFile;
+                JSONObject commitedfiles;
 
                 JSONObject revisions = (JSONObject) jsonFileObject.get("revisions");
-                String currentRevisionId = (String) revisions.keySet().iterator().next();
-                JSONObject commitedfiles = (JSONObject) ((JSONObject) revisions.get(currentRevisionId)).get("files");
-                String firstFile = (String) commitedfiles.keySet().iterator().next();
+                if (revisions.isEmpty()) {
+                    firstFile = "";
+                    gerritChange.setFirstFilePath(firstFile);
 
-                gerritChange.setFirstFilePath(firstFile);
-
-                for (Object file : commitedfiles.keySet()) {
-                    if (((String) file).endsWith(".java")) {
+                } else {
+                    String currentRevisionId = (String) revisions.keySet().iterator().next();
+                    commitedfiles = (JSONObject) ((JSONObject) revisions.get(currentRevisionId)).get("files");
+                    if (commitedfiles.isEmpty()) {
+                        firstFile = "";
                         gerritChange.setFirstFilePath(firstFile);
-                        break;
+
+                    } else firstFile = (String) commitedfiles.keySet().iterator().next();
+
+                    gerritChange.setFirstFilePath(firstFile);
+
+                    for (Object file : commitedfiles.keySet()) {
+                        if (((String) file).endsWith(".java")) {
+                            gerritChange.setFirstFilePath(firstFile);
+                            break;
+                        }
                     }
                 }
-
                 gerritChangeRepository.save(gerritChange);
 
             }
