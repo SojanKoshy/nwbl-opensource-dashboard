@@ -18,7 +18,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -44,11 +43,10 @@ public class GerritExtractService {
 
             String dataDetails = getJsonData("https://gerrit.onosproject.org/changes/" + i + "/detail");
 
-            //String dataFiles = getJsonData("https://gerrit.onosproject.org/changes/" + i);
-
             if (dataDetails != null) {
 
-                String dataFiles = getJsonData("https://gerrit.onosproject.org/changes/?q=" + i + "&o=CURRENT_REVISION&o=CURRENT_COMMIT&o=CURRENT_FILES&o=DOWNLOAD_COMMANDS");
+                String dataFiles = getJsonData("https://gerrit.onosproject.org/changes/?q=" + i +
+                        "&o=CURRENT_REVISION&o=CURRENT_COMMIT&o=CURRENT_FILES&o=DOWNLOAD_COMMANDS");
 
                 GerritDump gerritDump = gerritDumpRepository.findOne(i);
                 if (gerritDump == null) {
@@ -90,7 +88,6 @@ public class GerritExtractService {
                     gerritChange = new GerritChange();
                 }
 
-
                 Long addedSize = (Long) jObject.get("insertions");
                 Long deletedSize = (Long) jObject.get("deletions");
                 Long actualSize = addedSize - deletedSize;
@@ -103,8 +100,8 @@ public class GerritExtractService {
 
                 gerritChange.setOwner((String) ((JSONObject) jObject.get("owner")).get("name"));
 
+                //FIXME: If account not found add new account
                 gerritChange.setAccount(gerritAccountRepository.findOne(gerritID));
-
 
                 gerritChange.setId(id);
                 gerritChange.setAddedSize(addedSize.intValue());
@@ -125,17 +122,13 @@ public class GerritExtractService {
 
                 JSONObject revisions = (JSONObject) jsonFileObject.get("revisions");
                 String currentRevisionId = (String) revisions.keySet().iterator().next();
-                //JSONObject revisions = (JSONObject) jsonFileObject.keySet()
-                System.out.println("commitedFilesPath >>>>>>" + currentRevisionId);
-                JSONObject commitedfiles = (JSONObject) ((JSONObject)  ((JSONObject) jsonFileObject.get("revisions")).get(currentRevisionId)).get("files");
+                JSONObject commitedfiles = (JSONObject) ((JSONObject) revisions.get(currentRevisionId)).get("files");
                 String firstFile = (String) commitedfiles.keySet().iterator().next();
 
                 gerritChange.setFirstFilePath(firstFile);
 
-                Iterator<String> iter = commitedfiles.keySet().iterator();
-
-                while (iter.hasNext()) {
-                    if(iter.next().endsWith(".java")) {
+                for (Object file : commitedfiles.keySet()) {
+                    if (((String) file).endsWith(".java")) {
                         gerritChange.setFirstFilePath(firstFile);
                         break;
                     }

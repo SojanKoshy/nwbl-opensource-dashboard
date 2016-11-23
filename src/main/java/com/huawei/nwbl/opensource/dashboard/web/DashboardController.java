@@ -68,12 +68,12 @@ public class DashboardController {
 
     @GetMapping("jira_json")
     public String getJiraData() {
-        return jiraExtractService.getAllData();
+        return jiraExtractService.parseJson();
     }
 
     @GetMapping("gerrit_json")
     public String getGerritData() {
-        return gerritExtractService.getAllData();
+        return gerritExtractService.parseJson();
     }
 
     @GetMapping("company_json")

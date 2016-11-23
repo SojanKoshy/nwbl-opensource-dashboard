@@ -1,6 +1,7 @@
 package com.huawei.nwbl.opensource.dashboard.domain;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -35,6 +36,9 @@ public class GerritAccount {
     private List<GerritChange> gerritChanges;
 
     private Calendar lastUpdatedOn;
+
+    @Column(columnDefinition = "CHAR(1)")
+    private boolean inUse = false;
 
     public Long getId() {
         return id;
@@ -103,6 +107,14 @@ public class GerritAccount {
 
     public void setGerritChanges(List<GerritChange> gerritChanges) {
         this.gerritChanges = gerritChanges;
+    }
+
+    public boolean isInUse() {
+        return inUse;
+    }
+
+    public void setInUse(boolean inUse) {
+        this.inUse = inUse;
     }
 
     public String toString() {
