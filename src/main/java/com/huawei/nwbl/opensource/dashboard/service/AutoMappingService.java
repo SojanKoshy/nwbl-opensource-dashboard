@@ -132,6 +132,7 @@ public class AutoMappingService {
 //            companyRepository.save(company);
 //        }
         List<String> folderPatterns = new ArrayList<>();
+        folderPatterns.add("(/(sfc)/)");
         folderPatterns.add("(/onosproject/([^/]+)/)");
         folderPatterns.add("(^(core)/)");
         folderPatterns.add("(^(incubator)/)");
@@ -164,10 +165,11 @@ public class AutoMappingService {
                         onosProjectRepository.save(onosProject);
                     }
 
-//                    gerritChange.setOnosProject(onosProject);
-//                    gerritChangeRepository.save(gerritChange);
+                    gerritChange.setOnosProject(onosProject);
+                    gerritChangeRepository.save(gerritChange);
 
                     found = true;
+                    break;
                 }
             }
             if(!found) {

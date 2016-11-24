@@ -62,6 +62,9 @@ public class DashboardController {
     private ProjectRepository projectRepository;
 
     @Autowired
+    private GerritReviewRepository gerritReviewRepository;
+
+    @Autowired
     private JiraExtractService jiraExtractService;
 
     @Autowired
@@ -306,28 +309,30 @@ public class DashboardController {
 
         Map<String, Double[]> projects = new HashMap<>();
 
-        List<Object[]> gerritChangesMerged = gerritChangeRepository.getSumActualSizeGroupByProjectAndMerged(startDate, endDate,
+        List<Object[]> gerritChangesMerged = gerritReviewRepository.getSumCommentsGroupByProjectAndMerged(startDate, endDate,
                 projectsId, accountsId);
+
+
         for (Object[] gerritChange : gerritChangesMerged) {
             String projectName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
-                Double[] status = {codeSize / 1000.0, 0.0};
+            if (codeSize != null && codeSize  > 0) {
+                Double[] status = {codeSize / 1.0, 0.0};
                 projects.put(projectName, status);
             }
         }
 
-        List<Object[]> gerritChangesOpen = gerritChangeRepository.getSumActualSizeGroupByProjectAndOpen(startDate, endDate,
+        List<Object[]> gerritChangesOpen = gerritReviewRepository.getSumCommentsSizeGroupByProjectAndOpen(startDate, endDate,
                 projectsId, accountsId);
         for (Object[] gerritChange : gerritChangesOpen) {
             String projectName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
+            if (codeSize != null && codeSize > 0) {
                 if (projects.containsKey(projectName)) {
                     Double[] status = projects.get(projectName);
-                    status[1] = codeSize / 1000.0;
+                    status[1] = codeSize / 1.0;
                 } else {
-                    Double[] status = {0.0, codeSize / 1000.0};
+                    Double[] status = {0.0, codeSize / 1.0};
                     projects.put(projectName, status);
                 }
             }
