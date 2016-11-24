@@ -1,9 +1,13 @@
 package com.huawei.nwbl.opensource.dashboard.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
@@ -17,20 +21,18 @@ public class GerritReview {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    //private GerritChange gerritChange;
-    private Long ChangeId;
 
-    public Long getChangeId() {
-        return ChangeId;
-    }
-
-    public void setChangeId(Long changeId) {
-        ChangeId = changeId;
-    }
-
+    @Column(unique = true)
     private String reviewId;
-    //private GerritAccount gerritAccount;
     private int commentCount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "changeId")
+    private GerritChange gerritChange;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "accountId")
+    private GerritAccount gerritAccount;
 
     public Long getId() {
         return id;
@@ -39,6 +41,7 @@ public class GerritReview {
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getReviewId() {
         return reviewId;
     }
@@ -47,12 +50,27 @@ public class GerritReview {
         this.reviewId = reviewId;
     }
 
-
     public int getCommentCount() {
         return commentCount;
     }
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
+    }
+
+    public GerritChange getGerritChange() {
+        return gerritChange;
+    }
+
+    public void setGerritChange(GerritChange gerritChange) {
+        this.gerritChange = gerritChange;
+    }
+
+    public GerritAccount getGerritAccount() {
+        return gerritAccount;
+    }
+
+    public void setGerritAccount(GerritAccount gerritAccount) {
+        this.gerritAccount = gerritAccount;
     }
 }

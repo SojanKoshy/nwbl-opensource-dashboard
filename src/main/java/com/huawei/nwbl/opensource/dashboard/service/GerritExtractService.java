@@ -1,5 +1,6 @@
 package com.huawei.nwbl.opensource.dashboard.service;
 
+import com.huawei.nwbl.opensource.dashboard.domain.GerritAccount;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritAccountRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritChange;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
@@ -7,6 +8,7 @@ import com.huawei.nwbl.opensource.dashboard.domain.GerritDump;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritDumpRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritReview;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritReviewRepository;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -20,7 +22,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by saravana on 21/11/16.
@@ -77,8 +82,6 @@ public class GerritExtractService {
     }
 
 
-
-
     public String parseJson() {
 
         List<GerritDump> gerritDumps = gerritDumpRepository.findAll();
@@ -112,48 +115,48 @@ public class GerritExtractService {
                 //FIXME: If account not found add new account
                 gerritChange.setAccount(gerritAccountRepository.findOne(gerritID));
 
-                gerritChange.setId(id);
-                gerritChange.setAddedSize(addedSize.intValue());
-                gerritChange.setDeletedSize(deletedSize.intValue());
-                gerritChange.setActualSize(actualSize.intValue());
-                gerritChange.setBranch(branch);
-                gerritChange.setStatus(status);
+//                gerritChange.setId(id);
+//                gerritChange.setAddedSize(addedSize.intValue());
+//                gerritChange.setDeletedSize(deletedSize.intValue());
+//                gerritChange.setActualSize(actualSize.intValue());
+//                gerritChange.setBranch(branch);
+//                gerritChange.setStatus(status);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd"); //"2016-11-10T11:20:33.794-0800"
 
                 try {
-                    gerritChange.setUpdatedOn(sdf.parse((updatedOn.split(" ")[0])));
+                    gerritChange.setUpdatedOn(new java.sql.Date(sdf.parse((updatedOn.split(" ")[0])).getTime()));
                 } catch (java.text.ParseException e) {
                     e.printStackTrace();
                 }
-                gerritChange.setProject(project);
-                gerritChange.setSubject(subject);
-                gerritChange.setLink("https://gerrit.onosproject.org/" + id);
-                String firstFile;
-                JSONObject commitedfiles;
-
-                JSONObject revisions = (JSONObject) jsonFileObject.get("revisions");
-                if (revisions.isEmpty()) {
-                    firstFile = "";
-                    gerritChange.setFirstFilePath(firstFile);
-
-                } else {
-                    String currentRevisionId = (String) revisions.keySet().iterator().next();
-                    commitedfiles = (JSONObject) ((JSONObject) revisions.get(currentRevisionId)).get("files");
-                    if (commitedfiles.isEmpty()) {
-                        firstFile = "";
-                        gerritChange.setFirstFilePath(firstFile);
-
-                    } else firstFile = (String) commitedfiles.keySet().iterator().next();
-
-                    gerritChange.setFirstFilePath(firstFile);
-
-                    for (Object file : commitedfiles.keySet()) {
-                        if (((String) file).endsWith(".java")) {
-                            gerritChange.setFirstFilePath(firstFile);
-                            break;
-                        }
-                    }
-                }
+//                gerritChange.setProject(project);
+//                gerritChange.setSubject(subject);
+//                gerritChange.setLink("https://gerrit.onosproject.org/" + id);
+//                String firstFile;
+//                JSONObject commitedfiles;
+//
+//                JSONObject revisions = (JSONObject) jsonFileObject.get("revisions");
+//                if (revisions.isEmpty()) {
+//                    firstFile = "";
+//                    gerritChange.setFirstFilePath(firstFile);
+//
+//                } else {
+//                    String currentRevisionId = (String) revisions.keySet().iterator().next();
+//                    commitedfiles = (JSONObject) ((JSONObject) revisions.get(currentRevisionId)).get("files");
+//                    if (commitedfiles.isEmpty()) {
+//                        firstFile = "";
+//                        gerritChange.setFirstFilePath(firstFile);
+//
+//                    } else firstFile = (String) commitedfiles.keySet().iterator().next();
+//
+//                    gerritChange.setFirstFilePath(firstFile);
+//
+//                    for (Object file : commitedfiles.keySet()) {
+//                        if (((String) file).endsWith(".java")) {
+//                            gerritChange.setFirstFilePath(firstFile);
+//                            break;
+//                        }
+//                    }
+//                }
                 gerritChangeRepository.save(gerritChange);
 
             }
@@ -165,36 +168,51 @@ public class GerritExtractService {
     }
 
 
-    public String setReviewCountTable() {
+    public String parseReviewComments() {
 
         List<GerritDump> gerritDumps = gerritDumpRepository.findAll();
         JSONParser parser = new JSONParser();
 
+        for (GerritDump gerritDump : gerritDumps) {
+            JSONObject jObject = null;
+            try {
+                jObject = (JSONObject) parser.parse(gerritDump.getJsonDetails());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Long changeId = (Long) jObject.get("_number");
+            JSONArray messages = (JSONArray) jObject.get("messages");
+            Iterator itr = messages.iterator();
+            while (itr.hasNext()) {
+                JSONObject message = (JSONObject) itr.next();
 
-        try {
-            for (GerritDump gerritDump : gerritDumps) {
-                JSONObject jObject = (JSONObject) parser.parse(gerritDump.getJsonDetails());
-                Long ChangeId = (Long) jObject.get("_number");
-
-
-                GerritReview gerritReview = gerritReviewRepository.findOne(ChangeId);
-                /*if (gerritReview == null) {
-                    gerritReview = new GerritReview();
-                }*/
-                System.out.println("IDddd>>>>>" + ChangeId);
-
-                gerritReview.setChangeId(ChangeId);
-                gerritReviewRepository.save(gerritReview);
+                String commentCountMessage = (String) message.get("message");
+                Pattern pattern = Pattern.compile("\\((\\d+) comments*\\)");
+                Matcher matcher = pattern.matcher(commentCountMessage);
+                if (matcher.find()) {
+                    Integer count = Integer.valueOf(matcher.group(1));
+                    String reviewId = (String) message.get("id");
+                    Long accountId = (Long) ((JSONObject) message.get("author")).get("_account_id");
+                    GerritAccount account = gerritAccountRepository.findOne(accountId);
+                    if (!account.isInUse()) {
+                        account.setInUse(true);
+                        gerritAccountRepository.save(account);
+                    }
+                    GerritReview gerritReview = gerritReviewRepository.findByReviewId(reviewId);
+                    GerritChange gerritChange = gerritChangeRepository.findOne(changeId);
+                    if (gerritReview == null) {
+                        gerritReview = new GerritReview();
+                    }
+                    gerritReview.setCommentCount(count);
+                    gerritReview.setGerritAccount(account);
+                    gerritReview.setGerritChange(gerritChange);
+                    gerritReview.setReviewId(reviewId);
+                    gerritReviewRepository.save(gerritReview);
+                }
 
             }
-
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
-
-
         return "Ok";
-
     }
 
 

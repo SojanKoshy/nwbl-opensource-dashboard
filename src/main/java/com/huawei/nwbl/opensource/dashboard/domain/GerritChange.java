@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Date;
+import java.sql.Date;
 
 
 /**
@@ -39,6 +39,10 @@ public class GerritChange {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accountId")
     private GerritAccount account;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "onosProjectId")
+    private OnosProject onosProject;
 
     public Long getId() {
         return id;
@@ -166,6 +170,14 @@ public class GerritChange {
 
     public void setFolder(Folder folder) {
         this.folder = folder;
+    }
+
+    public OnosProject getOnosProject() {
+        return onosProject;
+    }
+
+    public void setOnosProject(OnosProject onosProject) {
+        this.onosProject = onosProject;
     }
 
     public GerritAccount getAccount() {

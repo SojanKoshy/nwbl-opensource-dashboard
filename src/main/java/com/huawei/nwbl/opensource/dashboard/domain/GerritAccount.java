@@ -32,6 +32,10 @@ public class GerritAccount {
     @JoinColumn(name = "memberId")
     private Member member;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "onosMemberId")
+    private OnosMember onosMember;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "account")
     private List<GerritChange> gerritChanges;
 
@@ -115,6 +119,14 @@ public class GerritAccount {
 
     public void setInUse(boolean inUse) {
         this.inUse = inUse;
+    }
+
+    public OnosMember getOnosMember() {
+        return onosMember;
+    }
+
+    public void setOnosMember(OnosMember onosMember) {
+        this.onosMember = onosMember;
     }
 
     public String toString() {

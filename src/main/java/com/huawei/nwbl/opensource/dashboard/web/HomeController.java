@@ -2,6 +2,7 @@ package com.huawei.nwbl.opensource.dashboard.web;
 
 import com.huawei.nwbl.opensource.dashboard.domain.CompanyRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.GerritChangeRepository;
+import com.huawei.nwbl.opensource.dashboard.domain.OnosProjectRepository;
 import com.huawei.nwbl.opensource.dashboard.domain.ProjectRepository;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -38,13 +39,16 @@ public class HomeController {
     ProjectRepository projectRepository;
 
     @Autowired
+    OnosProjectRepository onosProjectRepository;
+
+    @Autowired
     private GerritChangeRepository gerritChangeRepository;
 
     @GetMapping
     public ModelAndView home() {
         ModelAndView modelAndView = new ModelAndView("dashboard");
         modelAndView.addObject("companies", companyRepository.getDistinctHasAccountsOrderByName());
-        modelAndView.addObject("projects", projectRepository.getAllByIsVisibleOrderByName());
+        modelAndView.addObject("projects", onosProjectRepository.findByOrderByName());
         return modelAndView;
     }
 

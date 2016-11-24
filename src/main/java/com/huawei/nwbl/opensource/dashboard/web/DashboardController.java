@@ -17,6 +17,7 @@
 package com.huawei.nwbl.opensource.dashboard.web;
 
 import com.huawei.nwbl.opensource.dashboard.domain.*;
+import com.huawei.nwbl.opensource.dashboard.service.AutoMappingService;
 import com.huawei.nwbl.opensource.dashboard.service.GerritExtractService;
 import com.huawei.nwbl.opensource.dashboard.service.JiraExtractService;
 import com.huawei.nwbl.opensource.dashboard.utils.ChartUtils;
@@ -66,6 +67,12 @@ public class DashboardController {
     @Autowired
     private GerritExtractService gerritExtractService;
 
+    @Autowired
+    private AutoMappingService autoMappingService;
+
+    @Autowired
+    private OnosMemberRepository onosMemberRepository;
+
     @GetMapping("jira_json")
     public String getJiraData() {
         return jiraExtractService.parseJson();
@@ -74,6 +81,17 @@ public class DashboardController {
     @GetMapping("gerrit_json")
     public String getGerritData() {
         return gerritExtractService.parseJson();
+    }
+
+    @GetMapping("gerrit_review")
+    public String getGerritReview() {
+        return gerritExtractService.parseReviewComments();
+    }
+
+    @GetMapping("auto_map")
+    public String doAutoMap() {
+        autoMappingService.remap();
+        return "done";
     }
 
     @GetMapping("company_json")
@@ -86,10 +104,17 @@ public class DashboardController {
 
         for (Company company : companies) {
             JSONArray members = new JSONArray();
-            for (GerritAccount account : company.getGerritAccounts()) {
+//            for (GerritAccount account : company.getGerritAccounts()) {
+//                System.out.println(account.getId());
+//                JSONArray member = new JSONArray();
+//                member.add(account.getId());
+//                member.add(account.getName());
+//                members.add(member);
+//            }
+            for (OnosMember onosMember : company.getOnosMembers()) {
                 JSONArray member = new JSONArray();
-                member.add(account.getId());
-                member.add(account.getName());
+                member.add(onosMember.getId());
+                member.add(onosMember.getName());
                 members.add(member);
             }
             companiesJson.put(company.getId(), members);

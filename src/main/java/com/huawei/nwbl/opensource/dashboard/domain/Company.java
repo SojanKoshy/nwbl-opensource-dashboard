@@ -28,6 +28,9 @@ public class Company {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
     private List<Member> members;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    private List<OnosMember> onosMembers;
+
     public Long getId() {
         return id;
     }
@@ -66,6 +69,14 @@ public class Company {
 
     public void setMembers(List<Member> members) {
         this.members = members;
+    }
+
+    public List<OnosMember> getOnosMembers() {
+        return onosMembers;
+    }
+
+    public void setOnosMembers(List<OnosMember> onosMembers) {
+        this.onosMembers = onosMembers;
     }
 
     public String toString() {

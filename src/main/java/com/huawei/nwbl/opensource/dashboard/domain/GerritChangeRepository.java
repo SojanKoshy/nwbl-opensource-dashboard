@@ -47,124 +47,67 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
             " order by gc.id desc")
     List<GerritChange> getAllByProject(Long id);
 
-    @Query("select pj.name, sum(gc.actualSize)" +
-            " from GerritChange gc, Folder fd, Project pj" +
-            " where gc.folder = fd.id" +
-            " and fd.project = pj.id" +
-            " and pj.visible = '1'" +
-            " and pj.id in (?3)" +
-            " and gc.status != 'Abandoned'" +
-            " and gc.updatedOn between ?1 and ?2" +
-            " group by pj.name")
-    List<Object[]> getSumActualSizeGroupByProject(Date startDate, Date endDate, ArrayList<Long> projectsId);
-
-    @Query("select pj.name, sum(gc.actualSize)" +
-            " from GerritChange gc, Folder fd, Project pj, GerritAccount ga" +
-            " where gc.folder = fd.id" +
-            " and fd.project = pj.id" +
-            " and gc.account = ga.id" +
-            " and pj.visible = '1'" +
-            " and pj.id in (?3)" +
-            " and ga.id in (?4)" +
+    @Query("select op.name, sum(gc.actualSize)" +
+            " from GerritChange gc, GerritAccount ga, OnosMember om, OnosProject op" +
+            " where gc.account = ga.id" +
+            " and ga.onosMember = om.id" +
+            " and gc.onosProject = op.id" +
+            " and op.id in (?3)" +
+            " and om.id in (?4)" +
             " and gc.status = 'Merged'" +
             " and gc.updatedOn between ?1 and ?2" +
-            " group by pj.name")
+            " group by op.name")
     List<Object[]> getSumActualSizeGroupByProjectAndMerged(Date startDate, Date endDate, ArrayList<Long> projectsId,
     ArrayList<Long> accountsId);
 
-    @Query("select pj.name, sum(gc.actualSize)" +
-            " from GerritChange gc, GerritAccount ga, Folder fd, Project pj" +
-            " where gc.folder = fd.id" +
-            " and fd.project = pj.id" +
-            " and gc.account = ga.id" +
-            " and pj.visible = '1'" +
-            " and pj.id in (?3)" +
-            " and ga.id in (?4)" +
+    @Query("select op.name, sum(gc.actualSize)" +
+            " from GerritChange gc, GerritAccount ga, OnosMember om, OnosProject op" +
+            " where gc.account = ga.id" +
+            " and ga.onosMember = om.id" +
+            " and gc.onosProject = op.id" +
+            " and op.id in (?3)" +
+            " and om.id in (?4)" +
             " and gc.status != 'Merged'" +
             " and gc.status != 'Abandoned'" +
             " and gc.updatedOn between ?1 and ?2" +
-            " group by pj.name")
+            " group by op.name")
     List<Object[]> getSumActualSizeGroupByProjectAndOpen(Date startDate, Date endDate, ArrayList<Long> projectsId,
     ArrayList<Long> accountsId);
 
-    @Query("select mb.name, sum(gc.actualSize)" +
-            " from GerritChange gc, GerritAccount ga, Member mb, Folder fd, Project pj" +
+    @Query("select om.name, sum(gc.actualSize)" +
+            " from GerritChange gc, GerritAccount ga, OnosMember om, OnosProject op" +
             " where gc.account = ga.id" +
-            " and gc.folder = fd.id" +
-            " and fd.project = pj.id" +
-            " and gc.account = ga.id" +
-            " and ga.member = mb.id" +
-            " and mb.visible = '1'" +
-            " and pj.id in (?3)" +
-            " and ga.id in (?4)" +
-            " and gc.status != 'Abandoned'" +
-            " and gc.updatedOn between ?1 and ?2" +
-            " group by mb.name")
-    List<Object[]> getSumActualSizeGroupByMember(Date startDate, Date endDate, ArrayList<Long> projectsId);
-
-    @Query("select mb.name, sum(gc.actualSize)" +
-            " from GerritChange gc, GerritAccount ga, Member mb, Folder fd, Project pj" +
-            " where gc.account = ga.id" +
-            " and gc.folder = fd.id" +
-            " and fd.project = pj.id" +
-            " and ga.member = mb.id" +
-            " and mb.visible = '1'" +
-            " and pj.id in (?3)" +
-            " and ga.id in (?4)" +
+            " and ga.onosMember = om.id" +
+            " and gc.onosProject = op.id" +
+            " and op.id in (?3)" +
+            " and om.id in (?4)" +
             " and gc.status = 'Merged'" +
             " and gc.updatedOn between ?1 and ?2" +
-            " group by mb.name")
+            " group by om.name")
     List<Object[]> getSumActualSizeGroupByMemberAndMerged(Date startDate, Date endDate, ArrayList<Long> projectsId,
     ArrayList<Long> accountsId);
 
-    @Query("select mb.name, sum(gc.actualSize)" +
-            " from GerritChange gc, GerritAccount ga, Member mb, Folder fd, Project pj" +
+    @Query("select om.name, sum(gc.actualSize)" +
+            " from GerritChange gc,  GerritAccount ga, OnosMember om, OnosProject op" +
             " where gc.account = ga.id" +
-            " and gc.folder = fd.id" +
-            " and fd.project = pj.id" +
-            " and gc.account = ga.id" +
-            " and ga.member = mb.id" +
-            " and mb.visible = '1'" +
-            " and pj.id in (?3)" +
-            " and ga.id in (?4)" +
+            " and ga.onosMember = om.id" +
+            " and gc.onosProject = op.id" +
+            " and op.id in (?3)" +
+            " and om.id in (?4)" +
             " and gc.status != 'Merged'" +
             " and gc.status != 'Abandoned'" +
             " and gc.updatedOn between ?1 and ?2" +
-            " group by mb.name")
+            " group by om.name")
     List<Object[]> getSumActualSizeGroupByMemberAndOpen(Date startDate, Date endDate, ArrayList<Long> projectsId,
     ArrayList<Long> accountsId);
 
-    @Query("select sum(gc.actualSize)" +
-            " from GerritChange gc, GerritAccount ga, Folder fd, Project pj" +
-            " where gc.folder = fd.id" +
-            " and fd.project = pj.id" +
-            " and gc.account = ga.id" +
-            " and gc.status = 'Merged'" +
-            " and pj.id in (?3)" +
-            " and ga.id in (?4)" +
-            " and gc.updatedOn between ?1 and ?2")
-    Integer getSumActualSizeByStatusIsMerged(Date startDate, Date endDate, ArrayList<Long> projectsId,
-    ArrayList<Long> accountsId);
-
-    @Query("select sum(gc.actualSize)" +
-            " from GerritChange gc, GerritAccount ga, Folder fd, Project pj" +
-            " where gc.folder = fd.id" +
-            " and fd.project = pj.id" +
-            " and gc.account = ga.id" +
-            " and (gc.status = '' or gc.status = 'Merge Conflict')" +
-            " and pj.id in (?3)" +
-            " and ga.id in (?4)" +
-            " and gc.updatedOn between ?1 and ?2")
-    Integer getSumActualSizeByStatusIsOpen(Date startDate, Date endDate, ArrayList<Long> projectsId,
-     ArrayList<Long> accountsId);
-
     @Query("select gc.updatedOn,sum(gc.actualSize)" +
-            " from GerritChange gc, GerritAccount ga, Folder fd, Project pj" +
-            " where gc.folder = fd.id" +
-            " and fd.project = pj.id" +
-            " and gc.account = ga.id" +
-            " and pj.id in (?3)" +
-            " and ga.id in (?4)" +
+            " from GerritChange gc,  GerritAccount ga, OnosMember om, OnosProject op" +
+            " where gc.account = ga.id" +
+            " and ga.onosMember = om.id" +
+            " and gc.onosProject = op.id" +
+            " and op.id in (?3)" +
+            " and om.id in (?4)" +
             " and gc.status != 'Abandoned'" +
             " and gc.updatedOn between ?1 and ?2" +
             " group by gc.updatedOn")
@@ -173,13 +116,13 @@ public interface GerritChangeRepository extends JpaRepository<GerritChange, Long
 
 
     @Query("select co.name,sum(gc.actualSize)" +
-            " from GerritChange gc, GerritAccount ga, Folder fd, Project pj, Company co" +
-            " where gc.folder = fd.id" +
-            " and fd.project = pj.id" +
-            " and gc.account = ga.id" +
+            " from GerritChange gc,  GerritAccount ga, OnosMember om, OnosProject op, Company co" +
+            " where gc.account = ga.id" +
+            " and ga.onosMember = om.id" +
+            " and gc.onosProject = op.id" +
+            " and op.id in (?3)" +
+            " and om.id in (?4)" +
             " and ga.company = co.id" +
-            " and pj.id in (?3)" +
-            " and ga.id in (?4)" +
             " and gc.status != 'Abandoned'" +
             " and gc.updatedOn between ?1 and ?2" +
             " group by co.name")
