@@ -121,7 +121,7 @@ public class GerritExtractService {
 //                gerritChange.setActualSize(actualSize.intValue());
 //                gerritChange.setBranch(branch);
 //                gerritChange.setStatus(status);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd"); //"2016-11-10T11:20:33.794-0800"
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); //"2016-11-10T11:20:33.794-0800"
 
                 try {
                     gerritChange.setUpdatedOn(new java.sql.Date(sdf.parse((updatedOn.split(" ")[0])).getTime()));
