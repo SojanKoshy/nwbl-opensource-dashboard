@@ -77,7 +77,7 @@ public class JiraExtractService {
                 jiraTicket.setId(id);
                 jiraTicket.setName((String) jObject.get("key"));
                 jObject = (JSONObject) jObject.get("fields");
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd"); //"2016-11-10T11:20:33.794-0800"
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); //"2016-11-10T11:20:33.794-0800"
                 jiraTicket.setCreatedOn(sdf.parse(((String) jObject.get("created")).split("T")[0]));
                 jiraTicket.setUpdatedOn(sdf.parse(((String) jObject.get("updated")).split("T")[0]));
 

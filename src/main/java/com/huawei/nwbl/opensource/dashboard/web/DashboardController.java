@@ -76,6 +76,9 @@ public class DashboardController {
     @Autowired
     private OnosMemberRepository onosMemberRepository;
 
+    @Autowired
+    private JiraTicketRepository jiraTicketRepository;
+
     @GetMapping("jira_json")
     public String getJiraData() {
         return jiraExtractService.parseJson();
@@ -84,6 +87,11 @@ public class DashboardController {
     @GetMapping("gerrit_json")
     public String getGerritData() {
         return gerritExtractService.parseJson();
+    }
+
+    @GetMapping("gerrit_account")
+    public String getGerritAccount() {
+        return gerritExtractService.getAllAccounts();
     }
 
     @GetMapping("gerrit_review")
@@ -374,28 +382,28 @@ public class DashboardController {
             @PathVariable ArrayList<Long> accountsId) {
         Map<String, Double[]> members = new HashMap<>();
 
-        List<Object[]> gerritChangesMerged = gerritChangeRepository.getSumActualSizeGroupByMemberAndMerged(startDate, endDate,
-                projectsId, accountsId);
+        List<Object[]> gerritChangesMerged = gerritReviewRepository.getSumCommentsGroupByMemberAndMerged(startDate, endDate,
+               projectsId, accountsId);
         for (Object[] gerritChange : gerritChangesMerged) {
             String memberName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
-                Double[] status = {codeSize / 1000.0, 0.0};
+            if (codeSize != null && codeSize > 0) {
+                Double[] status = {codeSize / 1.0, 0.0};
                 members.put(memberName, status);
             }
         }
 
-        List<Object[]> gerritChangesOpen = gerritChangeRepository.getSumActualSizeGroupByMemberAndOpen(startDate, endDate,
+        List<Object[]> gerritChangesOpen = gerritReviewRepository.getSumActualSizeGroupByMemberAndOpen(startDate, endDate,
                 projectsId, accountsId);
         for (Object[] gerritChange : gerritChangesOpen) {
             String memberName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
+            if (codeSize != null && codeSize > 0) {
                 if (members.containsKey(memberName)) {
                     Double[] status = members.get(memberName);
-                    status[1] = codeSize / 1000.0;
+                    status[1] = codeSize / 1.0;
                 } else {
-                    Double[] status = {0.0, codeSize / 1000.0};
+                    Double[] status = {0.0, codeSize / 1.0};
                     members.put(memberName, status);
                 }
             }
@@ -439,14 +447,14 @@ public class DashboardController {
 
         JSONObject data = new JSONObject();
         JSONArray seriesdata = new JSONArray();
-        List<Object[]> objectsList = gerritChangeRepository.getSumActualSizeGroupByCompany(startDate, endDate,
+        List<Object[]> objectsList = gerritReviewRepository.getSumCommentsGroupByCompany(startDate, endDate,
                 projectsId, accountsId);
         for (Object[] objects : objectsList) {
             JSONObject seriesdata1 = new JSONObject();
             String companyName = (String) objects[0];
             Long codeSize = (Long) objects[1];
             seriesdata1.put("name", companyName);
-            seriesdata1.put("y", codeSize / 1000.0);
+            seriesdata1.put("y", codeSize / 1.0);
             seriesdata.add(seriesdata1);
         }
         data.put("data", seriesdata);
@@ -462,7 +470,7 @@ public class DashboardController {
         JSONArray data = new JSONArray();
         ChartUtils chartUtils = new ChartUtils();
 
-        List<Object[]> gerritChanges = gerritChangeRepository.getSumActualSizeGroupByUpdatedOn(startDate, endDate,
+        List<Object[]> gerritChanges = gerritReviewRepository.getSumCommentsGroupByUpdatedOn(startDate, endDate,
                 projectsId, accountsId);
         for (Object[] gerritChange : gerritChanges) {
             java.sql.Date date = new java.sql.Date(((Date) gerritChange[0]).getTime());
@@ -485,28 +493,28 @@ public class DashboardController {
 
         Map<String, Double[]> projects = new HashMap<>();
 
-        List<Object[]> gerritChangesMerged = gerritChangeRepository.getSumActualSizeGroupByProjectAndMerged(startDate, endDate,
-                projectsId, accountsId);
+        List<Object[]> gerritChangesMerged = jiraTicketRepository.getSumDefectGroupByProjectAndClosed(startDate, endDate,
+                accountsId);
         for (Object[] gerritChange : gerritChangesMerged) {
             String projectName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
-                Double[] status = {codeSize / 1000.0, 0.0};
+            if (codeSize != null && codeSize > 0) {
+                Double[] status = {codeSize / 1.0, 0.0};
                 projects.put(projectName, status);
             }
         }
 
-        List<Object[]> gerritChangesOpen = gerritChangeRepository.getSumActualSizeGroupByProjectAndOpen(startDate, endDate,
-                projectsId, accountsId);
+        List<Object[]> gerritChangesOpen = jiraTicketRepository.getSumDefectGroupByProjectAndOpen(startDate, endDate,
+                accountsId);
         for (Object[] gerritChange : gerritChangesOpen) {
             String projectName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
+            if (codeSize != null && codeSize > 0) {
                 if (projects.containsKey(projectName)) {
                     Double[] status = projects.get(projectName);
-                    status[1] = codeSize / 1000.0;
+                    status[1] = codeSize / 1.0;
                 } else {
-                    Double[] status = {0.0, codeSize / 1000.0};
+                    Double[] status = {0.0, codeSize / 1.0};
                     projects.put(projectName, status);
                 }
             }
@@ -548,28 +556,28 @@ public class DashboardController {
             @PathVariable ArrayList<Long> accountsId) {
         Map<String, Double[]> members = new HashMap<>();
 
-        List<Object[]> gerritChangesMerged = gerritChangeRepository.getSumActualSizeGroupByMemberAndMerged(startDate, endDate,
-                projectsId, accountsId);
+        List<Object[]> gerritChangesMerged = jiraTicketRepository.getSumDefectsGroupByMemberAndClosed(startDate, endDate,
+                accountsId);
         for (Object[] gerritChange : gerritChangesMerged) {
             String memberName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
-                Double[] status = {codeSize / 1000.0, 0.0};
+            if (codeSize != null && codeSize > 0) {
+                Double[] status = {codeSize / 1.0, 0.0};
                 members.put(memberName, status);
             }
         }
 
-        List<Object[]> gerritChangesOpen = gerritChangeRepository.getSumActualSizeGroupByMemberAndOpen(startDate, endDate,
-                projectsId, accountsId);
+        List<Object[]> gerritChangesOpen = jiraTicketRepository.getSumDefectsGroupByMemberAndOpen(startDate, endDate,
+                accountsId);
         for (Object[] gerritChange : gerritChangesOpen) {
             String memberName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
+            if (codeSize != null && codeSize > 0) {
                 if (members.containsKey(memberName)) {
                     Double[] status = members.get(memberName);
-                    status[1] = codeSize / 1000.0;
+                    status[1] = codeSize / 1.0;
                 } else {
-                    Double[] status = {0.0, codeSize / 1000.0};
+                    Double[] status = {0.0, codeSize / 1.0};
                     members.put(memberName, status);
                 }
             }
@@ -583,15 +591,21 @@ public class DashboardController {
         JSONObject series2 = new JSONObject();
         JSONArray series2data = new JSONArray();
 
-        Map<Double, String> membersSorted = new TreeMap<>(Collections.reverseOrder());
-        members.forEach((k, v) -> membersSorted.put(v[0] + v[1], k));
-        membersSorted.values().forEach((k) -> {
+//        Map<Double, String> membersSorted = new TreeMap<>(Collections.reverseOrder());
+//        members.forEach((k, v) -> membersSorted.put(v[0] + v[1], k));
+//        membersSorted.values().forEach((k) -> {
+//            categories.add(k);
+//            Double[] v = members.get(k);
+//            series1data.add(v[0]);
+//            series2data.add(v[1]);
+//        });
+//
+        members.keySet().forEach((k) -> {
             categories.add(k);
             Double[] v = members.get(k);
             series1data.add(v[0]);
             series2data.add(v[1]);
         });
-
         series2.put("name", "Open");
         series2.put("data", series2data);
         series.add(series2);
@@ -613,14 +627,14 @@ public class DashboardController {
 
         JSONObject data = new JSONObject();
         JSONArray seriesdata = new JSONArray();
-        List<Object[]> objectsList = gerritChangeRepository.getSumActualSizeGroupByCompany(startDate, endDate,
-                projectsId, accountsId);
+        List<Object[]> objectsList = jiraTicketRepository.getSumDefectGroupByCompany(startDate, endDate,
+                accountsId);
         for (Object[] objects : objectsList) {
             JSONObject seriesdata1 = new JSONObject();
             String companyName = (String) objects[0];
             Long codeSize = (Long) objects[1];
             seriesdata1.put("name", companyName);
-            seriesdata1.put("y", codeSize / 1000.0);
+            seriesdata1.put("y", codeSize / 1.0);
             seriesdata.add(seriesdata1);
         }
         data.put("data", seriesdata);
@@ -636,14 +650,14 @@ public class DashboardController {
         JSONArray data = new JSONArray();
         ChartUtils chartUtils = new ChartUtils();
 
-        List<Object[]> gerritChanges = gerritChangeRepository.getSumActualSizeGroupByUpdatedOn(startDate, endDate,
-                projectsId, accountsId);
+        List<Object[]> gerritChanges = jiraTicketRepository.getSumDefectGroupByUpdatedOn(startDate, endDate,
+               accountsId);
         for (Object[] gerritChange : gerritChanges) {
             java.sql.Date date = new java.sql.Date(((Date) gerritChange[0]).getTime());
             Long codeSize = (Long) gerritChange[1];
             JSONArray row = new JSONArray();
             row.add(date.getTime());
-            row.add(codeSize / 1000.0);
+            row.add(codeSize / 1.0);
             data.add(row);
         }
         return data.toJSONString();

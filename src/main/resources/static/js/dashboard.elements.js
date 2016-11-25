@@ -66,6 +66,7 @@ function activateCompanyMultiSelectDropDown() {
         enableCaseInsensitiveFiltering: true,
         maxHeight: 300,
         numberDisplayed: 1,
+        buttonClass: 'btn btn-primary',
         onInitialized: function() {companiesSelected = this.$select.val();},
         onChange: function() {onChangeCompanies(this.$select.val());},
         onSelectAll: function() {onChangeCompanies(this.$select.val());},
@@ -86,11 +87,21 @@ function activateMemberMultiSelectDropDown() {
         enableCaseInsensitiveFiltering: true,
         maxHeight: 300,
         numberDisplayed: 1,
+        buttonClass: 'btn btn-primary',
         onInitialized: function() {membersSelected = this.$select.val();},
         onChange: function() {onChangeMembers(this.$select.val());},
         onSelectAll: function() {onChangeMembers(this.$select.val());},
         onDeselectAll: function() {onChangeMembers(this.$select.val());}
     });
+}
+
+function compareSecondColumn(a, b) {
+    if (a[1] === b[1]) {
+        return 0;
+    }
+    else {
+        return (a[1] < b[1]) ? -1 : 1;
+    }
 }
 
 function rebuildMemberMultiSelectDropDown() {
@@ -103,7 +114,7 @@ function rebuildMemberMultiSelectDropDown() {
 
     var $members = $("#members");
     $members.empty();
-    vals.sort();
+    vals.sort(compareSecondColumn);
     $.each(vals, function(index, value) {
         $('#members').append($('<option>', {
              value: value[0],
@@ -128,6 +139,7 @@ function activateProjectMultiSelectDropDown() {
         enableCaseInsensitiveFiltering: true,
         maxHeight: 300,
         numberDisplayed: 1,
+        buttonClass: 'btn btn-primary',
         onInitialized: function() {projectsSelected = this.$select.val();},
         onChange: function() {onChangeProjects(this.$select.val());},
         onSelectAll: function() {onChangeProjects(this.$select.val());},

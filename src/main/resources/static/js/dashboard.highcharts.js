@@ -52,7 +52,14 @@ function drawChartCallback(chartId, data) {
                     zoomType: 'x',
                     panning: true,
                     panKey: 'shift',
-                    shadow: true
+                    shadow: true,
+//                    options3d: {
+//                        enabled: true,
+//                        alpha: 12,
+//                        beta: -4,
+//                        depth: 54,
+//                        viewDistance: 25
+//                    }
                 },
                 title: {
                     text: 'Code Contribution Project wise'
@@ -98,7 +105,8 @@ function drawChartCallback(chartId, data) {
                         }
                     }
                 },
-                colors: ['#f7a35c', '#7cb5ec'],
+                colors: ['#d12b2f', '#43b1b0'],
+                //colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
                 },
@@ -112,7 +120,14 @@ function drawChartCallback(chartId, data) {
                     zoomType: 'x',
                     panning: true,
                     panKey: 'shift',
-                    shadow: true
+                    shadow: true,
+//                    options3d: {
+//                        enabled: true,
+//                        alpha: 12,
+//                        beta: -4,
+//                        depth: 54,
+//                        viewDistance: 25
+//                    }
                 },
                 title: {
                     text: 'Code Contribution Member wise'
@@ -153,7 +168,7 @@ function drawChartCallback(chartId, data) {
                         stacking: 'normal'
                     }
                 },
-                colors: ['#f7a35c', '#7cb5ec'],
+                colors: ['#d12b2f', '#43b1b0'],
                 credits: {
                     enabled: false
                 },
@@ -175,7 +190,7 @@ function drawChartCallback(chartId, data) {
                     shadow: true
                 },
                 title: {
-                    text: 'Company wise Code Contribution'
+                    text: 'Code Contribution Company wise'
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)'
@@ -191,7 +206,7 @@ function drawChartCallback(chartId, data) {
                         }
                     }
                 },
-                //colors: ['#f7a35c', '#7cb5ec'],
+                colors: ['#d12b2f', '#43b1b0', '#fac174', '#27a4dd', '#727378'],
                 credits: {
                     enabled: false
                 },
@@ -234,6 +249,7 @@ function drawChartCallback(chartId, data) {
                 credits: {
                     enabled: false
                 },
+                colors: ['#f17f49', '#88d3a1'],
                 plotOptions: {
                     area: {
                         fillColor: {
@@ -244,8 +260,10 @@ function drawChartCallback(chartId, data) {
                                 y2: 1
                             },
                             stops: [
-                                [0, Highcharts.getOptions().colors[0]],
-                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                               // [0, Highcharts.getOptions().colors[0]],
+                               // [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                               [0, '#f17f49'],
+                               [1, Highcharts.Color('#f17f49').setOpacity(0).get('rgba')]
                             ]
                         },
                         marker: {
@@ -278,7 +296,7 @@ function drawChartCallback(chartId, data) {
                     shadow: true
                 },
                 title: {
-                    text: 'Review Comment Contribution Project wise'
+                    text: 'Review Comment Project wise'
                 },
                 xAxis: {
                     categories: data['categories']
@@ -321,7 +339,8 @@ function drawChartCallback(chartId, data) {
                         }
                     }
                 },
-                colors: ['#f7a35c', '#7cb5ec'],
+                colors: ['#43b1b0', '#d12b2f'],
+               // colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
                 },
@@ -376,7 +395,8 @@ function drawChartCallback(chartId, data) {
                         stacking: 'normal'
                     }
                 },
-                colors: ['#f7a35c', '#7cb5ec'],
+                colors: ['#43b1b0', '#d12b2f'],
+                //colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
                 },
@@ -398,7 +418,7 @@ function drawChartCallback(chartId, data) {
                     shadow: true
                 },
                 title: {
-                    text: 'Company wise Review Comment Contribution'
+                    text: 'Review Comment Contribution Company wise'
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)'
@@ -414,6 +434,7 @@ function drawChartCallback(chartId, data) {
                         }
                     }
                 },
+                colors: ['#fac174', '#d12b2f', '#43b1b0', '#27a4dd', '#727378'],
                 //colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
@@ -457,6 +478,7 @@ function drawChartCallback(chartId, data) {
                 credits: {
                     enabled: false
                 },
+                colors: ['#27a4dd', '#d12b2f', '#43b1b0', '#fac174', '#727378'],
                 plotOptions: {
                     area: {
                         fillColor: {
@@ -467,8 +489,10 @@ function drawChartCallback(chartId, data) {
                                 y2: 1
                             },
                             stops: [
-                                [0, Highcharts.getOptions().colors[0]],
-                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                               // [0, Highcharts.getOptions().colors[0]],
+                               // [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                               [0, '#27a4dd'],
+                               [1, Highcharts.Color('#27a4dd').setOpacity(0).get('rgba')]
                             ]
                         },
                         marker: {
@@ -623,7 +647,7 @@ function drawChartCallback(chartId, data) {
                     shadow: true
                 },
                 title: {
-                    text: 'Company wise Defect Status'
+                    text: 'Defect Submitted Company wise'
                 },
                 tooltip: {
                     pointFormat: '{series.name}: <b>{point.y} ({point.percentage:.1f}%)'

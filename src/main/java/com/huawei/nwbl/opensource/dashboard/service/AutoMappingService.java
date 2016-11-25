@@ -58,81 +58,80 @@ public class AutoMappingService {
 
 
     public void remap() {
-//        List<GerritChange> gerritChanges = gerritChangeRepository.findAll();
-//        for(GerritChange gerritChange : gerritChanges) {
-//            GerritAccount gerritAccount = gerritChange.getAccount();
-//            if(!gerritAccount.isInUse()) {
-//                gerritAccount.setInUse(true);
-//                gerritAccountRepository.save(gerritAccount);
-//            }
-//        }
-//
-//        List<GerritAccount> gerritAccounts = gerritAccountRepository.findAll();
-//        List<JiraAccount> jiraAccounts = jiraAccountRepository.findAll();
-//        for (GerritAccount gerritAccount : gerritAccounts) {
-//            if (gerritAccount.isInUse()) {
-//                OnosMember onosMember = onosMemberRepository.findByEmail(gerritAccount.getEmail());
-//                if (onosMember == null) {
-//                    onosMember = new OnosMember();
-//                }
-//                onosMember.setEmail(gerritAccount.getEmail());
-//                onosMember.setCompany(gerritAccount.getCompany());
-//                onosMember.setName(gerritAccount.getName());
-//                onosMemberRepository.save(onosMember);
-//            }
-//        }
-//
-//        for (GerritAccount gerritAccount : gerritAccounts) {
-//            gerritAccount.setOnosMember(onosMemberRepository.findByEmail(gerritAccount.getEmail()));
-//            gerritAccountRepository.save(gerritAccount);
-//        }
-//
-//        for (JiraAccount jiraAccount : jiraAccounts) {
-//            OnosMember onosMember = onosMemberRepository.findByEmail(jiraAccount.getEmail());
-//            if (onosMember == null) {
-//                onosMember = new OnosMember();
-//                String domain = jiraAccount.getEmail().split("@")[1];
-//                CompanyEmailDomain emailDomain = companyEmailDomainRepository.findByDomain(domain);
-//                if (emailDomain == null) {
-//                    System.out.println("#######################" + jiraAccount.getEmail());
-//                } else {
-//                    onosMember.setCompany(emailDomain.getCompany());
-//                }
-//                onosMember.setName(jiraAccount.getName());
-//                onosMember.setEmail(jiraAccount.getEmail());
-//                onosMemberRepository.save(onosMember);
-//            } else {
-//                if(onosMember.getCompany() == null) {
-//
-//                    String domain = jiraAccount.getEmail().split("@")[1];
-//                    CompanyEmailDomain emailDomain = companyEmailDomainRepository.findByDomain(domain);
-//                    if (emailDomain == null) {
-//                        System.out.println("#######################" + jiraAccount.getEmail());
-//                    } else {
-//                        onosMember.setCompany(emailDomain.getCompany());
-//                    }
-//                    onosMemberRepository.save(onosMember);
-//                }
-//            }
-//        }
-//
-//
-//        for (JiraAccount jiraAccount : jiraAccounts) {
-//            jiraAccount.setOnosMember(onosMemberRepository.findByEmail(jiraAccount.getEmail()));
-//            jiraAccountRepository.save(jiraAccount);
-//        }
-//
-//        for (OnosMember onosMember : onosMemberRepository.findAll()) {
-//            Company company = onosMember.getCompany();
-//            List<OnosMember> onosMembers = company.getOnosMembers();
-//            if (onosMembers == null) {
-//                onosMembers = new ArrayList<>();
-//            }
-//            onosMembers.add(onosMember);
-//            companyRepository.save(company);
-//        }
+        List<GerritChange> gerritChanges = gerritChangeRepository.findAll();
+        for(GerritChange gerritChange : gerritChanges) {
+            GerritAccount gerritAccount = gerritChange.getAccount();
+            if(!gerritAccount.isInUse()) {
+                gerritAccount.setInUse(true);
+                gerritAccountRepository.save(gerritAccount);
+            }
+        }
+
+        List<GerritAccount> gerritAccounts = gerritAccountRepository.findAll();
+        List<JiraAccount> jiraAccounts = jiraAccountRepository.findAll();
+        for (GerritAccount gerritAccount : gerritAccounts) {
+            if (gerritAccount.isInUse()) {
+                OnosMember onosMember = onosMemberRepository.findByEmail(gerritAccount.getEmail());
+                if (onosMember == null) {
+                    onosMember = new OnosMember();
+                }
+                onosMember.setEmail(gerritAccount.getEmail());
+                onosMember.setCompany(gerritAccount.getCompany());
+                onosMember.setName(gerritAccount.getName());
+                onosMemberRepository.save(onosMember);
+            }
+        }
+
+        for (GerritAccount gerritAccount : gerritAccounts) {
+            gerritAccount.setOnosMember(onosMemberRepository.findByEmail(gerritAccount.getEmail()));
+            gerritAccountRepository.save(gerritAccount);
+        }
+
+        for (JiraAccount jiraAccount : jiraAccounts) {
+            OnosMember onosMember = onosMemberRepository.findByEmail(jiraAccount.getEmail());
+            if (onosMember == null) {
+                onosMember = new OnosMember();
+                String domain = jiraAccount.getEmail().split("@")[1];
+                CompanyEmailDomain emailDomain = companyEmailDomainRepository.findByDomain(domain);
+                if (emailDomain == null) {
+                    System.out.println("#######################" + jiraAccount.getEmail());
+                } else {
+                    onosMember.setCompany(emailDomain.getCompany());
+                }
+                onosMember.setName(jiraAccount.getName());
+                onosMember.setEmail(jiraAccount.getEmail());
+                onosMemberRepository.save(onosMember);
+            } else {
+                if(onosMember.getCompany() == null) {
+
+                    String domain = jiraAccount.getEmail().split("@")[1];
+                    CompanyEmailDomain emailDomain = companyEmailDomainRepository.findByDomain(domain);
+                    if (emailDomain == null) {
+                        System.out.println("#######################" + jiraAccount.getEmail());
+                    } else {
+                        onosMember.setCompany(emailDomain.getCompany());
+                    }
+                    onosMemberRepository.save(onosMember);
+                }
+            }
+        }
+
+
+        for (JiraAccount jiraAccount : jiraAccounts) {
+            jiraAccount.setOnosMember(onosMemberRepository.findByEmail(jiraAccount.getEmail()));
+            jiraAccountRepository.save(jiraAccount);
+        }
+
+        for (OnosMember onosMember : onosMemberRepository.findAll()) {
+            Company company = onosMember.getCompany();
+                List<OnosMember> onosMembers = company.getOnosMembers();
+            if (onosMembers == null) {
+                onosMembers = new ArrayList<>();
+            }
+            onosMembers.add(onosMember);
+            companyRepository.save(company);
+        }
         List<String> folderPatterns = new ArrayList<>();
-        folderPatterns.add("(/(sfc)/)");
         folderPatterns.add("(/onosproject/([^/]+)/)");
         folderPatterns.add("(^(core)/)");
         folderPatterns.add("(^(incubator)/)");

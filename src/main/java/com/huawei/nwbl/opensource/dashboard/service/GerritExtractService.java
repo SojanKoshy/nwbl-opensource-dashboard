@@ -46,9 +46,42 @@ public class GerritExtractService {
     private GerritReviewRepository gerritReviewRepository;
 
 
+    public String getAllAccounts() {
+
+        for (Long i = 1000001L; i < 1000520L; i++) {
+            System.out.println("https://gerrit.onosproject.org/accounts/" + i);
+            String account = getJsonData("https://gerrit.onosproject.org/accounts/" + i);
+            if (account == null) {
+                continue;
+            }
+
+            account = account.substring(6);
+            account = account.substring(0, account.length() - 1);
+            JSONParser parser = new JSONParser();
+            try {
+                JSONObject jObject = (JSONObject) parser.parse(account);
+                Long id = (Long) jObject.get("_account_id");
+                String name = (String) jObject.get("name");
+                String email = (String) jObject.get("email");
+                String username = (String) jObject.get("username");
+                GerritAccount gerritAccount = gerritAccountRepository.findOne(id);
+                if (gerritAccount == null) {
+                    gerritAccount = new GerritAccount();
+                }
+                gerritAccount.setId(id);
+                gerritAccount.setName(name);
+                gerritAccount.setEmail(email);
+                gerritAccount.setUsername(username);
+                gerritAccountRepository.save(gerritAccount);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return "done";
+    }
     public String getAllData() {
 
-        for (Long i = 1L; i < 11000L; i++) {
+        for (Long i = 11000L; i < 12000L; i++) {
 
             System.out.println("https://gerrit.onosproject.org/changes/" + i + "/detail");
 
@@ -115,12 +148,12 @@ public class GerritExtractService {
                 //FIXME: If account not found add new account
                 gerritChange.setAccount(gerritAccountRepository.findOne(gerritID));
 
-//                gerritChange.setId(id);
-//                gerritChange.setAddedSize(addedSize.intValue());
-//                gerritChange.setDeletedSize(deletedSize.intValue());
-//                gerritChange.setActualSize(actualSize.intValue());
-//                gerritChange.setBranch(branch);
-//                gerritChange.setStatus(status);
+                gerritChange.setId(id);
+                gerritChange.setAddedSize(addedSize.intValue());
+                gerritChange.setDeletedSize(deletedSize.intValue());
+                gerritChange.setActualSize(actualSize.intValue());
+                gerritChange.setBranch(branch);
+                gerritChange.setStatus(status);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); //"2016-11-10T11:20:33.794-0800"
 
                 try {
@@ -128,35 +161,35 @@ public class GerritExtractService {
                 } catch (java.text.ParseException e) {
                     e.printStackTrace();
                 }
-//                gerritChange.setProject(project);
-//                gerritChange.setSubject(subject);
-//                gerritChange.setLink("https://gerrit.onosproject.org/" + id);
-//                String firstFile;
-//                JSONObject commitedfiles;
-//
-//                JSONObject revisions = (JSONObject) jsonFileObject.get("revisions");
-//                if (revisions.isEmpty()) {
-//                    firstFile = "";
-//                    gerritChange.setFirstFilePath(firstFile);
-//
-//                } else {
-//                    String currentRevisionId = (String) revisions.keySet().iterator().next();
-//                    commitedfiles = (JSONObject) ((JSONObject) revisions.get(currentRevisionId)).get("files");
-//                    if (commitedfiles.isEmpty()) {
-//                        firstFile = "";
-//                        gerritChange.setFirstFilePath(firstFile);
-//
-//                    } else firstFile = (String) commitedfiles.keySet().iterator().next();
-//
-//                    gerritChange.setFirstFilePath(firstFile);
-//
-//                    for (Object file : commitedfiles.keySet()) {
-//                        if (((String) file).endsWith(".java")) {
-//                            gerritChange.setFirstFilePath(firstFile);
-//                            break;
-//                        }
-//                    }
-//                }
+                gerritChange.setProject(project);
+                gerritChange.setSubject(subject);
+                gerritChange.setLink("https://gerrit.onosproject.org/" + id);
+                String firstFile;
+                JSONObject commitedfiles;
+
+                JSONObject revisions = (JSONObject) jsonFileObject.get("revisions");
+                if (revisions.isEmpty()) {
+                    firstFile = "";
+                    gerritChange.setFirstFilePath(firstFile);
+
+                } else {
+                    String currentRevisionId = (String) revisions.keySet().iterator().next();
+                    commitedfiles = (JSONObject) ((JSONObject) revisions.get(currentRevisionId)).get("files");
+                    if (commitedfiles.isEmpty()) {
+                        firstFile = "";
+                        gerritChange.setFirstFilePath(firstFile);
+
+                    } else firstFile = (String) commitedfiles.keySet().iterator().next();
+
+                    gerritChange.setFirstFilePath(firstFile);
+
+                    for (Object file : commitedfiles.keySet()) {
+                        if (((String) file).endsWith(".java")) {
+                            gerritChange.setFirstFilePath(firstFile);
+                            break;
+                        }
+                    }
+                }
                 gerritChangeRepository.save(gerritChange);
 
             }
