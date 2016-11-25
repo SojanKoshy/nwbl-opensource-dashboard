@@ -58,7 +58,7 @@ public interface JiraTicketRepository extends JpaRepository<JiraTicket, Long> {
             " group by om.name")
     List<Object[]> getSumDefectsGroupByMemberAndOpen(Date startDate, Date endDate, ArrayList<Long> accountsId);
 
-    @Query("select co.name, count(jt)" +
+    @Query("select co.name, count(jt) as total" +
             " from JiraTicket jt, OnosMember om, Company co, JiraAccount ja" +
             " where jt.creator = ja.id" +
             " and ja.onosMember = om.id" +
@@ -66,7 +66,8 @@ public interface JiraTicketRepository extends JpaRepository<JiraTicket, Long> {
             " and om.company = co.id" +
             " and jt.type = 'Bug'" +
             " and jt.updatedOn between ?1 and ?2" +
-            " group by co.name")
+            " group by co.name" +
+            " order by total")
     List<Object[]> getSumDefectGroupByCompany(Date startDate, Date endDate, ArrayList<Long> accountsId);
 
     @Query("select jt.updatedOn, count(jt)" +

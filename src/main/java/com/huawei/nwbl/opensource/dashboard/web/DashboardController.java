@@ -21,6 +21,7 @@ import com.huawei.nwbl.opensource.dashboard.service.AutoMappingService;
 import com.huawei.nwbl.opensource.dashboard.service.GerritExtractService;
 import com.huawei.nwbl.opensource.dashboard.service.JiraExtractService;
 import com.huawei.nwbl.opensource.dashboard.utils.ChartUtils;
+import com.huawei.nwbl.opensource.dashboard.utils.MapUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,9 +37,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  *
@@ -536,14 +534,16 @@ public class DashboardController {
         JSONObject series2 = new JSONObject();
         JSONArray series2data = new JSONArray();
 
-        Map<Double, String> projectsSorted = new TreeMap<>(Collections.reverseOrder());
-        projects.forEach((k, v) -> projectsSorted.put(v[0] + v[1], k));
-        projectsSorted.values().forEach((k) -> {
+        Map<String, Double> sortedKeys = new TreeMap<>(Collections.reverseOrder());
+        projects.forEach((k, v) -> sortedKeys.put(k, v[0] + v[1]));
+        Map<String, Double> projectsSorted2 = MapUtils.sortByValue(sortedKeys);
+        projectsSorted2.keySet().forEach((k) -> {
             categories.add(k);
             Double[] v = projects.get(k);
             series1data.add(v[0]);
             series2data.add(v[1]);
         });
+
 
         series2.put("name", "Open");
         series2.put("data", series2data);
@@ -599,27 +599,17 @@ public class DashboardController {
         JSONObject series2 = new JSONObject();
         JSONArray series2data = new JSONArray();
 
-//        Map<Double, String> membersSorted = new TreeMap<>(Collections.reverseOrder());
-//        members.forEach((k, v) -> membersSorted.put(v[0] + v[1], k));
-//        membersSorted.values().forEach((k) -> {
-//            categories.add(k);
-//            Double[] v = members.get(k);
-//            series1data.add(v[0]);
-//            series2data.add(v[1]);
-//        });
-//
-        Set<String> memberSorted = new TreeSet<>();
-
-        members.keySet().forEach((k) -> {
-            memberSorted.add(k);
-                });
-        memberSorted.forEach((k) -> {
-        //members.keySet().forEach((k) -> {
+        Map<String, Double> projectsSorted = new TreeMap<>(Collections.reverseOrder());
+        members.forEach((k, v) -> projectsSorted.put(k, v[0] + v[1]));
+        Map<String, Double> projectsSorted2 = MapUtils.sortByValue(projectsSorted);
+        projectsSorted2.keySet().forEach((k) -> {
             categories.add(k);
             Double[] v = members.get(k);
             series1data.add(v[0]);
             series2data.add(v[1]);
         });
+
+
         series2.put("name", "Open");
         series2.put("data", series2data);
         series.add(series2);
