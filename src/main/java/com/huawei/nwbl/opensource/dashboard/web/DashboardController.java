@@ -153,7 +153,7 @@ public class DashboardController {
         for (Object[] gerritChange : gerritChangesMerged) {
             String projectName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
+            if (codeSize != null ) {
                 Double[] status = {codeSize / 1000.0, 0.0};
                 projects.put(projectName, status);
             }
@@ -164,7 +164,7 @@ public class DashboardController {
         for (Object[] gerritChange : gerritChangesOpen) {
             String projectName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
+            if (codeSize != null ) {
                 if (projects.containsKey(projectName)) {
                     Double[] status = projects.get(projectName);
                     status[1] = codeSize / 1000.0;
@@ -216,7 +216,7 @@ public class DashboardController {
         for (Object[] gerritChange : gerritChangesMerged) {
             String memberName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
+            if (codeSize != null) {
                 Double[] status = {codeSize / 1000.0, 0.0};
                 members.put(memberName, status);
             }
@@ -227,7 +227,7 @@ public class DashboardController {
         for (Object[] gerritChange : gerritChangesOpen) {
             String memberName = (String) gerritChange[0];
             Long codeSize = (Long) gerritChange[1];
-            if (codeSize != null && codeSize / 1000.0 > 0) {
+            if (codeSize != null ) {
                 if (members.containsKey(memberName)) {
                     Double[] status = members.get(memberName);
                     status[1] = codeSize / 1000.0;

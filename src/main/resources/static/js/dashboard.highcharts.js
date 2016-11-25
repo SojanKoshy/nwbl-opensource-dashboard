@@ -68,7 +68,6 @@ function drawChartCallback(chartId, data) {
                     categories: data['categories']
                 },
                 yAxis: {
-                    min: 0,
                     title: {
                         text: 'Code Size (in KLOC)'
                     },
@@ -136,7 +135,6 @@ function drawChartCallback(chartId, data) {
                     categories: data['categories']
                 },
                 yAxis: {
-                    min: 0,
                     title: {
                         text: 'Code Size (in KLOC)'
                     },
