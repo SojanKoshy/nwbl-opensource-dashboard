@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,8 +46,13 @@ public class HomeController {
     private GerritChangeRepository gerritChangeRepository;
 
     @GetMapping
-    public ModelAndView home() {
-        ModelAndView modelAndView = new ModelAndView("dashboard");
+    public ModelAndView home(HttpServletRequest request) {
+        ModelAndView modelAndView;
+        if (request.isUserInRole("ADMIN")) {
+            modelAndView = new ModelAndView("dashboard");
+        } else {
+            modelAndView = new ModelAndView("dashboard_user");
+        }
         modelAndView.addObject("companies", companyRepository.getDistinctHasAccountsOrderByName());
         modelAndView.addObject("projects", onosProjectRepository.findByOrderByName());
         return modelAndView;
