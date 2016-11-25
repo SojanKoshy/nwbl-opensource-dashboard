@@ -105,7 +105,7 @@ function drawChartCallback(chartId, data) {
                         }
                     }
                 },
-                colors: ['#d12b2f', '#43b1b0'],
+                colors: ['#727378','#f96503'],
                 //colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
@@ -168,7 +168,7 @@ function drawChartCallback(chartId, data) {
                         stacking: 'normal'
                     }
                 },
-                colors: ['#d12b2f', '#43b1b0'],
+                colors: ['#727378','#f96503'],
                 credits: {
                     enabled: false
                 },
@@ -206,7 +206,7 @@ function drawChartCallback(chartId, data) {
                         }
                     }
                 },
-                colors: ['#d12b2f', '#43b1b0', '#fac174', '#27a4dd', '#727378'],
+                colors: ['#ff5d00', '#43b1b0', '#fac174', '#27a4dd', '#727378'],
                 credits: {
                     enabled: false
                 },
@@ -339,7 +339,8 @@ function drawChartCallback(chartId, data) {
                         }
                     }
                 },
-                colors: ['#43b1b0', '#d12b2f'],
+                colors: ['#727378','#f96503'],
+//                colors: ['#43b1b0', '#d12b2f'],
                // colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
@@ -395,7 +396,8 @@ function drawChartCallback(chartId, data) {
                         stacking: 'normal'
                     }
                 },
-                colors: ['#43b1b0', '#d12b2f'],
+                colors: ['#727378','#f96503'],
+//                colors: ['#43b1b0', '#d12b2f'],
                 //colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
@@ -434,7 +436,8 @@ function drawChartCallback(chartId, data) {
                         }
                     }
                 },
-                colors: ['#fac174', '#d12b2f', '#43b1b0', '#27a4dd', '#727378'],
+                colors: ['#ff5d00', '#43b1b0', '#fac174', '#27a4dd', '#727378'],
+//                colors: ['#fac174', '#d12b2f', '#43b1b0', '#27a4dd', '#727378'],
                 //colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
@@ -478,7 +481,8 @@ function drawChartCallback(chartId, data) {
                 credits: {
                     enabled: false
                 },
-                colors: ['#27a4dd', '#d12b2f', '#43b1b0', '#fac174', '#727378'],
+                colors: ['#f17f49', '#88d3a1'],
+//                colors: ['#27a4dd', '#d12b2f', '#43b1b0', '#fac174', '#727378'],
                 plotOptions: {
                     area: {
                         fillColor: {
@@ -491,8 +495,8 @@ function drawChartCallback(chartId, data) {
                             stops: [
                                // [0, Highcharts.getOptions().colors[0]],
                                // [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                               [0, '#27a4dd'],
-                               [1, Highcharts.Color('#27a4dd').setOpacity(0).get('rgba')]
+                               [0, '#f17f49'],
+                               [1, Highcharts.Color('#f17f49').setOpacity(0).get('rgba')]
                             ]
                         },
                         marker: {
@@ -570,7 +574,8 @@ function drawChartCallback(chartId, data) {
                         }
                     }
                 },
-                colors: ['#f7a35c', '#7cb5ec'],
+                colors: ['#727378','#f96503'],
+//                colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
                 },
@@ -625,7 +630,8 @@ function drawChartCallback(chartId, data) {
                         stacking: 'normal'
                     }
                 },
-                colors: ['#f7a35c', '#7cb5ec'],
+                colors: ['#727378','#f96503'],
+//                colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
                 },
@@ -663,6 +669,7 @@ function drawChartCallback(chartId, data) {
                         }
                     }
                 },
+                colors: ['#ff5d00', '#43b1b0', '#fac174', '#27a4dd', '#727378'],
                 //colors: ['#f7a35c', '#7cb5ec'],
                 credits: {
                     enabled: false
@@ -696,7 +703,7 @@ function drawChartCallback(chartId, data) {
                 tooltip: {
                     formatter: function () {
                         var point = this.points[0];
-                        return Highcharts.dateFormat('%A %B %e %Y', this.x) + '<br/>Code Size: <b>' + point.y + '</b>';
+                        return Highcharts.dateFormat('%A %B %e %Y', this.x) + '<br/>Defects Submitted: <b>' + point.y + '</b>';
                     },
                     shared: true
                 },
@@ -706,6 +713,7 @@ function drawChartCallback(chartId, data) {
                 credits: {
                     enabled: false
                 },
+                colors: ['#f17f49', '#88d3a1'],
                 plotOptions: {
                     area: {
                         fillColor: {
@@ -716,8 +724,10 @@ function drawChartCallback(chartId, data) {
                                 y2: 1
                             },
                             stops: [
-                                [0, Highcharts.getOptions().colors[0]],
-                                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                               // [0, Highcharts.getOptions().colors[0]],
+                               // [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                               [0, '#f17f49'],
+                               [1, Highcharts.Color('#f17f49').setOpacity(0).get('rgba')]
                             ]
                         },
                         marker: {

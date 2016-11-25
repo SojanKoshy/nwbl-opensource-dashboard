@@ -8,18 +8,19 @@
     <div class="pull-right">
     </div>
     <div class="pull-right">
-        <a th:href="@{/companies/(form)}">Add Company</a> |
-        <a th:href="@{/dashboard/jira_json}">Jira Data</a> |
-        <a th:href="@{/dashboard/gerrit_json}">Gerrit Data</a> |
-        <a th:href="@{/dashboard/gerrit_review}">Gerrit Review</a> |
-        <a th:href="@{/dashboard/auto_map}">Auto-map</a>
+        <a th:href="@{/companies}">Update</a> |
+        <!--<a th:href="@{/companies/(form)}">Add Company</a> |-->
+        <!--<a th:href="@{/dashboard/jira_json}">Jira Data</a> |-->
+        <!--<a th:href="@{/dashboard/gerrit_json}">Gerrit Data</a> |-->
+        <!--<a th:href="@{/dashboard/gerrit_review}">Gerrit Review</a> |-->
+        <!--<a th:href="@{/dashboard/auto_map}">Auto-map</a>-->
     </div>
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
             <th>Company</th>
-            <th>EmailDomain</th>
-            <th>Gerrit Accounts (commits found)</th>
+            <th>Email Domain</th>
+            <th>Members who Contributed</th>
           </tr>
         </thead>
         <tbody>
@@ -33,7 +34,7 @@
             <td th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils)
             .formatSet(company.emailDomains), ',', '&lt;br /&gt;')}"></td>
             <td th:utext="${#strings.replace(T(com.huawei.nwbl.opensource.dashboard.utils.WebUtils)
-            .formatSet(company.gerritAccounts), ',', '&lt;br /&gt;')}"></td>
+            .formatSet(company.onosMembers), ',', '&lt;br /&gt;')}"></td>
         </tr>
         </tbody>
     </table>

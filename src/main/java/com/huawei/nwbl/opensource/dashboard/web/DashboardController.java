@@ -37,7 +37,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  *
@@ -81,6 +83,12 @@ public class DashboardController {
 
     @GetMapping("jira_json")
     public String getJiraData() {
+//        for (OnosMember onosMember : onosMemberRepository.findAll()){
+//            String name = onosMember.getName();
+//            onosMember.setName(name.substring(0, 1).toUpperCase() + name.substring(1));
+//            onosMemberRepository.save(onosMember);
+//        }
+//        return "done";
         return jiraExtractService.parseJson();
     }
 
@@ -477,7 +485,7 @@ public class DashboardController {
             Long codeSize = (Long) gerritChange[1];
             JSONArray row = new JSONArray();
             row.add(date.getTime());
-            row.add(codeSize / 1000.0);
+            row.add(codeSize);
             data.add(row);
         }
         return data.toJSONString();
@@ -600,7 +608,13 @@ public class DashboardController {
 //            series2data.add(v[1]);
 //        });
 //
+        Set<String> memberSorted = new TreeSet<>();
+
         members.keySet().forEach((k) -> {
+            memberSorted.add(k);
+                });
+        memberSorted.forEach((k) -> {
+        //members.keySet().forEach((k) -> {
             categories.add(k);
             Double[] v = members.get(k);
             series1data.add(v[0]);

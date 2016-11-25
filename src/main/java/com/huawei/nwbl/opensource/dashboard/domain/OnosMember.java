@@ -61,4 +61,8 @@ public class OnosMember {
     public void setCompany(Company company) {
         this.company = company;
     }
+
+    public String toString() {
+        return String.format("%s &lt;%s&gt;", name, email);
+    }
 }
