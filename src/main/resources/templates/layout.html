@@ -29,16 +29,22 @@
             </button>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
+            <br/>
             <ul class="nav navbar-nav navbar-right">
-
                 <li><a th:href="@{/}"> Home </a></li>
                 <li><a th:href="@{/companies}"> Company </a></li>
                 <li><a th:href="@{/projects}"> Project </a></li>
                 <li><a th:href="@{/members}"> Member </a></li>
                 <li><a th:href="@{/accounts}"> Gerrit Account </a></li>
+                <li>
+                    <a href="#" onclick="document.getElementById('logout').submit()">
+                        <i class="glyphicon glyphicon-log-out"></i></a>
+                </li>
                 <!--<li><a href="http://121.244.84.163:8081/" style="color:lightblue;"> Local CI </a></li>-->
             </ul>
         </div>
+        <form id="logout" th:action="@{/logout}" method="post">
+        </form>
     </div>
 </nav>
 <div class="container">

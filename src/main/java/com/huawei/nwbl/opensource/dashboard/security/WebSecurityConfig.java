@@ -22,9 +22,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/accounts/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .permitAll();
+                .formLogin().loginPage("/login").permitAll()
+                .and()
+                .logout().permitAll();
     }
 
     @Override
@@ -37,6 +37,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.inMemoryAuthentication()
                 .withUser("onos").password("rocks").roles("USER")
                 .and()
-                .withUser("admin@nwbl").password("dashboard$").roles("ADMIN","USER");
+                .withUser("admin@nwbl").password("dashboard$").roles("ADMIN", "USER");
     }
 }
